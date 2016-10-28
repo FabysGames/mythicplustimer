@@ -1,0 +1,43 @@
+MythicPlusTimer 1.7
+===================================
+- Update for WoW 7.3
+
+MythicPlusTimer 1.6
+===================================
+- Add approximate enemy forces progress in the enemy tooltip (Database builds itself by killing the enemies inside a mythic+ dungeon)
+- Show best times for the current level and not per dungeon (optional, enabled by default)
+- Exclude "Surrender to Madness" from death counter
+
+MythicPlusTimer 1.5
+===================================
+- Show enemies percentage with 2 decimals
+
+MythicPlusTimer 1.4
+===================================
+- Update for WoW 7.2.5
+- Remove "chests" texts
+
+MythicPlusTimer 1.3
+===================================
+- Update for WoW 7.2
+- Object/Dungeon completion time is shown in chat (optional, enabled by default)
+- Shift + Click on the timer sends a time left information message to the party chat
+- Frame can be moved outside of a mythic+ dungeon now
+
+MythicPlusTimer 1.2.1
+===================================
+- Frame can be moved again
+
+MythicPlusTimer 1.2
+===================================
+- Update for WoW 7.1
+- Exclude Hunter's feign death from the death counter
+
+MythicPlusTimer 1.1
+===================================
+- Shows the completion time and your best time per objective (optional, enabled by default)
+- Death Counter - time lost caused by player deaths (optional, disabled by default) [Limitation: Does not count a death if it is too far away]
+
+MythicPlusTimer 1.0
+===================================
+- Initial Release

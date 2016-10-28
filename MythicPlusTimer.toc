@@ -1,0 +1,15 @@
+## Interface: 70300
+## Version: 1.7
+## Title: MythicPlusTimer
+## Author: Fabys
+## Notes: Custom Mythic+ timer appearance
+## SavedVariables: MythicPlusTimerDB
+## OptionalDeps: Ace3
+## X-Embeds: Ace3
+
+embeds.xml
+
+Locales\Locales.xml
+
+Core.lua
+CMTimer.lua
