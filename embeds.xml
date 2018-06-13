@@ -10,5 +10,4 @@
     <Include file="Libs\AceConfig-3.0\AceConfig-3.0.xml"/>
     <Include file="Libs\AceTimer-3.0\AceTimer-3.0.xml"/>
     <Include file="Libs\AceLocale-3.0\AceLocale-3.0.xml"/>
-    <Include file="Libs\LibSharedMedia-3.0\lib.xml"/>
 </Ui>

@@ -46,17 +46,18 @@ function MythicPlusTimerCMTimer:Init()
     MythicPlusTimerCMTimer.eventFrame = CreateFrame("Frame")
     MythicPlusTimerCMTimer.eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
     MythicPlusTimerCMTimer.eventFrame:RegisterEvent("SCENARIO_CRITERIA_UPDATE")
-    MythicPlusTimerCMTimer.eventFrame:SetScript("OnEvent", function(self, event, timestamp, subEvent, hideCaster, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags)
-        if subEvent == "PARTY_KILL" then
-            MythicPlusTimerCMTimer:OnPartyKill(destGUID)
-            return
-        end
-        
+    MythicPlusTimerCMTimer.eventFrame:SetScript("OnEvent", function(self, event)
         if event == "SCENARIO_CRITERIA_UPDATE" then
             MythicPlusTimerCMTimer:OnCriteriaUpdate()
             return
         end
         
+        _, subEvent, _, _, _, _, _, destGUID, destName = CombatLogGetCurrentEventInfo()
+
+        if subEvent == "PARTY_KILL" then
+            MythicPlusTimerCMTimer:OnPartyKill(destGUID)
+            return
+        end
         
         if subEvent ~= "UNIT_DIED" then 
             return 
@@ -76,10 +77,17 @@ function MythicPlusTimerCMTimer:Init()
             surrenderedSoul = GetSpellInfo(212570) 
         end
 
-        if UnitDebuff(destName, surrenderedSoul) == surrenderedSoul then
-            return
+        for i = 1, 40 do
+            local debuffName = UnitDebuff(destName, i)
+            if debuffName == nil then
+                break
+            end
+
+			if debuffName == surrenderedSoul then
+				return
+			end
         end
-        
+
         MythicPlusTimerCMTimer:OnPlayerDeath()
     end)
 
@@ -459,7 +467,7 @@ function MythicPlusTimerCMTimer:Draw()
     end
 
     local currentMapId = C_ChallengeMode.GetActiveChallengeMapID();
-    local zoneName, _, maxTime = C_ChallengeMode.GetMapInfo(currentMapId);
+    local zoneName, _, maxTime = C_ChallengeMode.GetMapUIInfo(currentMapId);
     local bonus = C_ChallengeMode.GetPowerLevelDamageHealthMod(cmLevel);
 
     -- Info
