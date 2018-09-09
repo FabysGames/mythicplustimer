@@ -444,7 +444,7 @@ function MythicPlusTimerCMTimer:Draw()
         return
     end
 
-    local cmLevel, affixes, empowered = C_ChallengeMode.GetActiveKeystoneInfo();
+    local cmLevel, affixes, _ = C_ChallengeMode.GetActiveKeystoneInfo();
 
     if not MythicPlusTimerCMTimer.isCompleted then
         MythicPlusTimerCMTimer.frame:Show();
@@ -524,19 +524,20 @@ function MythicPlusTimerCMTimer:Draw()
     table.insert(tooltip, " ")
 
     local txt = ""
-    if empowered then
-        txt = txt .. MythicPlusTimer.L["Loot"]
-    else
-        txt = txt .. MythicPlusTimer.L["NoLoot"]
-    end
-
+    local firstAffix = true
     for _, affixID in ipairs(affixes) do
         local affixName, affixDesc, _ = C_ChallengeMode.GetAffixInfo(affixID);
-        txt = txt ..  " - "..affixName
+
+        if not firstAffix then
+            txt = txt ..  " - "
+        end
+        txt = txt .. affixName
 
         table.insert(tooltip, affixName)
         table.insert(tooltip, "|cFFFFFFFF" .. affixDesc)
         table.insert(tooltip, "  ")
+
+        firstAffix = false
     end
 
     MythicPlusTimerCMTimer.frames.infos.tooltip = tooltip;
