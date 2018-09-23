@@ -26,3 +26,5 @@ L["ProgressTooltip"] = "Show progress percent in tooltip (Database builds itself
 L["ProgressTooltipDesc"] = "Shows the progress toolbar of the mob in his tooltip."
 L["DeleteNPCProgress"] = "Delete progress percent database"
 L["DeleteNPCProgressDesc"] = "Clears the progress percent database."
+L["ShowAbsoluteNumbers"] = "Absolute number of enemy forces progress"
+L["ShowAbsoluteNumbersDesc"] = "Shows the absolute number of enemy forces progress next to the percent value (And in the tooltip)."

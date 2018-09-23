@@ -29,3 +29,5 @@ L["ProgressTooltip"] = "在鼠标提示中显示进度百分比 (通过击杀大
 L["ProgressTooltipDesc"] = "在鼠标提示中显示怪物进度."
 L["DeleteNPCProgress"] = "删除进度百分比数据"
 L["DeleteNPCProgressDesc"] = "清除进度百分比数据库."
+L["ShowAbsoluteNumbers"] = "Absolute number of enemy forces progress"
+L["ShowAbsoluteNumbersDesc"] = "Shows the absolute number of enemy forces progress next to the percent value (And in the tooltip)."

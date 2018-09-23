@@ -26,3 +26,5 @@ L["ProgressTooltip"] = "Mobprozent im Tooltip (Datenbank baut sich auf, indem ma
 L["ProgressTooltipDesc"] = "Zeigt die Prozente die der Mob gibt im Tooltip an."
 L["DeleteNPCProgress"] = "Mobprozent Datenbank löschen"
 L["DeleteNPCProgressDesc"] = "Leer die Datenbank für die Mobprozente."
+L["ShowAbsoluteNumbers"] = "Absolute Zahl der benötigten Gegner"
+L["ShowAbsoluteNumbersDesc"] = "Zeigt die absolute Zahl der benötigten Gegner neben der Prozentzahl an (Auch im Tooltip)."

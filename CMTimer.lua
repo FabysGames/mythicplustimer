@@ -140,7 +140,12 @@ function MythicPlusTimerCMTimer:OnTooltipSetUnit(el)
     
         local name = C_Scenario.GetCriteriaInfo(steps)
     
-        GameTooltip:AddDoubleLine(name..": +"..quantityPercent.."%")
+        local absoluteNumber = ""
+        if MythicPlusTimerDB.config.showAbsoluteNumbers then
+            absoluteNumber = " (+".. value ..")"
+        end
+
+        GameTooltip:AddDoubleLine(name..": +"..quantityPercent.."%" .. absoluteNumber)
         GameTooltip:Show()
     end
 end
@@ -754,7 +759,19 @@ function MythicPlusTimerCMTimer:Draw()
                 quantityPercent = 100
             end
 
-            MythicPlusTimerCMTimer.frames.objectives[i].text:SetText("- "..quantityPercent.."% "..name .. bestTimeStr);
+            local absoluteNumber = ""
+            if MythicPlusTimerDB.config.showAbsoluteNumbers then
+                local missingAbsolute = finalValue - quantityNumber
+                if missingAbsolute == 0 then
+                    missingAbsolute = ""
+                else
+                    missingAbsolute = " - "..missingAbsolute
+                end
+               
+                absoluteNumber = "("..quantityNumber.."/"..finalValue..missingAbsolute..") "
+            end
+
+            MythicPlusTimerCMTimer.frames.objectives[i].text:SetText("- "..quantityPercent.."% "..absoluteNumber..name..bestTimeStr);
         else
             if status then
                 curValue = finalValue
