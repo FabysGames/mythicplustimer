@@ -1,3 +1,7 @@
+MythicPlusTimer 2.4
+===================================
+- Added option to automatically insert the keystone (optional, enabled by default)
+
 MythicPlusTimer 2.3
 ===================================
 - Added absolute numbers for enemy forces progress (optional, disabled by default)

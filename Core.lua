@@ -13,7 +13,8 @@ function MythicPlusTimer:OnInitialize()
             deathCounter = false,
             objectiveTimeInChat = true,
             progressTooltip = true,
-            showAbsoluteNumbers = false
+            showAbsoluteNumbers = false,
+            insertKeystone = true
         } 
     end
     
@@ -31,6 +32,10 @@ function MythicPlusTimer:OnInitialize()
 
     if MythicPlusTimerDB.config.showAbsoluteNumbers == nil then
         MythicPlusTimerDB.config.showAbsoluteNumbers = false
+    end
+
+    if MythicPlusTimerDB.config.insertKeystone == nil then
+        MythicPlusTimerDB.config.insertKeystone = true
     end
 
     if not MythicPlusTimerDB.currentRun then
@@ -100,6 +105,14 @@ function MythicPlusTimer:OnInitialize()
                 set = function(info,val)  MythicPlusTimerDB.config.showAbsoluteNumbers = val end,
                 width = "full"
             },
+            insertkeystone = {
+                type = "toggle",
+                name = MythicPlusTimer.L["InsertKeystone"],
+                desc = MythicPlusTimer.L["InsertKeystoneDesc"],
+                get = function(info,val) return MythicPlusTimerDB.config.insertKeystone  end,
+                set = function(info,val)  MythicPlusTimerDB.config.insertKeystone = val end,
+                width = "full"
+            },
             resetbesttimes = {
                 type = "execute",
                 name = MythicPlusTimer.L["DeleteBestTimes"],
@@ -129,6 +142,10 @@ function MythicPlusTimer:OnInitialize()
     
     
     MythicPlusTimerCMTimer:Init();
+
+    if IsAddOnLoaded("Blizzard_ChallengesUI") then
+        self:HookIntoBlizzardChallengesUI()
+    end
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -137,6 +154,10 @@ function MythicPlusTimer:OnEnable()
     self:RegisterEvent("CHALLENGE_MODE_COMPLETED");
     self:RegisterEvent("CHALLENGE_MODE_RESET");
     self:RegisterEvent("PLAYER_ENTERING_WORLD");
+
+    if not IsAddOnLoaded("Blizzard_ChallengesUI") then
+        self:RegisterEvent('ADDON_LOADED')
+    end
     
     self:RegisterChatCommand("mpt", "CMTimerChatCommand");
 end
@@ -187,6 +208,38 @@ function MythicPlusTimer:CMTimerChatCommand(input)
     else
         self:Print("/mpt toggle: " .. MythicPlusTimer.L["ToggleCommandText"])
     end
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function MythicPlusTimer:ADDON_LOADED(_, name)
+    if name == "Blizzard_ChallengesUI" then
+        self:HookIntoBlizzardChallengesUI()
+    end
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function InsertKeystone()
+    if not MythicPlusTimerDB.config.insertKeystone then
+        return
+    end
+
+    for bag = 0, NUM_BAG_SLOTS do
+        local slots = GetContainerNumSlots(bag)
+        for slot = 1, slots do
+            if (GetContainerItemID(bag, slot) == 158923) then 
+                PickupContainerItem(bag, slot)
+                if (CursorHasItem()) then
+                    C_ChallengeMode.SlotKeystone()
+                end
+
+                return
+            end
+        end
+    end
+end
+
+function MythicPlusTimer:HookIntoBlizzardChallengesUI()
+    ChallengesKeystoneFrame:HookScript("OnShow", InsertKeystone)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

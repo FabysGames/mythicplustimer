@@ -1,5 +1,5 @@
 ## Interface: 80000
-## Version: 2.3
+## Version: 2.4
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
