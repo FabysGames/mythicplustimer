@@ -88,7 +88,7 @@ function MythicPlusTimerCMTimer:Init()
 			end
         end
 
-        MythicPlusTimerCMTimer:OnPlayerDeath()
+        MythicPlusTimerCMTimer:OnPlayerDeath(destName)
     end)
 
     GameTooltip:HookScript("OnTooltipSetUnit", function(self)
@@ -391,9 +391,8 @@ function MythicPlusTimerCMTimer:ReStart()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function MythicPlusTimerCMTimer:OnPlayerDeath()
+function MythicPlusTimerCMTimer:OnPlayerDeath(name)
     local _, _, difficulty, _, _, _, _, _ = GetInstanceInfo();
-    local _, timeCM = GetWorldElapsedTime(1);
 
     if difficulty ~= 8 then
         return
@@ -405,6 +404,16 @@ function MythicPlusTimerCMTimer:OnPlayerDeath()
     
     if MythicPlusTimerDB.currentRun.death == nil then
         return
+    end
+
+    if MythicPlusTimerDB.currentRun.deathNames == nil then
+        MythicPlusTimerDB.currentRun.deathNames = {}
+    end
+
+    if MythicPlusTimerDB.currentRun.deathNames[name] == nil then
+        MythicPlusTimerDB.currentRun.deathNames[name] = 1
+    else
+        MythicPlusTimerDB.currentRun.deathNames[name] = MythicPlusTimerDB.currentRun.deathNames[name] + 1
     end
 
     MythicPlusTimerDB.currentRun.death = MythicPlusTimerDB.currentRun.death + 1
@@ -420,7 +429,11 @@ function MythicPlusTimerCMTimer:Draw()
     end
 
     if not MythicPlusTimerCMTimer.isCompleted then
-        ObjectiveTrackerFrame:Hide();
+        if MythicPlusTimerDB.config.hideDefaultObjectiveTracker then
+            ObjectiveTrackerFrame:Hide();
+        else
+            ObjectiveTrackerFrame:Show();
+        end
     end
 
     if not MythicPlusTimerCMTimer.started and not MythicPlusTimerCMTimer.reset and MythicPlusTimerCMTimer.timerStarted then
@@ -528,9 +541,15 @@ function MythicPlusTimerCMTimer:Draw()
     table.insert(tooltip, "|cFFFFFFFF" .. "+"..bonus.."%");
     table.insert(tooltip, " ")
 
+
+    if not MythicPlusTimerCMTimer.frames.affixes then
+        MythicPlusTimerCMTimer.frames.affixes = {}
+    end
+
     local txt = ""
     local firstAffix = true
-    for _, affixID in ipairs(affixes) do
+    local prevAffix
+    for j, affixID in ipairs(affixes) do
         local affixName, affixDesc, _ = C_ChallengeMode.GetAffixInfo(affixID);
 
         if not firstAffix then
@@ -543,12 +562,61 @@ function MythicPlusTimerCMTimer:Draw()
         table.insert(tooltip, "  ")
 
         firstAffix = false
+
+        -- affix icons
+        local affixFrame = MythicPlusTimerCMTimer.frames.affixes[j]
+
+        if MythicPlusTimerDB.config.showAffixesAsIcons then
+            if not affixFrame then
+                affixFrame = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frames.infos)
+                affixFrame:SetSize(16, 16)
+
+                local border = affixFrame:CreateTexture(nil, "OVERLAY")
+                border:SetAllPoints()
+                border:SetAtlas("ChallengeMode-AffixRing-Sm")
+                affixFrame.Border = border
+
+                local portrait = affixFrame:CreateTexture(nil, "ARTWORK")
+                portrait:SetSize(16, 16)
+                portrait:SetPoint("CENTER", border)
+                affixFrame.Portrait = portrait
+
+                affixFrame.SetUp = ScenarioChallengeModeAffixMixin.SetUp
+                affixFrame:SetScript("OnEnter", ScenarioChallengeModeAffixMixin.OnEnter)
+                affixFrame:SetScript("OnLeave", GameTooltip_Hide)
+        
+                MythicPlusTimerCMTimer.frames.affixes[j] = affixFrame
+            end
+
+            if prevAffix then
+                affixFrame:SetPoint("LEFT", prevAffix, "RIGHT", 5, 0)
+            else
+                local framePosTop = -18
+                if MythicPlusTimerDB.config.showAffixesAsText then
+                    framePosTop = -35
+                end
+
+                affixFrame:SetPoint("TOPLEFT", 0, framePosTop)
+            end
+
+            prevAffix = affixFrame
+
+            affixFrame:Show()
+            affixFrame:SetUp(affixID)
+        else 
+            if affixFrame then
+                affixFrame:Hide()
+            end
+        end
     end
 
     MythicPlusTimerCMTimer.frames.infos.tooltip = tooltip;
-    MythicPlusTimerCMTimer.frames.infos.text:SetText(txt)
 
-
+    if MythicPlusTimerDB.config.showAffixesAsText then
+        MythicPlusTimerCMTimer.frames.infos.text:SetText(txt)
+    else
+        MythicPlusTimerCMTimer.frames.infos.text:SetText("")
+    end
 
     -- Time
     local timeLeft = maxTime - timeCM;
@@ -578,6 +646,14 @@ function MythicPlusTimerCMTimer:Draw()
             timer2 = t2;
         }
     end
+
+    local timeTopOffset = 0
+    if MythicPlusTimerDB.config.showAffixesAsText and MythicPlusTimerDB.config.showAffixesAsIcons then
+        timeTopOffset = 20
+    end
+    MythicPlusTimerCMTimer.frames.time.timer.text:SetPoint("TOPLEFT", 0, -40 - timeTopOffset)
+    MythicPlusTimerCMTimer.frames.time.timer2.text:SetPoint("TOPLEFT", 55, -42 - timeTopOffset)
+
 
     local font = "GameFontGreenLarge"
     if timeLeft == 0 then
@@ -638,6 +714,12 @@ function MythicPlusTimerCMTimer:Draw()
             time3 = t3;
         }
     end
+
+    MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetPoint("TOPLEFT", 0,-60-timeTopOffset);
+    MythicPlusTimerCMTimer.frames.chesttimer.time2.text:SetPoint("TOPLEFT", 75,-60-timeTopOffset);
+
+    MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetPoint("TOPLEFT", 0,-75-timeTopOffset);
+    MythicPlusTimerCMTimer.frames.chesttimer.time3.text:SetPoint("TOPLEFT", 75,-75-timeTopOffset);
     
     -- -- 2 Chest
     if timeLeft2 == 0 then
@@ -685,6 +767,9 @@ function MythicPlusTimerCMTimer:Draw()
 
             MythicPlusTimerCMTimer.frames.objectives[i] = f
         end
+
+        MythicPlusTimerCMTimer.frames.objectives[i].text:SetPoint("TOPLEFT", 0, -90 - timeTopOffset - (i * 17));
+
         MythicPlusTimerCMTimer.frames.objectives[i]:Show()
         
         local name, _, status, curValue, finalValue, _, _, quantity = C_Scenario.GetCriteriaInfo(i);
@@ -789,13 +874,54 @@ function MythicPlusTimerCMTimer:Draw()
             local f = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frame)
             f:SetAllPoints()
             f.text = f:CreateFontString(nil, "BACKGROUND", "GameFontHighlight");
+            f.text:SetPoint("BOTTOMLEFT")
             MythicPlusTimerCMTimer.frames.deathCounter = f
+
+               
+            local deathCounterOnEnter = function(self, motion)
+                if not MythicPlusTimerCMTimer.frames.deathCounter.tooltip then
+                    return
+                end
+                
+                GameTooltip:Hide()
+                GameTooltip:ClearLines()
+                GameTooltip:SetOwner(MythicPlusTimerCMTimer.frames.deathCounter, "ANCHOR_LEFT")
+                
+                for _, v in pairs(MythicPlusTimerCMTimer.frames.deathCounter.tooltip) do
+                    GameTooltip:AddLine(v)
+                end
+                GameTooltip:Show()
+            end
+
+            
+            local deathCounterOnLeave = function(self, motion)
+                GameTooltip:Hide()
+            end
+
+            MythicPlusTimerCMTimer.frames.deathCounter:SetScript("OnEnter", deathCounterOnEnter)
+            MythicPlusTimerCMTimer.frames.deathCounter:SetScript("OnLeave", deathCounterOnLeave)
         end
-        MythicPlusTimerCMTimer.frames.deathCounter.text:SetPoint("TOPLEFT", 0, -90 - (i * 17))
+
+
+        MythicPlusTimerCMTimer.frames.deathCounter:SetPoint("TOPLEFT", 0, -90 - timeTopOffset - 10 - (i * 17))
+        MythicPlusTimerCMTimer.frames.deathCounter.text:SetPoint("BOTTOMLEFT")
         MythicPlusTimerCMTimer.frames.deathCounter:Show()
 
         local seconds = MythicPlusTimerDB.currentRun.death * 5
         MythicPlusTimerCMTimer.frames.deathCounter.text:SetText(MythicPlusTimerDB.currentRun.death.." "..MythicPlusTimer.L["Deaths"]..":|cFFFF0000 -"..MythicPlusTimerCMTimer:FormatSeconds(seconds))
+
+        if MythicPlusTimerDB.currentRun.deathNames then
+            local tooltip = {};
+
+            for name, count in pairs(MythicPlusTimerDB.currentRun.deathNames) do
+                table.insert(tooltip, name .. ": " .. count);
+            end
+    
+            MythicPlusTimerCMTimer.frames.deathCounter.tooltip = tooltip
+        else 
+            MythicPlusTimerCMTimer.frames.deathCounter.tooltip =  nil
+        end
+        
     else
         if MythicPlusTimerCMTimer.frames.deathCounter then
             MythicPlusTimerCMTimer.frames.deathCounter:Hide()

@@ -38,6 +38,18 @@ function MythicPlusTimer:OnInitialize()
         MythicPlusTimerDB.config.insertKeystone = true
     end
 
+    if MythicPlusTimerDB.config.showAffixesAsText == nil then
+        MythicPlusTimerDB.config.showAffixesAsText = true
+    end
+
+    if MythicPlusTimerDB.config.showAffixesAsIcons == nil then
+        MythicPlusTimerDB.config.showAffixesAsIcons = false
+    end
+
+    if MythicPlusTimerDB.config.hideDefaultObjectiveTracker == nil then
+        MythicPlusTimerDB.config.hideDefaultObjectiveTracker = true
+    end
+
     if not MythicPlusTimerDB.currentRun then
         MythicPlusTimerDB.currentRun = {} 
     end
@@ -63,7 +75,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["ObjectiveTimesInChatDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.objectiveTimeInChat  end,
                 set = function(info,val)  MythicPlusTimerDB.config.objectiveTimeInChat = val end,
-                width = "full"
+                width = "full",
+                order = 1
             },
             objectivetimes = {
                 type = "toggle",
@@ -71,7 +84,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["ObjectiveTimesDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.objectiveTime  end,
                 set = function(info,val)  MythicPlusTimerDB.config.objectiveTime = val end,
-                width = "full"
+                width = "full",
+                order = 2
             },
             objectivetimeperlevel = {
                 type = "toggle",
@@ -79,7 +93,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["ObjectiveTimePerLevelDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.objectiveTimePerLevel  end,
                 set = function(info,val)  MythicPlusTimerDB.config.objectiveTimePerLevel = val end,
-                width = "full"
+                width = "full",
+                order = 3
             },
             deathcounter = {
                 type = "toggle",
@@ -87,7 +102,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["DeathCounterDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.deathCounter  end,
                 set = function(info,val)  MythicPlusTimerDB.config.deathCounter = val end,
-                width = "full"
+                width = "full",
+                order = 4
             },
             progresstooltip = {
                 type = "toggle",
@@ -95,7 +111,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["ProgressTooltipDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.progressTooltip  end,
                 set = function(info,val)  MythicPlusTimerDB.config.progressTooltip = val end,
-                width = "full"
+                width = "full",
+                order = 5
             },
             showabsolutenumbers = {
                 type = "toggle",
@@ -103,7 +120,8 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["ShowAbsoluteNumbersDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.showAbsoluteNumbers  end,
                 set = function(info,val)  MythicPlusTimerDB.config.showAbsoluteNumbers = val end,
-                width = "full"
+                width = "full",
+                order = 6
             },
             insertkeystone = {
                 type = "toggle",
@@ -111,28 +129,59 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["InsertKeystoneDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.insertKeystone  end,
                 set = function(info,val)  MythicPlusTimerDB.config.insertKeystone = val end,
-                width = "full"
+                width = "full",
+                order = 7
+            },
+            showaffixesastext = {
+                type = "toggle",
+                name = MythicPlusTimer.L["ShowAffixesAsText"],
+                desc = MythicPlusTimer.L["ShowAffixesAsTextDesc"],
+                get = function(info,val) return MythicPlusTimerDB.config.showAffixesAsText  end,
+                set = function(info,val)  MythicPlusTimerDB.config.showAffixesAsText = val end,
+                width = "full",
+                order = 8
+            },
+            showaffixesasicons = {
+                type = "toggle",
+                name = MythicPlusTimer.L["ShowAffixesAsIcons"],
+                desc = MythicPlusTimer.L["ShowAffixesAsIconsDesc"],
+                get = function(info,val) return MythicPlusTimerDB.config.showAffixesAsIcons  end,
+                set = function(info,val)  MythicPlusTimerDB.config.showAffixesAsIcons = val end,
+                width = "full",
+                order = 9
+            },
+            hidedefaultobjectivetracker = {
+                type = "toggle",
+                name = MythicPlusTimer.L["HideDefaultObjectiveTracker"],
+                desc = MythicPlusTimer.L["HideDefaultObjectiveTrackerDesc"],
+                get = function(info,val) return MythicPlusTimerDB.config.hideDefaultObjectiveTracker  end,
+                set = function(info,val)  MythicPlusTimerDB.config.hideDefaultObjectiveTracker = val end,
+                width = "full",
+                order = 10
             },
             resetbesttimes = {
                 type = "execute",
                 name = MythicPlusTimer.L["DeleteBestTimes"],
                 desc = MythicPlusTimer.L["DeleteBestTimesRecords"],
                 func = function(info) MythicPlusTimerDB.bestTimes = {} end,
-                width = "full"
+                width = "full",
+                order = 90
             },
             resetnpcprogress = {
                 type = "execute",
                 name = MythicPlusTimer.L["DeleteNPCProgress"],
                 desc = MythicPlusTimer.L["DeleteNPCProgressDesc"],
                 func = function(info) MythicPlusTimerDB.npcProgress = {} end,
-                width = "full"
+                width = "full",
+                order = 91
             },
 --            exportdata = {
 --                type = "execute",
 --                name = "export",
 --                desc = "export",
 --                func = function(info) MythicPlusTimer:ExportData() end,
---                width = "full"
+--                width = "full",
+--                order = -1
 --            },
         },
     }
