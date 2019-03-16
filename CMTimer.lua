@@ -406,13 +406,9 @@ function MythicPlusTimerCMTimer:OnPlayerDeath(name)
     if not MythicPlusTimerCMTimer.started then
         return
     end
-    
-    if MythicPlusTimerDB.currentRun.death == nil then
-        return
-    end
 
     if MythicPlusTimerDB.currentRun.deathNames == nil then
-        MythicPlusTimerDB.currentRun.deathNames = {}
+        return
     end
 
     if MythicPlusTimerDB.currentRun.deathNames[name] == nil then
@@ -420,8 +416,6 @@ function MythicPlusTimerCMTimer:OnPlayerDeath(name)
     else
         MythicPlusTimerDB.currentRun.deathNames[name] = MythicPlusTimerDB.currentRun.deathNames[name] + 1
     end
-
-    MythicPlusTimerDB.currentRun.death = MythicPlusTimerDB.currentRun.death + 1
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -485,8 +479,8 @@ function MythicPlusTimerCMTimer:Draw()
         MythicPlusTimerDB.currentRun.times = {}
     end
 
-    if MythicPlusTimerDB.currentRun.death == nil then
-        MythicPlusTimerDB.currentRun.death = 0
+    if MythicPlusTimerDB.currentRun.deathNames == nil then
+        MythicPlusTimerDB.currentRun.deathNames = {}
     end
 
     local currentMapId = C_ChallengeMode.GetActiveChallengeMapID();
@@ -941,7 +935,8 @@ function MythicPlusTimerCMTimer:Draw()
     
     
     -- Death Count
-    if MythicPlusTimerDB.currentRun.death > 0 and MythicPlusTimerDB.config.deathCounter then
+    local deathCount, deathTimeLost = C_ChallengeMode.GetDeathCount();
+    if deathTimeLost and deathTimeLost > 0 and deathCount and deathCount > 0 and MythicPlusTimerDB.config.deathCounter then
         local i = stepsCount + 1
         if not MythicPlusTimerCMTimer.frames.deathCounter then
             local f = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frame)
@@ -977,8 +972,7 @@ function MythicPlusTimerCMTimer:Draw()
         end
 
 
-        local seconds = MythicPlusTimerDB.currentRun.death * 5
-        MythicPlusTimerCMTimer.frames.deathCounter.text:SetText(MythicPlusTimerDB.currentRun.death.." "..MythicPlusTimer.L["Deaths"]..":|cFFFF0000 -"..MythicPlusTimerCMTimer:FormatSeconds(seconds))
+        MythicPlusTimerCMTimer.frames.deathCounter.text:SetText(deathCount.." "..MythicPlusTimer.L["Deaths"]..":|cFFFF0000 -"..MythicPlusTimerCMTimer:FormatSeconds(deathTimeLost))
 
         MythicPlusTimerCMTimer.frames.deathCounter:SetHeight(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringHeight())
         MythicPlusTimerCMTimer.frames.deathCounter:SetWidth(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringWidth())
