@@ -992,9 +992,10 @@ function MythicPlusTimerCMTimer:Draw()
 
         if MythicPlusTimerDB.currentRun.deathNames then
             local tooltip = {};
+            table.insert(tooltip, MythicPlusTimer.L["Deaths"]);
 
             for name, count in pairs(MythicPlusTimerDB.currentRun.deathNames) do
-                table.insert(tooltip, name .. ": " .. count);
+                table.insert(tooltip, "|cFFFFFFFF" ..  name .. ": " .. count);
             end
     
             MythicPlusTimerCMTimer.frames.deathCounter.tooltip = tooltip
