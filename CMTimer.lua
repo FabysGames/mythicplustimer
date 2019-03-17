@@ -664,11 +664,6 @@ function MythicPlusTimerCMTimer:Draw()
         }
     end
 
-    local timeTopOffset = 0
-    if MythicPlusTimerDB.config.showAffixesAsText and MythicPlusTimerDB.config.showAffixesAsIcons then
-        timeTopOffset = 20
-    end
-
 
     local font = "GameFontGreenLarge"
     if timeLeft == 0 then
