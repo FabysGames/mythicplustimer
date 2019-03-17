@@ -17,7 +17,8 @@ function MythicPlusTimer:OnInitialize()
             insertKeystone = true,
             showAffixesAsText = true,
             showAffixesAsIcons = false,
-            hideDefaultObjectiveTracker = true
+            hideDefaultObjectiveTracker = true,
+            showReapingTimer = true
         } 
     end
     
@@ -51,6 +52,10 @@ function MythicPlusTimer:OnInitialize()
 
     if MythicPlusTimerDB.config.hideDefaultObjectiveTracker == nil then
         MythicPlusTimerDB.config.hideDefaultObjectiveTracker = true
+    end
+
+    if MythicPlusTimerDB.config.showReapingTimer == nil then
+        MythicPlusTimerDB.config.showReapingTimer = true
     end
 
     if not MythicPlusTimerDB.currentRun then
@@ -159,6 +164,15 @@ function MythicPlusTimer:OnInitialize()
                 desc = MythicPlusTimer.L["HideDefaultObjectiveTrackerDesc"],
                 get = function(info,val) return MythicPlusTimerDB.config.hideDefaultObjectiveTracker  end,
                 set = function(info,val)  MythicPlusTimerDB.config.hideDefaultObjectiveTracker = val end,
+                width = "full",
+                order = 10
+            },
+            showreapingtimer = {
+                type = "toggle",
+                name = MythicPlusTimer.L["ShowReapingTimer"],
+                desc = MythicPlusTimer.L["ShowReapingTimerDesc"],
+                get = function(info,val) return MythicPlusTimerDB.config.showReapingTimer  end,
+                set = function(info,val)  MythicPlusTimerDB.config.showReapingTimer = val end,
                 width = "full",
                 order = 10
             },

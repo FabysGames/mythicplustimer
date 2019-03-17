@@ -557,6 +557,7 @@ function MythicPlusTimerCMTimer:Draw()
     end
 
     local txt = ""
+    local isReaping = false
     local firstAffix = true
     local prevAffixFrame
     for j, affixID in ipairs(affixes) do
@@ -572,6 +573,10 @@ function MythicPlusTimerCMTimer:Draw()
         table.insert(tooltip, "  ")
 
         firstAffix = false
+
+        if affixID == 117 then
+            isReaping = true
+        end
 
         -- affix icons
         local affixFrame = MythicPlusTimerCMTimer.frames.affixesIcon[j]
@@ -808,6 +813,9 @@ function MythicPlusTimerCMTimer:Draw()
     
     local stepsCount = 0
     local prevStepFrame
+    local finalQuantity
+    local currentQuantity
+    local quantityProgressDone = false
     for i = 1, steps do
         stepsCount = stepsCount + 1
         if not MythicPlusTimerCMTimer.frames.objectives[i] then
@@ -887,6 +895,13 @@ function MythicPlusTimerCMTimer:Draw()
             local quantityNumber = string.sub(quantity, 1, string.len(quantity) - 1)
             local quantityPercent = (quantityNumber / finalValue) * 100
 
+            finalQuantity = finalValue
+            currentQuantity = quantityNumber
+
+            if status then
+                quantityProgressDone = true
+            end
+
             local mult = 10^2
             quantityPercent = math.floor(quantityPercent * mult + 0.5) / mult
             if(quantityPercent > 100) then
@@ -928,11 +943,12 @@ function MythicPlusTimerCMTimer:Draw()
         prevStepFrame = MythicPlusTimerCMTimer.frames.objectives[i]
     end
     
-    
+
+    local nextRefFrame = prevStepFrame
+
     -- Death Count
     local deathCount, deathTimeLost = C_ChallengeMode.GetDeathCount();
     if deathTimeLost and deathTimeLost > 0 and deathCount and deathCount > 0 and MythicPlusTimerDB.config.deathCounter then
-        local i = stepsCount + 1
         if not MythicPlusTimerCMTimer.frames.deathCounter then
             local f = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frame)
             f:ClearAllPoints()
@@ -985,10 +1001,48 @@ function MythicPlusTimerCMTimer:Draw()
         else 
             MythicPlusTimerCMTimer.frames.deathCounter.tooltip =  nil
         end
-        
+
+        nextRefFrame = MythicPlusTimerCMTimer.frames.deathCounter
     else
         if MythicPlusTimerCMTimer.frames.deathCounter then
             MythicPlusTimerCMTimer.frames.deathCounter:Hide()
+        end
+    end
+
+    -- reaping timer
+    if isReaping and MythicPlusTimerDB.config.showReapingTimer and finalQuantity and not quantityProgressDone then
+        if not MythicPlusTimerCMTimer.frames.reaping then
+            local f = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frame)
+            f:ClearAllPoints()
+
+            f.text = f:CreateFontString(nil, "BACKGROUND", "GameFontHighlight");
+            f.text:SetPoint("TOPLEFT")
+
+            MythicPlusTimerCMTimer.frames.reaping = f
+        end
+
+        local reapingQuantity = finalQuantity / 5
+        local reapingIn = reapingQuantity - currentQuantity % reapingQuantity
+        local reapingInPercent =  (reapingIn / finalQuantity) * 100
+
+        local mult = 10^2
+        reapingInPercent = math.floor(reapingInPercent * mult + 0.5) / mult
+
+        local reapingText = MythicPlusTimer.L["ReapingIn"]..": "..reapingInPercent.."%"
+
+        if MythicPlusTimerDB.config.showAbsoluteNumbers then
+            reapingText = reapingText.." ("..math.ceil(reapingIn)..")"
+        end
+
+        MythicPlusTimerCMTimer.frames.reaping.text:SetText(reapingText)
+
+        MythicPlusTimerCMTimer.frames.reaping:SetHeight(MythicPlusTimerCMTimer.frames.reaping.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.reaping:SetWidth(MythicPlusTimerCMTimer.frames.reaping.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.reaping:SetPoint("TOPLEFT", nextRefFrame, "BOTTOMLEFT", 0, -5)
+        MythicPlusTimerCMTimer.frames.reaping:Show()
+    else
+        if MythicPlusTimerCMTimer.frames.reaping then
+            MythicPlusTimerCMTimer.frames.reaping:Hide()
         end
     end
 end
