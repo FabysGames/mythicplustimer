@@ -10,11 +10,14 @@ function MythicPlusTimer:OnInitialize()
         MythicPlusTimerDB.config = {
             objectiveTime = true,
             objectiveTimePerLevel = true,
-            deathCounter = false,
+            deathCounter = true,
             objectiveTimeInChat = true,
             progressTooltip = true,
             showAbsoluteNumbers = false,
-            insertKeystone = true
+            insertKeystone = true,
+            showAffixesAsText = true,
+            showAffixesAsIcons = false,
+            hideDefaultObjectiveTracker = true
         } 
     end
     
