@@ -1,3 +1,14 @@
+MythicPlusTimer 2.6
+===================================
+- Death counter is always correct now
+- Added a tooltip to the death count that shows who died and how often (uses the combat log event)
+- Updated tooltip positions
+- Updated frame positions to better support different default font styles
+- Added progress needed until next reaping (optional, enabled by default)
+- Added an option to show affixes as icons (optional, disabled by default)
+- Added an option to show affixes as text (optional, enabled by default)
+- Added an option to hide the default objective tracker (optional, enabled by default)
+
 MythicPlusTimer 2.5
 ===================================
 - Update for WoW 8.1
