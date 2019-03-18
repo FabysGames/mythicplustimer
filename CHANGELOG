@@ -1,3 +1,8 @@
+MythicPlusTimer 2.7
+===================================
+- Use better timer value
+- Improved draw performance
+
 MythicPlusTimer 2.6
 ===================================
 - Death counter is always correct now
