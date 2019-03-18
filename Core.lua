@@ -1,4 +1,4 @@
-MythicPlusTimer = LibStub("AceAddon-3.0"):NewAddon("MythicPlusTimer", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0");
+MythicPlusTimer = LibStub("AceAddon-3.0"):NewAddon("MythicPlusTimer", "AceConsole-3.0", "AceEvent-3.0");
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function MythicPlusTimer:OnInitialize()
@@ -236,7 +236,7 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 function MythicPlusTimer:StartCMTimer()
     MythicPlusTimer:CancelCMTimer()
-    MythicPlusTimer.cmTimer = self:ScheduleRepeatingTimer("OnCMTimerTick", 1)
+    MythicPlusTimer.cmTimerStarted = true
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -250,8 +250,13 @@ function MythicPlusTimer:CHALLENGE_MODE_RESET()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function MythicPlusTimer:OnCMTimerTick()
-    MythicPlusTimerCMTimer:Draw();
+function MythicPlusTimer:OnCMTimerTick(elapsedTime)
+    if MythicPlusTimerCMTimer.cmElapsed == elapsedTime then
+        return
+    end
+
+    MythicPlusTimerCMTimer.cmElapsed = elapsedTime
+    MythicPlusTimerCMTimer:Draw(elapsedTime);
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -261,10 +266,8 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function MythicPlusTimer:CancelCMTimer()
-    if MythicPlusTimer.cmTimer then
-        self:CancelTimer(MythicPlusTimer.cmTimer)
-        MythicPlusTimer.cmTimer = nil
-    end
+    MythicPlusTimer.cmTimerStarted = false
+    MythicPlusTimerCMTimer.cmElapsed = -1
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -272,7 +275,7 @@ function MythicPlusTimer:CMTimerChatCommand(input)
     if input == "toggle" then
         MythicPlusTimerCMTimer:ToggleFrame()
     else
-        self:Print("/mpt toggle: " .. MythicPlusTimer.L["ToggleCommandText"])
+        self:Print("/mpt toggle|cCCCCCCCC: " .. MythicPlusTimer.L["ToggleCommandText"])
     end
 end
 
@@ -307,6 +310,17 @@ end
 function MythicPlusTimer:HookIntoBlizzardChallengesUI()
     ChallengesKeystoneFrame:HookScript("OnShow", InsertKeystone)
 end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function UpdateTimeHook(_, elapsedTime)
+    if not MythicPlusTimer.cmTimerStarted then
+        return
+    end
+    
+    MythicPlusTimer:OnCMTimerTick(elapsedTime)
+end
+
+hooksecurefunc("Scenario_ChallengeMode_UpdateTime", UpdateTimeHook)
 
 -- ---------------------------------------------------------------------------------------------------------------------
 --function MythicPlusTimer:ExportData()

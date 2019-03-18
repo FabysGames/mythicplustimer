@@ -419,7 +419,7 @@ function MythicPlusTimerCMTimer:OnPlayerDeath(name)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function MythicPlusTimerCMTimer:Draw()
+function MythicPlusTimerCMTimer:Draw(timeCM)
     local _, _, difficulty, _, _, _, _, currentZoneID = GetInstanceInfo();
     if difficulty ~= 8 then
         MythicPlusTimerCMTimer.frame:Hide();
@@ -456,7 +456,6 @@ function MythicPlusTimerCMTimer:Draw()
 
     
     MythicPlusTimerCMTimer.timerStarted = true
-    local _, timeCM = GetWorldElapsedTime(1)
     if not timeCM or timeCM <= 0 then
         return
     end
@@ -522,12 +521,15 @@ function MythicPlusTimerCMTimer:Draw()
         MythicPlusTimerCMTimer.frames.dungeonInfo:SetScript("OnLeave", GameTooltip_Hide)
     end
 
-    MythicPlusTimerCMTimer.frames.dungeonInfo.text:SetText("+" .. cmLevel .. " - " .. zoneName);
-    MythicPlusTimerCMTimer.frames.dungeonInfo:SetHeight(MythicPlusTimerCMTimer.frames.dungeonInfo.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.dungeonInfo:SetWidth(MythicPlusTimerCMTimer.frames.dungeonInfo.text:GetStringWidth())
+    local dungeonName = "+" .. cmLevel .. " - " .. zoneName
+    if MythicPlusTimerCMTimer.frames.dungeonInfo.text:GetText() ~= dungeonName then
+        MythicPlusTimerCMTimer.frames.dungeonInfo.text:SetText(dungeonName);
+        MythicPlusTimerCMTimer.frames.dungeonInfo:SetHeight(MythicPlusTimerCMTimer.frames.dungeonInfo.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.dungeonInfo:SetWidth(MythicPlusTimerCMTimer.frames.dungeonInfo.text:GetStringWidth())
+    end
 
     local tooltip = {};
-    table.insert(tooltip, "+" .. cmLevel .. " - " .. zoneName);
+    table.insert(tooltip, dungeonName);
     table.insert(tooltip, "|cFFFFFFFF" .. "+"..bonus.."%");
     table.insert(tooltip, " ")
 
@@ -604,15 +606,25 @@ function MythicPlusTimerCMTimer:Draw()
             end
 
             if prevAffixFrame then
-                affixFrame:SetPoint("LEFT", prevAffixFrame, "RIGHT", 5, 0)
+                if not affixFrame.refFrame or affixFrame.refFrame ~= prevAffixFrame then
+                    affixFrame:SetPoint("LEFT", prevAffixFrame, "RIGHT", 5, 0)
+                    affixFrame.refFrame = prevAffixFrame
+                end
             else
-                affixFrame:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.affixesIcons, "TOPLEFT", 0, 0)
+                if not affixFrame.refFrame or affixFrame.refFrame ~= MythicPlusTimerCMTimer.frames.affixesIcons then
+                    affixFrame:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.affixesIcons, "TOPLEFT", 0, 0)
+                    affixFrame.refFrame = MythicPlusTimerCMTimer.frames.affixesIcons
+                end
             end
 
             prevAffixFrame = affixFrame
 
             affixFrame:Show()
-            affixFrame:SetUp(affixID)
+
+            if not affixFrame.affixID or affixFrame.affixID ~= affixID then
+                affixFrame:SetUp(affixID)
+                affixFrame.affixID = affixID
+            end
         end
     end
 
@@ -620,15 +632,23 @@ function MythicPlusTimerCMTimer:Draw()
 
     if MythicPlusTimerDB.config.showAffixesAsText then
         MythicPlusTimerCMTimer.frames.affixesText:Show()
-        MythicPlusTimerCMTimer.frames.affixesText.text:SetText(txt)
-        MythicPlusTimerCMTimer.frames.affixesText:SetHeight(MythicPlusTimerCMTimer.frames.affixesText.text:GetStringHeight())
-        MythicPlusTimerCMTimer.frames.affixesText:SetWidth(MythicPlusTimerCMTimer.frames.affixesText.text:GetStringWidth())
 
-        MythicPlusTimerCMTimer.frames.affixesIcons:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.dungeonInfo, "BOTTOMLEFT", 0, -6 - MythicPlusTimerCMTimer.frames.affixesText:GetHeight())
+        if MythicPlusTimerCMTimer.frames.affixesText.text:GetText() ~= txt then
+            MythicPlusTimerCMTimer.frames.affixesText.text:SetText(txt)
+            MythicPlusTimerCMTimer.frames.affixesText:SetHeight(MythicPlusTimerCMTimer.frames.affixesText.text:GetStringHeight())
+            MythicPlusTimerCMTimer.frames.affixesText:SetWidth(MythicPlusTimerCMTimer.frames.affixesText.text:GetStringWidth())
+
+            MythicPlusTimerCMTimer.frames.affixesIcons.refName = "text"
+            MythicPlusTimerCMTimer.frames.affixesIcons:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.dungeonInfo, "BOTTOMLEFT", 0, -6 - MythicPlusTimerCMTimer.frames.affixesText:GetHeight())
+        end
     else
         MythicPlusTimerCMTimer.frames.affixesText.text:SetText("")
         MythicPlusTimerCMTimer.frames.affixesText:Hide()
-        MythicPlusTimerCMTimer.frames.affixesIcons:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.dungeonInfo, "BOTTOMLEFT", 0, -2)
+
+        if not MythicPlusTimerCMTimer.frames.affixesIcons.refName or MythicPlusTimerCMTimer.frames.affixesIcons.refName ~= "info" then
+            MythicPlusTimerCMTimer.frames.affixesIcons:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.dungeonInfo, "BOTTOMLEFT", 0, -2)
+            MythicPlusTimerCMTimer.frames.affixesIcons.refName = "info"
+        end
     end
 
     if MythicPlusTimerDB.config.showAffixesAsIcons then 
@@ -674,17 +694,24 @@ function MythicPlusTimerCMTimer:Draw()
     if timeLeft == 0 then
         font = "GameFontRedLarge"
     end
-    MythicPlusTimerCMTimer.frames.time.timer.text:SetFontObject(font);
-    MythicPlusTimerCMTimer.frames.time.timer.text:SetText(MythicPlusTimerCMTimer:FormatSeconds(timeLeft));
-    MythicPlusTimerCMTimer.frames.time.timer2.text:SetText("(".. MythicPlusTimerCMTimer:FormatSeconds(timeCM) .." / ".. MythicPlusTimerCMTimer:FormatSeconds(maxTime) ..")");
 
-
-    MythicPlusTimerCMTimer.frames.time.timer:SetHeight(MythicPlusTimerCMTimer.frames.time.timer.text:GetStringHeight())
-    local currentWidth = MythicPlusTimerCMTimer.frames.time.timer.text:GetStringWidth()
-    if not MythicPlusTimerCMTimer.frames.time.timer.width or currentWidth > MythicPlusTimerCMTimer.frames.time.timer.width then
-        MythicPlusTimerCMTimer.frames.time.timer.width = currentWidth
+    if not MythicPlusTimerCMTimer.frames.time.timer.text.currentFont or MythicPlusTimerCMTimer.frames.time.timer.text.currentFont ~= font then
+        MythicPlusTimerCMTimer.frames.time.timer.text:SetFontObject(font);
     end
-    MythicPlusTimerCMTimer.frames.time.timer:SetWidth(MythicPlusTimerCMTimer.frames.time.timer.width)
+
+    local timeLeftText = MythicPlusTimerCMTimer:FormatSeconds(timeLeft)
+    local currentTimeLeftText = MythicPlusTimerCMTimer.frames.time.timer.text:GetText()
+
+    MythicPlusTimerCMTimer.frames.time.timer.text:SetText(timeLeftText)
+
+    if not currentTimeLeftText or not timeLeftText or string.len(timeLeftText) ~= string.len(currentTimeLeftText) then
+        MythicPlusTimerCMTimer.frames.time.timer:SetHeight(MythicPlusTimerCMTimer.frames.time.timer.text:GetStringHeight())
+        local currentWidth = MythicPlusTimerCMTimer.frames.time.timer.text:GetStringWidth()
+        if not MythicPlusTimerCMTimer.frames.time.timer.width or currentWidth > MythicPlusTimerCMTimer.frames.time.timer.width then
+            MythicPlusTimerCMTimer.frames.time.timer.width = currentWidth
+        end
+        MythicPlusTimerCMTimer.frames.time.timer:SetWidth(MythicPlusTimerCMTimer.frames.time.timer.width)
+    end
 
     local timerRef = MythicPlusTimerCMTimer.frames.affixesIcons
     if not MythicPlusTimerDB.config.showAffixesAsIcons then
@@ -695,11 +722,22 @@ function MythicPlusTimerCMTimer:Draw()
         timerRef = MythicPlusTimerCMTimer.frames.dungeonInfo
     end
 
-    MythicPlusTimerCMTimer.frames.time.timer:SetPoint("TOPLEFT", timerRef, "BOTTOMLEFT", 0, -10);
+    if not MythicPlusTimerCMTimer.frames.time.timer.refFrame or MythicPlusTimerCMTimer.frames.time.timer.refFrame ~= timerRef then
+        MythicPlusTimerCMTimer.frames.time.timer:SetPoint("TOPLEFT", timerRef, "BOTTOMLEFT", 0, -10);
+        MythicPlusTimerCMTimer.frames.time.timer.refFrame = timerRef
+    end
 
-    MythicPlusTimerCMTimer.frames.time.timer2:SetHeight(MythicPlusTimerCMTimer.frames.time.timer2.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.time.timer2:SetWidth(MythicPlusTimerCMTimer.frames.time.timer2.text:GetStringWidth())
-    MythicPlusTimerCMTimer.frames.time.timer2:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.time.timer, "BOTTOMRIGHT", 5, 1)
+
+    local dungeonTimeText = "(".. MythicPlusTimerCMTimer:FormatSeconds(timeCM) .." / ".. MythicPlusTimerCMTimer:FormatSeconds(maxTime) ..")"
+    local currentDungeonTimeText = MythicPlusTimerCMTimer.frames.time.timer2.text:GetText()
+
+    MythicPlusTimerCMTimer.frames.time.timer2.text:SetText(dungeonTimeText)
+
+    if not dungeonTimeText or not currentDungeonTimeText or string.len(dungeonTimeText) ~= string.len(currentDungeonTimeText) then
+        MythicPlusTimerCMTimer.frames.time.timer2:SetHeight(MythicPlusTimerCMTimer.frames.time.timer2.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.time.timer2:SetWidth(MythicPlusTimerCMTimer.frames.time.timer2.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.time.timer2:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.time.timer, "BOTTOMRIGHT", 5, 1)
+    end
 
     MythicPlusTimerDB.currentRun.timeLeft = timeLeft
     
@@ -762,47 +800,89 @@ function MythicPlusTimerCMTimer:Draw()
     end
 
     -- -- +2
+    local currentTimeLeft2Label = MythicPlusTimerCMTimer.frames.chesttimer.label2.text:GetText()
+    local currentTime2 = MythicPlusTimerCMTimer.frames.chesttimer.time2.text:GetText()
+    local timeLeft2LabelText = ""
+    local updateTime2Pos = false
+    local timeLeft2Text = ""
+
     if timeLeft2 == 0 then
-        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetText("+2 ("..MythicPlusTimerCMTimer:FormatSeconds(twoChestTime)..")")
-        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetFontObject("GameFontDisable");
+        timeLeft2LabelText = "+2 ("..MythicPlusTimerCMTimer:FormatSeconds(twoChestTime)..")"
+
+        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetText(timeLeft2LabelText)
+        if not MythicPlusTimerCMTimer.frames.chesttimer.label2.text.currentFont or MythicPlusTimerCMTimer.frames.chesttimer.label2.text.currentFont ~= "GameFontDisable" then
+            MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetFontObject("GameFontDisable");
+        end
+
         MythicPlusTimerCMTimer.frames.chesttimer.time2:Hide()
     else
-        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetText("+2 ("..MythicPlusTimerCMTimer:FormatSeconds(twoChestTime).."):")
-        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetFontObject("GameFontHighlight");
-        
-        MythicPlusTimerCMTimer.frames.chesttimer.time2.text:SetText(MythicPlusTimerCMTimer:FormatSeconds(timeLeft2));
+        timeLeft2LabelText = "+2 ("..MythicPlusTimerCMTimer:FormatSeconds(twoChestTime).."):"
+
+        MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetText(timeLeft2LabelText)
+        if not MythicPlusTimerCMTimer.frames.chesttimer.label2.text.currentFont or MythicPlusTimerCMTimer.frames.chesttimer.label2.text.currentFont ~= "GameFontHighlight" then
+            MythicPlusTimerCMTimer.frames.chesttimer.label2.text:SetFontObject("GameFontHighlight");
+        end
+
+        timeLeft2Text = MythicPlusTimerCMTimer:FormatSeconds(timeLeft2)
+        MythicPlusTimerCMTimer.frames.chesttimer.time2.text:SetText(timeLeft2Text);
         MythicPlusTimerCMTimer.frames.chesttimer.time2:Show()
+        updateTime2Pos = true
     end
 
-    MythicPlusTimerCMTimer.frames.chesttimer.label2:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.label2.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.chesttimer.label2:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.label2.text:GetStringWidth())
-    MythicPlusTimerCMTimer.frames.chesttimer.label2:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.time.timer, "BOTTOMLEFT", 0, -5)
+    if not timeLeft2LabelText or not currentTimeLeft2Label or string.len(timeLeft2LabelText) ~= string.len(currentTimeLeft2Label) then
+        MythicPlusTimerCMTimer.frames.chesttimer.label2:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.label2.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.chesttimer.label2:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.label2.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.chesttimer.label2:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.time.timer, "BOTTOMLEFT", 0, -5)
+    end
 
-    MythicPlusTimerCMTimer.frames.chesttimer.time2:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.time2.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.chesttimer.time2:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.time2.text:GetStringWidth())
-    MythicPlusTimerCMTimer.frames.chesttimer.time2:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label2, "BOTTOMRIGHT", 5, 0);
-
+    if updateTime2Pos and (not timeLeft2Text or not currentTime2 or string.len(timeLeft2Text) ~= string.len(currentTime2)) then
+        MythicPlusTimerCMTimer.frames.chesttimer.time2:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.time2.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.chesttimer.time2:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.time2.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.chesttimer.time2:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label2, "BOTTOMRIGHT", 5, 0);
+    end
 
     -- -- +3
+    local currentTimeLeft3Label = MythicPlusTimerCMTimer.frames.chesttimer.label3.text:GetText()
+    local currentTime3 = MythicPlusTimerCMTimer.frames.chesttimer.time3.text:GetText()
+    local timeLeft3LabelText = ""
+    local updateTime3Pos = false
+    local timeLeft3Text = ""
+
     if timeLeft3 == 0 then
-        MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetText("+3 ("..MythicPlusTimerCMTimer:FormatSeconds(threeChestTime)..")")
-        MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetFontObject("GameFontDisable");
+        timeLeft3LabelText = "+3 ("..MythicPlusTimerCMTimer:FormatSeconds(threeChestTime)..")"
+
+        MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetText(timeLeft3LabelText)
+        if not MythicPlusTimerCMTimer.frames.chesttimer.label3.text.currentFont or MythicPlusTimerCMTimer.frames.chesttimer.label3.text.currentFont ~= "GameFontDisable" then
+            MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetFontObject("GameFontDisable");
+        end
+
         MythicPlusTimerCMTimer.frames.chesttimer.time3:Hide()
     else
+        timeLeft3LabelText = "+3 ("..MythicPlusTimerCMTimer:FormatSeconds(threeChestTime).."):"
+
         MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetText("+3 ("..MythicPlusTimerCMTimer:FormatSeconds(threeChestTime).."):")
-        MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetFontObject("GameFontHighlight");
+        if not MythicPlusTimerCMTimer.frames.chesttimer.label3.text.currentFont or MythicPlusTimerCMTimer.frames.chesttimer.label3.text.currentFont ~= "GameFontHighlight" then
+            MythicPlusTimerCMTimer.frames.chesttimer.label3.text:SetFontObject("GameFontHighlight");
+        end
         
-        MythicPlusTimerCMTimer.frames.chesttimer.time3.text:SetText(MythicPlusTimerCMTimer:FormatSeconds(timeLeft3))
+
+        timeLeft3Text = MythicPlusTimerCMTimer:FormatSeconds(timeLeft3)
+        MythicPlusTimerCMTimer.frames.chesttimer.time3.text:SetText(timeLeft3Text)
         MythicPlusTimerCMTimer.frames.chesttimer.time3:Show()
+        updateTime3Pos = true
     end
     
-    MythicPlusTimerCMTimer.frames.chesttimer.label3:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.label3.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.chesttimer.label3:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.label3.text:GetStringWidth())
-    MythicPlusTimerCMTimer.frames.chesttimer.label3:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label2, "BOTTOMLEFT", 0, -5)
+    if not timeLeft3LabelText or not currentTimeLeft3Label or string.len(timeLeft3LabelText) ~= string.len(currentTimeLeft3Label) then
+        MythicPlusTimerCMTimer.frames.chesttimer.label3:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.label3.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.chesttimer.label3:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.label3.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.chesttimer.label3:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label2, "BOTTOMLEFT", 0, -5)
+    end
 
-    MythicPlusTimerCMTimer.frames.chesttimer.time3:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.time3.text:GetStringHeight())
-    MythicPlusTimerCMTimer.frames.chesttimer.time3:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.time3.text:GetStringWidth())
-    MythicPlusTimerCMTimer.frames.chesttimer.time3:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label3, "BOTTOMRIGHT", 5, 0);
+    if updateTime3Pos and (not timeLeft3Text or not currentTime3 or string.len(timeLeft3Text) ~= string.len(currentTime3)) then
+        MythicPlusTimerCMTimer.frames.chesttimer.time3:SetHeight(MythicPlusTimerCMTimer.frames.chesttimer.time3.text:GetStringHeight())
+        MythicPlusTimerCMTimer.frames.chesttimer.time3:SetWidth(MythicPlusTimerCMTimer.frames.chesttimer.time3.text:GetStringWidth())
+        MythicPlusTimerCMTimer.frames.chesttimer.time3:SetPoint("BOTTOMLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label3, "BOTTOMRIGHT", 5, 0);
+    end
     
     
     -- Objectives
@@ -831,7 +911,9 @@ function MythicPlusTimerCMTimer:Draw()
         
         local name, _, status, curValue, finalValue, _, _, quantity = C_Scenario.GetCriteriaInfo(i);
         if status then
-            MythicPlusTimerCMTimer.frames.objectives[i].text:SetFontObject("GameFontDisable")
+            if not MythicPlusTimerCMTimer.frames.objectives[i].text.currentFont or MythicPlusTimerCMTimer.frames.objectives[i].text.currentFont ~= "GameFontDisable" then
+                MythicPlusTimerCMTimer.frames.objectives[i].text:SetFontObject("GameFontDisable");
+            end
 
             if MythicPlusTimerDB.currentRun.times[i] == nil then
                 MythicPlusTimerDB.currentRun.times[i] = timeCM
@@ -857,7 +939,9 @@ function MythicPlusTimerCMTimer:Draw()
                 end
             end
         else
-            MythicPlusTimerCMTimer.frames.objectives[i].text:SetFontObject("GameFontHighlight")
+            if not MythicPlusTimerCMTimer.frames.objectives[i].text.currentFont or MythicPlusTimerCMTimer.frames.objectives[i].text.currentFont ~= "GameFontHighlight" then
+                MythicPlusTimerCMTimer.frames.objectives[i].text:SetFontObject("GameFontHighlight");
+            end
             
             if MythicPlusTimerDB.currentRun.times[i] then
                 MythicPlusTimerDB.currentRun.times[i] = nil
@@ -891,6 +975,7 @@ function MythicPlusTimerCMTimer:Draw()
             end
         end
         
+        local objectiveText = ""
         if finalValue >= 100 then
             local quantityNumber = string.sub(quantity, 1, string.len(quantity) - 1)
             local quantityPercent = (quantityNumber / finalValue) * 100
@@ -920,25 +1005,40 @@ function MythicPlusTimerCMTimer:Draw()
                 absoluteNumber = "("..quantityNumber.."/"..finalValue..missingAbsolute..") "
             end
 
-            MythicPlusTimerCMTimer.frames.objectives[i].text:SetText("- "..quantityPercent.."% "..absoluteNumber..name..bestTimeStr);
+            objectiveText = "- "..quantityPercent.."% "..absoluteNumber..name..bestTimeStr
         else
             if status then
                 curValue = finalValue
             end
 
-            MythicPlusTimerCMTimer.frames.objectives[i].text:SetText("- "..curValue.."/"..finalValue.." "..name .. bestTimeStr);
+            objectiveText = "- "..curValue.."/"..finalValue.." "..name .. bestTimeStr
         end
 
-        MythicPlusTimerCMTimer.frames.objectives[i]:SetHeight(MythicPlusTimerCMTimer.frames.objectives[i].text:GetStringHeight())
-        MythicPlusTimerCMTimer.frames.objectives[i]:SetWidth(MythicPlusTimerCMTimer.frames.objectives[i].text:GetStringWidth())
+        local objectiveFrame = MythicPlusTimerCMTimer.frames.objectives[i]
+
+        local currentObjectiveText = objectiveFrame.text:GetText()
+        if currentObjectiveText ~= objectiveText then
+            objectiveFrame.text:SetText(objectiveText);
+
+            if not currentObjectiveText or not objectiveText or string.len(currentObjectiveText) ~= string.len(objectiveText) then
+                objectiveFrame:SetHeight(objectiveFrame.text:GetStringHeight())
+                objectiveFrame:SetWidth(objectiveFrame.text:GetStringWidth())
+            end
+        end
 
         if prevStepFrame then
-            MythicPlusTimerCMTimer.frames.objectives[i]:SetPoint("TOPLEFT", prevStepFrame, "BOTTOMLEFT", 0, -5);
+            if not objectiveFrame.refFrame or objectiveFrame.refFrame ~= prevStepFrame then
+                objectiveFrame:SetPoint("TOPLEFT", prevStepFrame, "BOTTOMLEFT", 0, -5);
+                objectiveFrame.refFrame = prevStepFrame
+            end
         else
-            MythicPlusTimerCMTimer.frames.objectives[i]:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label3, "BOTTOMLEFT", 0, -20);
+            if not objectiveFrame.refFrame or objectiveFrame.refFrame ~= MythicPlusTimerCMTimer.frames.chesttimer.label3 then
+                objectiveFrame:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frames.chesttimer.label3, "BOTTOMLEFT", 0, -20);
+                objectiveFrame.refFrame = MythicPlusTimerCMTimer.frames.chesttimer.label3
+            end
         end
 
-        MythicPlusTimerCMTimer.frames.objectives[i]:Show()
+        objectiveFrame:Show()
 
         prevStepFrame = MythicPlusTimerCMTimer.frames.objectives[i]
     end
@@ -982,12 +1082,23 @@ function MythicPlusTimerCMTimer:Draw()
             MythicPlusTimerCMTimer.frames.deathCounter:SetScript("OnLeave", deathCounterOnLeave)
         end
 
+        local deathCountText = deathCount.." "..MythicPlusTimer.L["Deaths"]..":|cFFFF0000 -"..MythicPlusTimerCMTimer:FormatSeconds(deathTimeLost)
+        local currentDeathCountText = MythicPlusTimerCMTimer.frames.deathCounter.text:GetText()
 
-        MythicPlusTimerCMTimer.frames.deathCounter.text:SetText(deathCount.." "..MythicPlusTimer.L["Deaths"]..":|cFFFF0000 -"..MythicPlusTimerCMTimer:FormatSeconds(deathTimeLost))
+        if currentDeathCountText ~= deathCountText then
+            MythicPlusTimerCMTimer.frames.deathCounter.text:SetText(deathCountText)
 
-        MythicPlusTimerCMTimer.frames.deathCounter:SetHeight(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringHeight())
-        MythicPlusTimerCMTimer.frames.deathCounter:SetWidth(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringWidth())
-        MythicPlusTimerCMTimer.frames.deathCounter:SetPoint("TOPLEFT", prevStepFrame, "BOTTOMLEFT", 0, -5)
+            if not currentDeathCountText or not deathCountText or string.len(currentDeathCountText) ~= string.len(deathCountText) then
+                MythicPlusTimerCMTimer.frames.deathCounter:SetHeight(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringHeight())
+                MythicPlusTimerCMTimer.frames.deathCounter:SetWidth(MythicPlusTimerCMTimer.frames.deathCounter.text:GetStringWidth())
+            end
+        end
+
+        if not MythicPlusTimerCMTimer.frames.deathCounter.refFrame or MythicPlusTimerCMTimer.frames.deathCounter.refFrame ~= prevStepFrame then
+            MythicPlusTimerCMTimer.frames.deathCounter:SetPoint("TOPLEFT", prevStepFrame, "BOTTOMLEFT", 0, -5)
+            MythicPlusTimerCMTimer.frames.deathCounter.refFrame = prevStepFrame
+        end
+
         MythicPlusTimerCMTimer.frames.deathCounter:Show()
 
         if MythicPlusTimerDB.currentRun.deathNames then
@@ -1035,11 +1146,22 @@ function MythicPlusTimerCMTimer:Draw()
             reapingText = reapingText.." ("..math.ceil(reapingIn)..")"
         end
 
-        MythicPlusTimerCMTimer.frames.reaping.text:SetText(reapingText)
+        local currentReapingText = MythicPlusTimerCMTimer.frames.reaping.text:GetText()
 
-        MythicPlusTimerCMTimer.frames.reaping:SetHeight(MythicPlusTimerCMTimer.frames.reaping.text:GetStringHeight())
-        MythicPlusTimerCMTimer.frames.reaping:SetWidth(MythicPlusTimerCMTimer.frames.reaping.text:GetStringWidth())
-        MythicPlusTimerCMTimer.frames.reaping:SetPoint("TOPLEFT", nextRefFrame, "BOTTOMLEFT", 0, -5)
+        if currentReapingText ~= reapingText then
+            MythicPlusTimerCMTimer.frames.reaping.text:SetText(reapingText)
+
+            if not currentReapingText or not reapingText or string.len(currentReapingText) ~= string.len(reapingText) then
+                MythicPlusTimerCMTimer.frames.reaping:SetHeight(MythicPlusTimerCMTimer.frames.reaping.text:GetStringHeight())
+                MythicPlusTimerCMTimer.frames.reaping:SetWidth(MythicPlusTimerCMTimer.frames.reaping.text:GetStringWidth())
+            end
+        end
+
+        if not MythicPlusTimerCMTimer.frames.reaping.refFrame or MythicPlusTimerCMTimer.frames.reaping.refFrame ~= nextRefFrame then
+            MythicPlusTimerCMTimer.frames.reaping:SetPoint("TOPLEFT", nextRefFrame, "BOTTOMLEFT", 0, -5)
+            MythicPlusTimerCMTimer.frames.reaping.refFrame = nextRefFrame
+        end
+
         MythicPlusTimerCMTimer.frames.reaping:Show()
     else
         if MythicPlusTimerCMTimer.frames.reaping then
