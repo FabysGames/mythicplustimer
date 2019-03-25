@@ -244,6 +244,11 @@ function MythicPlusTimer:OnInitialize()
         step = 0.1,
         order = 11
       },
+      resetheaader = {
+        type = "header",
+        name = "",
+        order = 99
+      },
       resetbesttimes = {
         type = "execute",
         name = MythicPlusTimer.L["DeleteBestTimes"],
@@ -252,7 +257,7 @@ function MythicPlusTimer:OnInitialize()
           MythicPlusTimerDB.bestTimes = {}
         end,
         width = "full",
-        order = 90
+        order = 100
       },
       resetnpcprogress = {
         type = "execute",
@@ -262,7 +267,7 @@ function MythicPlusTimer:OnInitialize()
           MythicPlusTimerDB.npcProgress = {}
         end,
         width = "full",
-        order = 91
+        order = 101
       },
       resetscale = {
         type = "execute",
