@@ -346,6 +346,10 @@ function MythicPlusTimerCMTimer:OnStart()
   MythicPlusTimerCMTimer.reset = false
   MythicPlusTimerCMTimer.lastKill = {}
 
+  if MythicPlusTimerDB.config.hideDefaultObjectiveTracker then
+    ObjectiveTrackerFrame:Hide()
+  end
+
   MythicPlusTimer:StartCMTimer()
 end
 
