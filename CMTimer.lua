@@ -12,7 +12,7 @@ function MythicPlusTimerCMTimer:Init()
   end
 
   if MythicPlusTimerDB.pos.top == nil then
-    MythicPlusTimerDB.pos.top = 190
+    MythicPlusTimerDB.pos.top = 220
   end
 
   if MythicPlusTimerDB.pos.relativePoint == nil then

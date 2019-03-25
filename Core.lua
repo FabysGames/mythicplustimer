@@ -276,7 +276,7 @@ function MythicPlusTimer:OnInitialize()
         func = function(info)
           MythicPlusTimerDB.config.scale = 1.0
           MythicPlusTimerDB.pos.left = -260
-          MythicPlusTimerDB.pos.top = 190
+          MythicPlusTimerDB.pos.top = 220
           MythicPlusTimerDB.pos.relativePoint = "RIGHT"
 
           if MythicPlusTimerCMTimer.frame then
