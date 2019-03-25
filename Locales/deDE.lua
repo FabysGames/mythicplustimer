@@ -1,6 +1,6 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("MythicPlusTimer", "deDE")
 if L == nil then
-    return 
+  return
 end
 
 L["ToggleCommandText"] = "Timerbereich Freischalten/Sperren"
@@ -39,3 +39,11 @@ L["HideDefaultObjectiveTrackerDesc"] = "Blendet die Standardanzeige aus."
 L["ShowReapingTimer"] = "Zeige Prozent bis das nächste Schröpfend ausgelöst wird"
 L["ShowReapingTimerDesc"] = "Zeigt die benötigten Prozent bis das nächste mal Schröpfend ausgelöst wird."
 L["ReapingIn"] = "Schröpfend in"
+L["Scale"] = "Größen-Skalierung"
+L["ScaleDesc"] = "Skalierung um die Größe des Timers zu ändern."
+L["ResetScale"] = "Größen-Skalierung / Position zurücksetzen (UI Reload)"
+L["ResetScaleDesc"] = "Größe und Position zurücksetzen."
+L["EnableMovement"] = "Timerbereich freischalten"
+L["EnableMovementDesc"] = "Timerbereich freischalten um ihn bewegen zu können."
+L["DisableMovement"] = "Position speichern / Timerbereich sperren"
+L["DisableMovementDesc"] = "Timerbereich sperren."

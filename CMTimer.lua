@@ -31,7 +31,6 @@ function MythicPlusTimerCMTimer:Init()
   MythicPlusTimerCMTimer.lastKill = {}
 
   MythicPlusTimerCMTimer.frame = CreateFrame("Frame", "CmTimer", UIParent)
-  MythicPlusTimerCMTimer.frame:SetPoint(MythicPlusTimerDB.pos.relativePoint, MythicPlusTimerDB.pos.left, MythicPlusTimerDB.pos.top)
   MythicPlusTimerCMTimer.frame:EnableMouse(true)
   MythicPlusTimerCMTimer.frame:RegisterForDrag("LeftButton")
   MythicPlusTimerCMTimer.frame:SetScript("OnDragStart", MythicPlusTimerCMTimer.frame.StartMoving)
@@ -39,6 +38,8 @@ function MythicPlusTimerCMTimer:Init()
   MythicPlusTimerCMTimer.frame:SetScript("OnMouseDown", MythicPlusTimerCMTimer.OnFrameMouseDown)
   MythicPlusTimerCMTimer.frame:SetWidth(100)
   MythicPlusTimerCMTimer.frame:SetHeight(100)
+  MythicPlusTimerCMTimer.frame:SetScale(MythicPlusTimerDB.config.scale)
+  MythicPlusTimerCMTimer.frame:SetPoint(MythicPlusTimerDB.pos.relativePoint, MythicPlusTimerDB.pos.left, MythicPlusTimerDB.pos.top)
   MythicPlusTimerCMTimer.frameToggle = false
 
   MythicPlusTimerCMTimer.eventFrame = CreateFrame("Frame")

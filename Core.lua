@@ -18,7 +18,8 @@ function MythicPlusTimer:OnInitialize()
       showAffixesAsText = true,
       showAffixesAsIcons = false,
       hideDefaultObjectiveTracker = true,
-      showReapingTimer = true
+      showReapingTimer = true,
+      scale = 1.0
     }
   end
 
@@ -56,6 +57,10 @@ function MythicPlusTimer:OnInitialize()
 
   if MythicPlusTimerDB.config.showReapingTimer == nil then
     MythicPlusTimerDB.config.showReapingTimer = true
+  end
+
+  if MythicPlusTimerDB.config.scale == nil then
+    MythicPlusTimerDB.config.scale = 1.0
   end
 
   if not MythicPlusTimerDB.currentRun then
@@ -220,6 +225,25 @@ function MythicPlusTimer:OnInitialize()
         width = "full",
         order = 10
       },
+      scale = {
+        type = "range",
+        name = MythicPlusTimer.L["Scale"],
+        desc = MythicPlusTimer.L["ScaleDesc"],
+        get = function(info, val)
+          return MythicPlusTimerDB.config.scale
+        end,
+        set = function(info, val)
+          MythicPlusTimerDB.config.scale = val
+
+          if MythicPlusTimerCMTimer.frame then
+            MythicPlusTimerCMTimer.frame:SetScale(MythicPlusTimerDB.config.scale)
+          end
+        end,
+        min = 0.5,
+        max = 3.0,
+        step = 0.1,
+        order = 11
+      },
       resetbesttimes = {
         type = "execute",
         name = MythicPlusTimer.L["DeleteBestTimes"],
@@ -239,6 +263,51 @@ function MythicPlusTimer:OnInitialize()
         end,
         width = "full",
         order = 91
+      },
+      resetscale = {
+        type = "execute",
+        name = MythicPlusTimer.L["ResetScale"],
+        desc = MythicPlusTimer.L["ResetScaleDesc"],
+        func = function(info)
+          MythicPlusTimerDB.config.scale = 1.0
+          MythicPlusTimerDB.pos.left = -260
+          MythicPlusTimerDB.pos.top = 190
+          MythicPlusTimerDB.pos.relativePoint = "RIGHT"
+
+          if MythicPlusTimerCMTimer.frame then
+            MythicPlusTimerCMTimer.frame:SetScale(MythicPlusTimerDB.config.scale)
+            MythicPlusTimerCMTimer.frame:SetPoint(MythicPlusTimerDB.pos.relativePoint, MythicPlusTimerDB.pos.left, MythicPlusTimerDB.pos.top)
+            ReloadUI()
+          end
+        end,
+        width = "full",
+        order = 92
+      },
+      enableframemove = {
+        type = "execute",
+        name = MythicPlusTimer.L["EnableMovement"],
+        desc = MythicPlusTimer.L["EnableMovementDesc"],
+        func = function(info)
+          MythicPlusTimer:CMTimerChatCommand("toggle")
+        end,
+        width = "full",
+        order = 93,
+        hidden = function()
+          return MythicPlusTimerCMTimer.frameToggle
+        end
+      },
+      disableframemove = {
+        type = "execute",
+        name = MythicPlusTimer.L["DisableMovement"],
+        desc = MythicPlusTimer.L["DisableMovementDesc"],
+        func = function(info)
+          MythicPlusTimer:CMTimerChatCommand("toggle")
+        end,
+        width = "full",
+        order = 94,
+        hidden = function()
+          return not MythicPlusTimerCMTimer.frameToggle
+        end
       }
       --            exportdata = {
       --                type = "execute",

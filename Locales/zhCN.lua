@@ -3,7 +3,7 @@
 
 local L = LibStub("AceLocale-3.0"):NewLocale("MythicPlusTimer", "zhCN")
 if L == nil then
-    return
+  return
 end
 
 L["ToggleCommandText"] = "锁定/解锁计时器框体"
@@ -42,3 +42,11 @@ L["HideDefaultObjectiveTrackerDesc"] = "Hides the default objective tracker."
 L["ShowReapingTimer"] = "Show needed progress until next Reaping"
 L["ShowReapingTimerDesc"] = "Shows the needed progress until the next Reaping is activated."
 L["ReapingIn"] = "Reaping in"
+L["Scale"] = "Scale"
+L["ScaleDesc"] = "Scale to change the size of the timer frame."
+L["ResetScale"] = "Reset Scale / Position (UI Reload)"
+L["ResetScaleDesc"] = "Resets the scale and the position."
+L["EnableMovement"] = "Unlock timer frame"
+L["EnableMovementDesc"] = "Unlocks the timer frame to move it."
+L["DisableMovement"] = "Save position / Lock timer frame"
+L["DisableMovementDesc"] = "Locks the timer frame."
