@@ -1,3 +1,10 @@
+MythicPlusTimer 2.8
+===================================
+- Add size scale
+- Add option to reset scale / position
+- Add option to lock / unlock timer frame
+- Improve frame movement option
+
 MythicPlusTimer 2.7
 ===================================
 - Use better timer value
