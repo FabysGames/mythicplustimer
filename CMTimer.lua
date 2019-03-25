@@ -36,11 +36,16 @@ function MythicPlusTimerCMTimer:Init()
   MythicPlusTimerCMTimer.frame:SetScript("OnDragStart", MythicPlusTimerCMTimer.frame.StartMoving)
   MythicPlusTimerCMTimer.frame:SetScript("OnDragStop", MythicPlusTimerCMTimer.frame.StopMovingOrSizing)
   MythicPlusTimerCMTimer.frame:SetScript("OnMouseDown", MythicPlusTimerCMTimer.OnFrameMouseDown)
-  MythicPlusTimerCMTimer.frame:SetWidth(100)
-  MythicPlusTimerCMTimer.frame:SetHeight(100)
+  MythicPlusTimerCMTimer.frame:SetWidth(200)
+  MythicPlusTimerCMTimer.frame:SetHeight(25)
   MythicPlusTimerCMTimer.frame:SetScale(MythicPlusTimerDB.config.scale)
   MythicPlusTimerCMTimer.frame:SetPoint(MythicPlusTimerDB.pos.relativePoint, MythicPlusTimerDB.pos.left, MythicPlusTimerDB.pos.top)
   MythicPlusTimerCMTimer.frameToggle = false
+
+  MythicPlusTimerCMTimer.frame.drag_text = MythicPlusTimerCMTimer.frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  MythicPlusTimerCMTimer.frame.drag_text:SetPoint("TOPLEFT", 0, 0)
+  MythicPlusTimerCMTimer.frame.drag_text:SetText("MythicPlusTimer")
+  MythicPlusTimerCMTimer.frame.drag_text:Hide()
 
   MythicPlusTimerCMTimer.eventFrame = CreateFrame("Frame")
   MythicPlusTimerCMTimer.eventFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
@@ -277,6 +282,8 @@ function MythicPlusTimerCMTimer:ToggleFrame()
     if difficulty ~= 8 then
       MythicPlusTimerCMTimer.frame:Hide()
     end
+
+    MythicPlusTimerCMTimer.frame.drag_text:Hide()
   else
     MythicPlusTimerCMTimer.frame:SetMovable(true)
     local backdrop = {
@@ -296,6 +303,7 @@ function MythicPlusTimerCMTimer:ToggleFrame()
     MythicPlusTimerCMTimer.frame:SetBackdrop(backdrop)
     MythicPlusTimerCMTimer.frameToggle = true
     MythicPlusTimerCMTimer.frame:Show()
+    MythicPlusTimerCMTimer.frame.drag_text:Show()
   end
 end
 
@@ -500,7 +508,7 @@ function MythicPlusTimerCMTimer:Draw(timeCM)
   if not MythicPlusTimerCMTimer.frames.dungeonInfo then
     local f = CreateFrame("Frame", nil, MythicPlusTimerCMTimer.frame)
     f:ClearAllPoints()
-    f:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frame)
+    f:SetPoint("TOPLEFT", MythicPlusTimerCMTimer.frame, 0, -30)
 
     f.text = f:CreateFontString(nil, "BACKGROUND", "GameFontNormalLarge")
     f.text:SetPoint("TOPLEFT", 0, 0)
