@@ -1139,7 +1139,14 @@ function MythicPlusTimerCMTimer:Draw(timeCM)
     local mult = 10 ^ 2
     reapingInPercent = math.floor(reapingInPercent * mult + 0.5) / mult
 
-    local reapingText = MythicPlusTimer.L["ReapingIn"] .. ": " .. reapingInPercent .. "%"
+    local colorString = "|cFFFFFFFF"
+    if reapingInPercent < 4 then 
+      colorString = "|cFFFF0000"
+    elseif reapingInPercent < 10 then
+      colorString = "|cFFFFFF00"
+    end
+
+    local reapingText = MythicPlusTimer.L["ReapingIn"] .. ": " .. colorString .. reapingInPercent .. "%" .. "|r"
 
     if MythicPlusTimerDB.config.showAbsoluteNumbers then
       reapingText = reapingText .. " (" .. math.ceil(reapingIn) .. ")"
