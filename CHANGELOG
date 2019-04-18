@@ -8,6 +8,7 @@ MythicPlusTimer 3.0
 - Modified options page layout
 - Shift+Click on one of the time values will send the time left informations to the group or the instance chat again
 - Unlocked timer shows demo data if not currently in an mythic+ dungeon
+- "Reaping in" percent is color coded now (< 10% = yellow, < 4% = red)
 
 MythicPlusTimer 2.8
 ===================================

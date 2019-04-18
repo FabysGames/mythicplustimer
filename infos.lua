@@ -227,7 +227,14 @@ local function update_reaping(current_run)
   reaping_in_percent = math.floor(reaping_in_percent * mult + 0.5) / mult
 
   -- resolve text
-  local reaping_text = addon.t("lbl_reapingin") .. ": " .. reaping_in_percent .. "%"
+  local color_string = "|cFFFFFFFF"
+  if reaping_in_percent < 4 then
+    color_string = "|cFFFF0000"
+  elseif reaping_in_percent < 10 then
+    color_string = "|cFFFFFF00"
+  end
+
+  local reaping_text = addon.t("lbl_reapingin") .. ": " .. color_string .. reaping_in_percent .. "%" .. "|r"
 
   if addon.c("show_absolute_numbers") then
     reaping_text = reaping_text .. " (" .. math.ceil(reaping_in) .. ")"
