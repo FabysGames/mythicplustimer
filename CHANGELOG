@@ -1,3 +1,14 @@
+MythicPlusTimer 3.0
+===================================
+- Rewrite of the addon
+- Show available informations at the start timer (and not at dungeon timer start; not all informations are available at the start timer)
+- Timer will still be visible after the dungeon is completed
+- Position saves at drag stop and not on toggle now (No need to toggle it off after dragging the frame)
+- Most saved settings resetted (Due to better default values)
+- Modified options page layout
+- Shift+Click on one of the time values will send the time left informations to the group or the instance chat again
+- Unlocked timer shows demo data if not currently in an mythic+ dungeon
+
 MythicPlusTimer 2.8
 ===================================
 - Add size scale
