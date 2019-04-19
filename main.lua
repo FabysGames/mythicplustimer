@@ -500,6 +500,9 @@ function main.on_challenge_mode_start()
 
   -- show
   main.show_frame()
+
+  -- hide infos frames on start ... if we don't get the criterias at start the frames would still be shown with old data
+  infos.hide_frames()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

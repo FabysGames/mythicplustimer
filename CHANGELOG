@@ -1,7 +1,7 @@
 MythicPlusTimer 3.0
 ===================================
 - Rewrite of the addon
-- Show available informations at the start timer (and not at dungeon timer start; not all informations are available at the start timer)
+- Show available informations at the start timer (and not at dungeon timer start; not all or sometimes no informations are available at the start timer)
 - Timer will still be visible after the dungeon is completed
 - Position saves at drag stop and not on toggle now (No need to toggle it off after dragging the frame)
 - Most saved settings resetted (Due to better default values)

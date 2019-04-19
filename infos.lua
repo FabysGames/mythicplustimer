@@ -320,6 +320,19 @@ local function on_combat_log_event_unfiltered()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+function infos.hide_frames()
+  -- reaping frame
+  if reaping_frame then
+    reaping_frame:Hide()
+  end
+
+  -- deathcounter frame
+  if deathcounter_frame then
+    deathcounter_frame:Hide()
+  end
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 function infos.update_deathcounter()
   -- is called every second by the timer
   local current_run = main.get_current_run()
