@@ -454,7 +454,7 @@ function main.on_challenge_mode_start()
   main.hide_default_tracker()
 
   -- hide frames
-  local criteria = addon.get_module("criteria")
+  infos.hide_frames()
   criteria.hide_frames()
 
   if info_frames.affixes_icon then
@@ -500,9 +500,6 @@ function main.on_challenge_mode_start()
 
   -- show
   main.show_frame()
-
-  -- hide infos frames on start ... if we don't get the criterias at start the frames would still be shown with old data
-  infos.hide_frames()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -544,7 +541,7 @@ function main.is_in_cm()
   local _, _, difficulty, _, _, _, _, _ = GetInstanceInfo()
   local _, elapsed_time = GetWorldElapsedTime(1)
 
-  return difficulty == 8 and elapsed_time >= 0
+  return C_ChallengeMode.IsChallengeModeActive() and difficulty == 8 and elapsed_time >= 0
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
