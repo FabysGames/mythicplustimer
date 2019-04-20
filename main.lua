@@ -395,6 +395,11 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_challenge_mode_completed()
+  local current_run = main.get_current_run()
+  if current_run then
+    current_run.is_completed = true
+  end
+
   main.show_default_tracker()
 end
 

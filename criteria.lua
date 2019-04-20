@@ -229,6 +229,7 @@ local function on_scenario_criteria_update()
   end
 
   if completed_steps == steps then
+    current_run.is_completed = true
     criteria.update()
   end
 end

@@ -340,6 +340,11 @@ function infos.update_deathcounter()
     return
   end
 
+  -- skip if run is completed
+  if current_run.is_completed then
+    return
+  end
+
   -- update demo
   if current_run.is_demo then
     current_run.deathcount = -1
