@@ -141,6 +141,11 @@ local function on_category_refresh(self)
       config_name,
       addon.c(key),
       function(config_key, checked)
+        local current_run = main.get_current_run()
+        if current_run and current_run.is_completed then
+          main.show_demo()
+        end
+
         addon.set_config_value(config_key, checked)
       end,
       tooltip,
