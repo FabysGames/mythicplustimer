@@ -555,6 +555,10 @@ function main.hide_default_tracker()
     return
   end
 
+  if not main.is_in_cm() then
+    return
+  end
+
   local in_combat = InCombatLockdown() or UnitAffectingCombat("player")
   if not in_combat then
     ObjectiveTrackerFrame:Hide()
@@ -588,6 +592,11 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 function main.is_frame_moveable()
   return main_frame.frame_toggle
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function main.show_demo()
+  show_demo()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
