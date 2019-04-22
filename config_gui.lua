@@ -77,6 +77,8 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
   slider_frame:SetHeight(50)
 
   local slider_label = slider_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = slider_label:GetFont()
+  slider_label:SetFont(font_path, 12, font_flags)
   slider_label:SetPoint("TOPLEFT", 5, 0)
   slider_label:SetText(text)
 
@@ -91,6 +93,8 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
 
   local slider = CreateFrame("Slider", nil, slider_frame)
   local value_text = slider:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+  font_path, _, font_flags = value_text:GetFont()
+  value_text:SetFont(font_path, 12, font_flags)
 
   min_value = min_value or 1
   max_value = max_value or 100
@@ -133,10 +137,15 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
   value_text:SetText(value)
 
   local min_text = slider:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  font_path, _, font_flags = min_text:GetFont()
+  min_text:SetFont(font_path, 10, font_flags)
+
   min_text:SetPoint("TOPLEFT", slider, "BOTTOMLEFT", 2, 3)
   min_text:SetText(min_value)
 
   local max_text = slider:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+  font_path, _, font_flags = max_text:GetFont()
+  max_text:SetFont(font_path, 10, font_flags)
   max_text:SetPoint("TOPRIGHT", slider, "BOTTOMRIGHT", -2, 3)
   max_text:SetText(max_value)
 

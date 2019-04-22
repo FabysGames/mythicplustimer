@@ -64,6 +64,8 @@ local function create_main_frame()
 
   -- Drag text
   frame.drag_text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+  local font_path, _, font_flags = frame.drag_text:GetFont()
+  frame.drag_text:SetFont(font_path, 12, font_flags)
   frame.drag_text:SetPoint("TOPLEFT", 5, -5)
   frame.drag_text:SetText("MythicPlusTimer")
   frame.drag_text:Hide()
@@ -83,6 +85,8 @@ local function create_info_frame_dungeon()
   frame:SetPoint("TOPLEFT", main_frame, 0, -30)
 
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 16, font_flags)
   frame.text:SetPoint("TOPLEFT", 0, 0)
 
   local on_enter = function(self, motion)
@@ -120,6 +124,8 @@ local function create_info_frame_affixes_text()
   frame:SetPoint("TOPLEFT", info_frames.dungeon, "BOTTOMLEFT", 0, -3)
 
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT", 0, 0)
 
   info_frames.affixes_text = frame

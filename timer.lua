@@ -48,6 +48,8 @@ local function create_timer_frames()
   time_left_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   time_left_frame.text = time_left_frame:CreateFontString(nil, "OVERLAY", "GameFontGreenLarge")
+  local font_path, _, font_flags = time_left_frame.text:GetFont()
+  time_left_frame.text:SetFont(font_path, 16, font_flags)
   time_left_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.time_left = time_left_frame
@@ -59,6 +61,8 @@ local function create_timer_frames()
   time_in_cm_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   time_in_cm_frame.text = time_in_cm_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  font_path, _, font_flags = time_in_cm_frame.text:GetFont()
+  time_in_cm_frame.text:SetFont(font_path, 12, font_flags)
   time_in_cm_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.time_in_cm = time_in_cm_frame
@@ -70,6 +74,8 @@ local function create_timer_frames()
   label_2_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   label_2_frame.text = label_2_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  font_path, _, font_flags = label_2_frame.text:GetFont()
+  label_2_frame.text:SetFont(font_path, 12, font_flags)
   label_2_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.label_2 = label_2_frame
@@ -81,6 +87,8 @@ local function create_timer_frames()
   time_2_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   time_2_frame.text = time_2_frame:CreateFontString(nil, "OVERLAY", "GameFontGreen")
+  font_path, _, font_flags = time_2_frame.text:GetFont()
+  time_2_frame.text:SetFont(font_path, 12, font_flags)
   time_2_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.time_2 = time_2_frame
@@ -92,6 +100,8 @@ local function create_timer_frames()
   label_3_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   label_3_frame.text = label_3_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  font_path, _, font_flags = label_3_frame.text:GetFont()
+  label_3_frame.text:SetFont(font_path, 12, font_flags)
   label_3_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.label_3 = label_3_frame
@@ -103,6 +113,8 @@ local function create_timer_frames()
   time_3_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
   time_3_frame.text = time_3_frame:CreateFontString(nil, "OVERLAY", "GameFontGreen")
+  font_path, _, font_flags = time_3_frame.text:GetFont()
+  time_3_frame.text:SetFont(font_path, 12, font_flags)
   time_3_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.time_3 = time_3_frame

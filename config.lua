@@ -109,6 +109,8 @@ local function on_category_refresh(self)
   category_initialized = true
 
   local name = self:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = name:GetFont()
+  name:SetFont(font_path, 16, font_flags)
   name:SetPoint("TOPLEFT", 10, -16)
   name:SetText(addon_name)
 

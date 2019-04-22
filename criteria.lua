@@ -59,6 +59,8 @@ local function create_step_frame(step_index)
 
   -- text
   frame.text = frame:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
 
   step_frames[step_index] = frame

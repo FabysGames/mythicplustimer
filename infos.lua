@@ -22,6 +22,8 @@ local function create_deathcounter_frame()
 
   -- text
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
 
   -- tooltip
@@ -56,6 +58,8 @@ local function create_reaping_frame()
   frame:ClearAllPoints()
 
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
 
   reaping_frame = frame
