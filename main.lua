@@ -11,6 +11,7 @@ local infos
 -- ---------------------------------------------------------------------------------------------------------------------
 local main_frame
 local info_frames = {}
+local hidden_frame
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function save_frame_position()
@@ -374,7 +375,7 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_objectivetracker_change(_, checked)
   if not checked then
-    ObjectiveTrackerFrame:Show()
+    ObjectiveTrackerFrame:SetParent(UIParent)
   end
 end
 
@@ -567,7 +568,9 @@ function main.hide_default_tracker()
 
   local in_combat = InCombatLockdown() or UnitAffectingCombat("player")
   if not in_combat then
-    ObjectiveTrackerFrame:Hide()
+    if ObjectiveTrackerFrame:GetParent() ~= hidden_frame then
+      ObjectiveTrackerFrame:SetParent(hidden_frame)
+    end
   end
 end
 
@@ -577,7 +580,7 @@ function main.show_default_tracker()
     return
   end
 
-  ObjectiveTrackerFrame:Show()
+  ObjectiveTrackerFrame:SetParent(UIParent)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -620,6 +623,10 @@ end
 function main:enable()
   -- create frame
   create_main_frame()
+
+  -- create hidden frame (used to hide the objective tracker, otherwise other addons can show the tracker again)
+  hidden_frame = CreateFrame("Frame")
+  hidden_frame:Hide()
 
   -- create config entries if needed
   local best_times = addon.c("best_times")

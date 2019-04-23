@@ -1,6 +1,7 @@
 MythicPlusTimer 3.1
 ===================================
 - Better font size
+- Better way to hide the default tracker (This should fix compatibility issues with ElvUI Shadow & Light)
 
 MythicPlusTimer 3.0
 ===================================
