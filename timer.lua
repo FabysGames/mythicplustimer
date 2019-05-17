@@ -178,7 +178,6 @@ local function on_update_time(_, elapsed_time)
   -- check if we need to force an criteria update
   local _, _, steps = C_Scenario.GetStepInfo()
   if steps > 0 and current_run.steps ~= steps then
-    criteria.needs_update = true
     current_run.steps = steps
   end
 

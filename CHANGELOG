@@ -1,3 +1,8 @@
+MythicPlusTimer 3.2
+===================================
+- Will always show the time difference to the old criteria completion time (Until now it only showed if the new time was slower)
+- Reposition criterias on every tick
+
 MythicPlusTimer 3.1.1
 ===================================
 - Fix dungeon steps not always showing at timer start

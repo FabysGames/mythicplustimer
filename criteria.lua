@@ -84,15 +84,24 @@ local function set_step_completed(step_index, current_run, name)
   local best_times = addon.c("best_times")
 
   local best_time_zone = best_times[current_run.current_zone_id][step_index]
+  current_run.times[step_index .. "last_best_time_zone"] = best_time_zone
   if not best_time_zone or elapsed_time < best_time_zone then
     best_time_zone = elapsed_time
     best_times[current_run.current_zone_id][step_index] = elapsed_time
   end
 
   local best_time_zone_level = best_times[current_run.current_zone_id][current_run.level_key][step_index]
+  current_run.times[step_index .. "last_best_time_zone_level"] = best_time_zone_level
   if not best_time_zone_level or elapsed_time < best_time_zone_level then
     best_time_zone_level = elapsed_time
     best_times[current_run.current_zone_id][current_run.level_key][step_index] = elapsed_time
+  end
+
+  local best_time_zone_level_affixes = best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key][step_index]
+  current_run.times[step_index .. "last_best_time_zone_level_affixes"] = best_time_zone_level_affixes
+  if not best_time_zone_level_affixes or elapsed_time < best_time_zone_level_affixes then
+    best_time_zone_level_affixes = elapsed_time
+    best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key][step_index] = elapsed_time
   end
 
   -- output step completion to chat if configured
@@ -125,12 +134,18 @@ local function resolve_time_info(step_index, current_run)
   if addon.c("objective_time_perlevel") then
     -- best time per level and zone
     local best_time_zone_level = best_times[current_run.current_zone_id][current_run.level_key][step_index]
+    local last_best_time_zone_level = current_run.times[step_index .. "last_best_time_zone_level"]
+    if not last_best_time_zone_level then
+      last_best_time_zone_level = best_time_zone_level
+    end
 
-    if best_time_zone_level then
-      local diff = time - best_time_zone_level
+    if last_best_time_zone_level then
+      local diff = time - last_best_time_zone_level
       local diff_info = ""
       if diff > 0 then
         diff_info = ", +" .. main.format_seconds(diff)
+      elseif diff < 0 then
+        diff_info = ", -" .. main.format_seconds(diff * -1)
       end
 
       time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
@@ -138,12 +153,18 @@ local function resolve_time_info(step_index, current_run)
   else
     -- best time per zone
     local best_time_zone = best_times[current_run.current_zone_id][step_index]
+    local last_best_time_zone = current_run.times[step_index .. "last_best_time_zone"]
+    if not last_best_time_zone then
+      last_best_time_zone = best_time_zone
+    end
 
-    if best_time_zone then
-      local diff = time - best_time_zone
+    if last_best_time_zone then
+      local diff = time - last_best_time_zone
       local diff_info = ""
       if diff > 0 then
         diff_info = ", +" .. main.format_seconds(diff)
+      elseif diff < 0 then
+        diff_info = ", -" .. main.format_seconds(diff * -1)
       end
 
       time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. diff_info .. ")"
@@ -217,9 +238,6 @@ local function on_scenario_criteria_update()
     return
   end
 
-  -- set needs update
-  criteria.needs_update = true
-
   -- check if all are completed
   local completed_steps = 0
   for i = 1, steps do
@@ -250,24 +268,18 @@ local function on_config_change()
   end
 
   -- update criteria
-  criteria.needs_update = true
   criteria.update()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function criteria.on_challenge_mode_start()
-  criteria.needs_update = true
   criteria.update()
-
-  -- first timer tick must update criterias ... criterias are not always known until the timer elapsed
-  criteria.needs_update = true
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function criteria.on_player_entering_world()
   -- update if in cm
   if main.is_in_cm() then
-    criteria.needs_update = true
     criteria.update()
   end
 end
@@ -276,14 +288,7 @@ end
 function criteria.update()
   -- called every second by the timer module
 
-  -- skip update if no criteria was updated
-  if not criteria.needs_update then
-    return
-  end
-
   -- update all
-  criteria.needs_update = false
-
   local current_run = main.get_current_run()
   if not current_run then
     return
@@ -350,6 +355,10 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   end
 
   -- show frame
+  if step_index == 1 then
+    step_frame:SetPoint("TOPLEFT", timer.get_label_3_frame(), "BOTTOMLEFT", 0, -20)
+  end
+
   step_frame:Show()
 end
 

@@ -266,6 +266,7 @@ local function show_demo()
     cm_level = 30,
     level_key = "l" .. 30,
     affixes = {9, 7, 13, 117},
+    affixes_key = "affixes-9-7-13-117",
     zone_name = "Demo",
     current_zone_id = current_id,
     current_map_id = current_id,
@@ -287,6 +288,10 @@ local function show_demo()
 
   if not best_times[demo_run.current_zone_id][demo_run.level_key] then
     best_times[demo_run.current_zone_id][demo_run.level_key] = {}
+  end
+
+  if not best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] then
+    best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {}
   end
 
   -- name
@@ -425,6 +430,8 @@ local function restart_challenge_mode()
     main.hide_default_tracker()
     update_dungeon_info(current_run)
     main.show_frame()
+
+    current_run.steps = -1
     return
   end
 
@@ -482,10 +489,22 @@ function main.on_challenge_mode_start()
   local _, _, steps = C_Scenario.GetStepInfo()
   local zone_name, _, max_time = C_ChallengeMode.GetMapUIInfo(current_map_id)
 
+  local affixes_ids = {}
+  for _, affix_id in pairs(affixes) do
+    table.insert(affixes_ids, affix_id)
+  end
+  table.sort(affixes_ids)
+
+  local affixes_key = "affixes"
+  for _, k in ipairs(affixes_ids) do
+    affixes_key = affixes_key .. "-" .. k
+  end
+
   local current_run = {
     cm_level = cm_level,
     level_key = "l" .. cm_level,
     affixes = affixes,
+    affixes_key = affixes_key,
     zone_name = zone_name,
     current_zone_id = current_zone_id,
     current_map_id = current_map_id,
@@ -505,6 +524,10 @@ function main.on_challenge_mode_start()
 
   if not best_times[current_zone_id][current_run.level_key] then
     best_times[current_zone_id][current_run.level_key] = {}
+  end
+
+  if not best_times[current_zone_id][current_run.level_key .. current_run.affixes_key] then
+    best_times[current_zone_id][current_run.level_key .. current_run.affixes_key] = {}
   end
 
   -- update dungeon info
