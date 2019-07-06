@@ -146,3 +146,52 @@ local zhCN = {
 }
 
 addon.add_locale("zhCN", zhCN)
+
+-- ---------------------------------------------------------------------------------------------------------------------
+-- koKR
+local koKR = {
+  config_objective_time = "목표 시간보기",
+  config_desc_objective_time = "각 대상의 완료 시간과 최고 완료 시간을 표시합니다.",
+  config_objective_time_perlevel = "레벨 당 완료 시간",
+  config_desc_objective_time_perlevel = "인스턴스 별이 아닌 레벨 별 완료 시간을 표시합니다.",
+  config_objective_time_inchat = "완료 시간 채팅 표시",
+  config_desc_objective_time_inchat = "완료 시간을 채팅 메시지로 표시합니다.",
+  config_show_deathcounter = "죽음 카운터",
+  config_desc_show_deathcounter = "죽음 수와 플레이어의 죽음 시간을 죽음 수로 표시합니다.(죽음당 5초).",
+  config_progress_tooltip = "툴팁 설명에 몹 퍼센트 (데이터베이스는 인스턴스에서 적을 죽임으로써 생성됩니다.)",
+  config_desc_progress_tooltip = "툴팁에 적이 주는 퍼센트를 표시합니다.",
+  config_show_absolute_numbers = "필요한 적의 절대 수",
+  config_desc_show_absolute_numbers = "백분율 옆에 필요한 적의 절대 수를 표시합니다 (툴팁 포함).",
+  config_insert_keystone = "자동으로 쐐기돌을 삽입합니다.",
+  config_desc_insert_keystone = "자동으로 쐐기돌을 슬롯에 삽입합니다.",
+  config_show_affixes_as_text = "텍스트로 수정치 표시",
+  config_desc_show_affixes_as_text = "수정치는 텍스트로 표시됩니다.",
+  config_show_affixes_as_icons = "수정치를 아이콘으로 보여줍니다.",
+  config_desc_show_affixes_as_icons = "수정치는 아이콘으로 표시됩니다.",
+  config_hide_default_objectivetracker = "기본 시간 표시 숨기기",
+  config_desc_hide_default_objectivetracker = "기본 표시를 숨깁니다.",
+  config_show_reapingtimer = "다음 수확 때까지 퍼센트 표시",
+  config_desc_show_reapingtimer = "다음 수확이 활성화 될 때까지 필요한 퍼센트을(를) 보여줍니다.",
+  config_delete_besttimes = "대상 시간 삭제",
+  config_desc_delete_besttimes = "최고 기록을 삭제합니다.",
+  config_delete_npcprogress = "몹 퍼센트 데이터베이스 삭제",
+  config_desc_delete_npcprogress = "몹 퍼센트 데이터베이스를 지웁니다.",
+  config_scale = "Scale",
+  config_desc_scale = "Scale to change the size of the timer frame. (An UI reload after scaling helps with margin problems)",
+  config_reset_scale = "Reset Scale / Position (UI Reload)",
+  config_desc_reset_scale = "Resets the scale and the position.",
+  config_unlock_frame = "Unlock timer frame",
+  config_desc_unlock_frame = "Unlocks the timer frame to move it.",
+  lbl_togglecommandtext = "프레임 잠금/잠금 해제",
+  lbl_configcommandtext = "Open configuration",
+  lbl_best = "최고",
+  lbl_deaths = "죽음",
+  lbl_completed = "완료됨",
+  lbl_time = "시간",
+  lbl_besttime = "최고",
+  lbl_timeleft = "남은 시간",
+  lbl_reapingin = "수확",
+  lbl_enemyforces = "Enemy Forces"
+}
+
+addon.add_locale("koKR", koKR)
