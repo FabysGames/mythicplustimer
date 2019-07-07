@@ -39,7 +39,7 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_main_frame()
-  local frame = CreateFrame("Frame", "MythicPlusTimer", UIParent)
+  local frame = CreateFrame("Frame", "MythicPlusTimer")
   frame.frame_toggle = false
 
   frame:EnableMouse(true)
@@ -60,7 +60,7 @@ local function create_main_frame()
     addon.set_config_value("position", frame_position)
   end
 
-  frame:SetScale(addon.c("scale"))
+  frame:SetScale(addon.c("scale") - 0.4)
   frame:SetPoint(frame_position.relative_point, frame_position.left, frame_position.top)
 
   -- Drag text
@@ -360,7 +360,7 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_scale_change()
-  main_frame:SetScale(addon.c("scale"))
+  main_frame:SetScale(addon.c("scale") - 0.4)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
