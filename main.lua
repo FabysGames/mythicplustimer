@@ -60,7 +60,7 @@ local function create_main_frame()
     addon.set_config_value("position", frame_position)
   end
 
-  frame:SetScale(addon.c("scale") - 0.4)
+  frame:SetScale(addon.c("scale") * UIParent:GetScale())
   frame:SetPoint(frame_position.relative_point, frame_position.left, frame_position.top)
 
   -- Drag text
@@ -360,7 +360,7 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_scale_change()
-  main_frame:SetScale(addon.c("scale") - 0.4)
+  main_frame:SetScale(addon.c("scale") * UIParent:GetScale())
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
