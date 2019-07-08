@@ -1,3 +1,8 @@
+MythicPlusTimer 3.3
+===================================
+- Update for WoW 8.2
+- Add koKR locale
+
 MythicPlusTimer 3.2
 ===================================
 - Will always show the time difference to the old criteria completion time (Until now it only showed if the new time was slower)

@@ -1,5 +1,5 @@
-## Interface: 80100
-## Version: 3.2
+## Interface: 80200
+## Version: 3.3
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
