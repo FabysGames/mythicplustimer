@@ -603,7 +603,10 @@ function main.show_default_tracker()
     return
   end
 
-  ObjectiveTrackerFrame:SetParent(UIParent)
+  local in_combat = InCombatLockdown() or UnitAffectingCombat("player")
+  if not in_combat then
+    ObjectiveTrackerFrame:SetParent(UIParent)
+  end
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
