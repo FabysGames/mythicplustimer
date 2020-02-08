@@ -1,3 +1,8 @@
+MythicPlusTimer 3.5
+===================================
+- Update for WoW 8.3.0
+- Optimized detection of default tracker (This should fix compatibility with Kaliel´s Tracker)
+
 MythicPlusTimer 3.4
 ===================================
 - Update for WoW 8.2.5
