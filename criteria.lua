@@ -110,7 +110,13 @@ local function set_step_completed(step_index, current_run, name)
 
     if addon.c("objective_time_perlevel") then
       text = text .. main.format_seconds(best_time_zone_level)
-    else
+    end
+
+    if addon.c("objective_time_perlevelaffix") then
+      text = text .. main.format_seconds(best_time_zone_level_affixes)
+    end
+
+    if not addon.c("objective_time_perlevel") and not addon.c("objective_time_perlevelaffix") then
       text = text .. main.format_seconds(best_time_zone)
     end
 
@@ -131,8 +137,8 @@ local function resolve_time_info(step_index, current_run)
   -- add best times
   local best_times = addon.c("best_times")
 
+  --- best time per level and zone
   if addon.c("objective_time_perlevel") then
-    -- best time per level and zone
     local best_time_zone_level = best_times[current_run.current_zone_id][current_run.level_key][step_index]
     local last_best_time_zone_level = current_run.times[step_index .. "last_best_time_zone_level"]
     if not last_best_time_zone_level then
@@ -150,8 +156,31 @@ local function resolve_time_info(step_index, current_run)
 
       time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
     end
-  else
-    -- best time per zone
+  end
+
+  --- best time per level and zone and affix
+  if addon.c("objective_time_perlevelaffix") then
+    local best_time_zone_level_affixes = best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key][step_index]
+    local last_best_time_zone_level_affixes = current_run.times[step_index .. "last_best_time_zone_level_affixes"]
+    if not last_best_time_zone_level_affixes then
+      last_best_time_zone_level_affixes = best_time_zone_level_affixes
+    end
+
+    if last_best_time_zone_level_affixes then
+      local diff = time - last_best_time_zone_level_affixes
+      local diff_info = ""
+      if diff > 0 then
+        diff_info = ", +" .. main.format_seconds(diff)
+      elseif diff < 0 then
+        diff_info = ", -" .. main.format_seconds(diff * -1)
+      end
+
+      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. diff_info .. ")"
+    end
+  end
+
+  --- best time per zone
+  if not addon.c("objective_time_perlevelaffix") and not addon.c("objective_time_perlevel") then
     local best_time_zone = best_times[current_run.current_zone_id][step_index]
     local last_best_time_zone = current_run.times[step_index .. "last_best_time_zone"]
     if not last_best_time_zone then
@@ -405,6 +434,7 @@ function criteria:enable()
   addon.register_config_listener("best_times", on_config_change)
   addon.register_config_listener("objective_time_inchat", on_config_change)
   addon.register_config_listener("objective_time_perlevel", on_config_change)
+  addon.register_config_listener("objective_time_perlevelaffix", on_config_change)
   addon.register_config_listener("objective_time", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
 end

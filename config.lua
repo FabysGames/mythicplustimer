@@ -9,7 +9,8 @@ local main
 local CONFIG_VALUES = {
   -- options
   objective_time = true,
-  objective_time_perlevel = true,
+  objective_time_perlevel = false,
+  objective_time_perlevelaffix = true,
   objective_time_inchat = true,
   show_deathcounter = true,
   progress_tooltip = true,
@@ -118,6 +119,7 @@ local function on_category_refresh(self)
   local checkboxes = {
     "objective_time",
     "objective_time_perlevel",
+    "objective_time_perlevelaffix",
     "objective_time_inchat",
     "show_deathcounter",
     "progress_tooltip",
@@ -126,10 +128,11 @@ local function on_category_refresh(self)
     "show_affixes_as_text",
     "show_affixes_as_icons",
     "hide_default_objectivetracker",
-    "show_reapingtimer"
+--    "show_reapingtimer"
   }
 
   local checkboxes_frames = {}
+  local checkboxes_frames_bykey = {}
   for i, key in ipairs(checkboxes) do
     local config_name = addon.t("config_" .. key)
 
@@ -148,6 +151,16 @@ local function on_category_refresh(self)
           main.show_demo()
         end
 
+        if config_key == "objective_time_perlevel" and checked and addon.c("objective_time_perlevelaffix") then
+          addon.set_config_value("objective_time_perlevelaffix", false)
+          checkboxes_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
+        end
+
+        if config_key == "objective_time_perlevelaffix" and checked and addon.c("objective_time_perlevel") then
+          addon.set_config_value("objective_time_perlevel", false)
+          checkboxes_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+        end
+
         addon.set_config_value(config_key, checked)
       end,
       tooltip,
@@ -160,6 +173,7 @@ local function on_category_refresh(self)
     end
 
     checkboxes_frames[i] = checkbox
+    checkboxes_frames_bykey[key] = checkbox
   end
 
   -- scale slider
@@ -337,6 +351,11 @@ function config:init()
     if MythicPlusTimerDB.config[key] == nil then
       -- set default
       MythicPlusTimerDB.config[key] = value
+
+      -- set object time per level and affixes as default
+      if key == "objective_time_perlevelaffix" then
+        MythicPlusTimerDB.config["objective_time_perlevel"] = false
+      end
 
       -- if show_absolute_numbers set default from 2.x values
       if key == "show_absolute_numbers" and MythicPlusTimerDB.config.showAbsoluteNumbers then

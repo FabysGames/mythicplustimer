@@ -1,3 +1,9 @@
+MythicPlusTimer 3.6
+===================================
+- Will use standard affixes sort now
+- Add option to show best times for the level and affixes combination. Also disables the best times per level default setting. (optional, enabled by default)
+- Demo / Config Update; Different best times depending on option selected. Removed old reaping references.
+
 MythicPlusTimer 3.5
 ===================================
 - Update for WoW 8.3.0

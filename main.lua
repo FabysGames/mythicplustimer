@@ -266,8 +266,8 @@ local function show_demo()
   local demo_run = {
     cm_level = 30,
     level_key = "l" .. 30,
-    affixes = {9, 7, 13, 117},
-    affixes_key = "affixes-9-7-13-117",
+    affixes = {9, 7, 13, 120},
+    affixes_key = "affixes-9-7-13-120",
     zone_name = "Demo",
     current_zone_id = current_id,
     current_map_id = current_id,
@@ -283,17 +283,9 @@ local function show_demo()
 
   local best_times = addon.c("best_times")
 
-  if not best_times[demo_run.current_zone_id] then
-    best_times[demo_run.current_zone_id] = {}
-  end
-
-  if not best_times[demo_run.current_zone_id][demo_run.level_key] then
-    best_times[demo_run.current_zone_id][demo_run.level_key] = {}
-  end
-
-  if not best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] then
-    best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {}
-  end
+  best_times[demo_run.current_zone_id] = {[1] = 50}
+  best_times[demo_run.current_zone_id][demo_run.level_key] = {[1] = 110}
+  best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {[1] = 150}
 
   -- name
   update_dungeon_info(demo_run)
