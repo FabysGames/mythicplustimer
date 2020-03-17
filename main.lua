@@ -494,7 +494,6 @@ function main.on_challenge_mode_start()
   for _, affix_id in pairs(affixes) do
     table.insert(affixes_ids, affix_id)
   end
-  table.sort(affixes_ids)
 
   local affixes_key = "affixes"
   for _, k in ipairs(affixes_ids) do
