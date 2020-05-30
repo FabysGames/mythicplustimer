@@ -295,6 +295,26 @@ local function create_options_category()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function print_debug_table(data, table, prefix) 
+  if not prefix then
+    prefix = ""
+  end
+
+  for k, v in pairs(table) do
+    if type(v) == "table" then 
+      -- addon.print(k)
+      data = data .. prefix .. k .. "\n"
+      data = print_debug_table(data, v, prefix .. "- ")
+    else 
+      data = data .. prefix .. k .. ": " .. tostring(v) .. "\n"
+      -- addon.print(prefix .. k .. ": " .. tostring(v))
+    end
+  end
+
+  return data
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 -- Slash Commands
 local function on_slash_command(msg)
   -- toggle
@@ -311,6 +331,32 @@ local function on_slash_command(msg)
 
     InterfaceOptionsFrame_OpenToCategory(category)
     InterfaceOptionsFrame_OpenToCategory(category)
+    return
+  end
+
+  if msg == "debug" then
+    local frame = CreateFrame("Frame", nil, UIParent)
+    frame:SetPoint("CENTER", 0, 0)
+    frame:SetWidth(300)
+    frame:SetHeight(100)
+
+    local data = ""
+
+    data = data .. "BEST TIMES\n"
+    local best_times = addon.c("best_times")
+    data = print_debug_table(data, best_times)
+
+    local current_run = main.get_current_run()
+    if current_run then
+      data = data .. "CURRENT RUN\n"
+      data = print_debug_table(data, current_run)
+    end
+
+    local f = CreateFrame("EditBox", "MPTExport", frame, "InputBoxTemplate")
+    f:SetSize(300, 100)
+    f:SetPoint("CENTER", 0, 0)
+    f:SetScript("OnEnterPressed", frame.Hide)
+    f:SetText(data)
     return
   end
 
