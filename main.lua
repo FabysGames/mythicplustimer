@@ -276,7 +276,8 @@ local function show_demo()
     times = {},
     elapsed_time = 123,
     deathcount = 0,
-    is_demo = true
+    is_demo = true,
+    is_teeming = false
   }
 
   addon.set_config_value("current_run", demo_run)
@@ -483,8 +484,13 @@ function main.on_challenge_mode_start()
   local zone_name, _, max_time = C_ChallengeMode.GetMapUIInfo(current_map_id)
 
   local affixes_ids = {}
+  local is_teeming = false
   for _, affix_id in pairs(affixes) do
     table.insert(affixes_ids, affix_id)
+
+    if affix_id == 5 then
+      is_teeming = true
+    end
   end
 
   local affixes_key = "affixes"
@@ -502,7 +508,8 @@ function main.on_challenge_mode_start()
     current_map_id = current_map_id,
     max_time = max_time,
     steps = steps,
-    times = {}
+    times = {},
+    is_teeming = is_teeming
   }
 
   addon.set_config_value("current_run", current_run)

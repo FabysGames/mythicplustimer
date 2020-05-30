@@ -143,6 +143,7 @@ local function on_scenario_criteria_update()
   last_quantity = quantity_number
 end
 
+
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_tooltip_set_unit(tooltip)
   -- check if tooltip must be updated
@@ -159,6 +160,11 @@ local function on_tooltip_set_unit(tooltip)
     return
   end
 
+  local current_run = main.get_current_run()
+  if not current_run then
+    return
+  end
+
   if not UnitCanAttack("player", unit) or UnitIsDead(unit) then
     return
   end
@@ -170,8 +176,8 @@ local function on_tooltip_set_unit(tooltip)
     return
   end
 
-  local value = get_progress_value(npc_id)
-  if not value then
+  local value, is_mdt_value = progress.resolve_npc_progress_value(npc_id, current_run.is_teeming)
+  if not value or value == 0 then
     return
   end
 
@@ -197,7 +203,12 @@ local function on_tooltip_set_unit(tooltip)
     absolute_number = " (+" .. value .. ")"
   end
 
-  GameTooltip:AddDoubleLine(name .. ": +" .. quantity_percent .. "%" .. absolute_number)
+  local mdt_info = ""
+  -- if is_mdt_value then
+  --   mdt_info = " [MDT]"
+  -- end
+
+  GameTooltip:AddDoubleLine(name .. ": +" .. quantity_percent .. "%" .. absolute_number .. mdt_info)
   GameTooltip:Show()
 end
 
@@ -211,6 +222,31 @@ end
 function progress.on_player_entering_world()
   last_kill = nil
   last_quantity = nil
+end
+
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function progress.resolve_npc_progress_value(npc_id, is_teeming)
+  local value = nil
+  local is_mdt_value = false
+  if MDT ~= nil then
+    local mdtValue, _, _, mdtTeemingValue = MDT:GetEnemyForces(npc_id)
+
+    if is_teeming and mdtTeemingValue then
+      value = mdtTeemingValue
+    else
+      value = mdtValue
+    end
+
+    is_mdt_value = true
+  end
+
+  if not value or value == 0 then
+    value = get_progress_value(npc_id)
+    is_mdt_value = false
+  end
+
+  return value, is_mdt_value
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
