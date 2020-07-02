@@ -17,9 +17,14 @@ local function resolve_npc_id(guid)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function update_progress_value(npc_id, value)
+local function update_progress_value(npc_id, value, is_teeming)
   -- resolve npc progress data
-  local npc_progress = addon.c("npc_progress")
+  local progress_key = "npc_progress"
+  if is_teeming then
+    progress_key = "npc_progress_teeming"
+  end
+
+  local npc_progress = addon.c(progress_key)
   if npc_progress == nil then
     npc_progress = {}
   end
@@ -42,13 +47,18 @@ local function update_progress_value(npc_id, value)
     end
   end
 
-  addon.set_config_value("npc_progress", npc_progress)
+  addon.set_config_value(progress_key, npc_progress)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function get_progress_value(npc_id)
+local function get_progress_value(npc_id, is_teeming)
   -- resolve npc progress data
-  local npc_progress = addon.c("npc_progress")
+  local progress_key = "npc_progress"
+  if is_teeming then
+    progress_key = "npc_progress_teeming"
+  end
+
+  local npc_progress = addon.c(progress_key)
   if not npc_progress then
     return
   end
@@ -135,7 +145,7 @@ local function on_scenario_criteria_update()
 
     if timestamp and npc_id and delta and valid then
       if (GetTime() * 1000) - timestamp <= 600 then
-        update_progress_value(npc_id, delta)
+        update_progress_value(npc_id, delta, current_run.is_teeming)
       end
     end
   end
@@ -242,7 +252,7 @@ function progress.resolve_npc_progress_value(npc_id, is_teeming)
   end
 
   if not value or value == 0 then
-    value = get_progress_value(npc_id)
+    value = get_progress_value(npc_id, is_teeming)
     is_mdt_value = false
   end
 
