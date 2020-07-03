@@ -9,6 +9,7 @@ local criteria
 local deathcounter_frame
 local reaping_frame
 local current_reaping_in
+local pull_frame
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_deathcounter_frame()
@@ -64,6 +65,24 @@ local function create_reaping_frame()
 
   reaping_frame = frame
   return reaping_frame
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function create_pull_frame() 
+  if pull_frame then
+    return pull_frame
+  end
+
+  local frame = CreateFrame("Frame", nil, main.get_frame())
+  frame:ClearAllPoints()
+
+  frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
+  frame.text:SetPoint("TOPLEFT")
+
+  pull_frame = frame
+  return pull_frame
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -260,6 +279,73 @@ local function update_reaping(current_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function update_pull(current_run)
+  -- is called at criteria update
+  if not current_run.pull then
+    return
+  end
+
+  -- update
+  create_pull_frame()
+
+  -- skip if enemy forces is not known (criterias are not always known on cm start ... update gets called anyway)
+  if current_run.final_quantity_number == nil then
+    pull_frame:Hide()
+    return
+  end
+
+  -- update point
+  local ref_frame = nil
+
+  if deathcounter_frame and current_run.deathcount_visible then
+    ref_frame = deathcounter_frame
+  else
+    ref_frame = criteria.get_last_frame(current_run)
+  end
+
+  if not pull_frame.ref_frame or pull_frame.ref_frame ~= ref_frame then
+    pull_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    pull_frame.ref_frame = ref_frame
+  end
+
+  -- resolve pull value
+  local enemies = 0
+  local value = 0
+  local in_percent = 0
+  for _, v in pairs(current_run.pull) do
+    enemies = enemies + 1
+    value = value + v[1]
+    in_percent = in_percent + v[2]
+  end
+
+  if enemies == 0 then
+    pull_frame:Hide()
+    return
+  end
+
+  -- update text
+  local text = addon.t("lbl_currentpull") .. ": |cFF00FF00" .. in_percent .. "%"
+  if addon.c("show_absolute_numbers") then
+    text = text .. " (" .. value .. ")"
+  end
+
+  -- set text
+  local current_text = pull_frame.text:GetText()
+
+
+  if current_text ~= text then
+    pull_frame.text:SetText(text)
+
+    if not current_text or not text or string.len(current_text) ~= string.len(text) then
+      pull_frame:SetHeight(pull_frame.text:GetStringHeight())
+      pull_frame:SetWidth(pull_frame.text:GetStringWidth())
+    end
+  end
+
+  pull_frame:Show()
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 local surrendered_soul
 
 local function on_combat_log_event_unfiltered()
@@ -381,6 +467,16 @@ end
 function infos.update_reaping_info(current_run)
   -- used to update the reaping directly (demo)
   update_reaping(current_run)
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function infos.update_pull()
+  local current_run = main.get_current_run()
+  if not current_run then
+    return
+  end
+
+  update_pull(current_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

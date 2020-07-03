@@ -229,6 +229,28 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     current_run.quantity_number = quantity_number
     current_run.final_quantity_number = final_value
 
+    -- resolve pull value
+    local pull_enemies = 0
+    local pull_value = 0
+    local pull_in_percent = 0
+    if current_run.pull then
+      for _, v in pairs(current_run.pull) do
+        pull_enemies = pull_enemies + 1
+        pull_value = pull_value + v[1]
+        pull_in_percent = pull_in_percent + v[2]
+      end
+    end
+
+    local pull_value_text = " "
+    if pull_enemies > 0 and addon.c("show_pull_values") then
+      pull_value_text = pull_value_text .. "|cFF00FF00+" .. pull_in_percent .. "%"
+      if addon.c("show_absolute_numbers") then
+        pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
+      end
+
+      pull_value_text = pull_value_text .. "|r "
+    end
+
     -- resolve absolute number text
     local absolute_number = ""
     if addon.c("show_absolute_numbers") then
@@ -239,10 +261,10 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
         missing_absolute = " - " .. missing_absolute
       end
 
-      absolute_number = "(" .. quantity_number .. "/" .. final_value .. missing_absolute .. ") "
+      absolute_number = " (" .. quantity_number .. "/" .. final_value .. missing_absolute .. ")"
     end
 
-    return "- " .. quantity_percent .. "% " .. absolute_number .. name
+    return "- " .. quantity_percent .. "%" .. absolute_number .. pull_value_text .. name
   end
 
   -- boss
@@ -437,4 +459,5 @@ function criteria:enable()
   addon.register_config_listener("objective_time_perlevelaffix", on_config_change)
   addon.register_config_listener("objective_time", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
+  addon.register_config_listener("show_pull_values", on_config_change)
 end

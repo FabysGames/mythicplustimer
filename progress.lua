@@ -81,6 +81,15 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_combat_log_event_unfiltered()
   local _, sub_event, _, _, _, _, _, dest_guid = CombatLogGetCurrentEventInfo()
+
+  -- remove guid from pull on unit died
+  if sub_event == "UNIT_DIED" then
+    local current_run = main.get_current_run()
+    if current_run and current_run.pull and current_run.pull[dest_guid] then
+      current_run.pull[dest_guid] = nil
+    end
+  end
+
   -- skip if not a party kill event
   if sub_event ~= "PARTY_KILL" then
     return
@@ -223,6 +232,65 @@ local function on_tooltip_set_unit(tooltip)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function on_unit_threat_list_update(unit)
+  -- skip if not in combat
+  if not InCombatLockdown() or not unit or not UnitExists(unit) then
+    return
+  end
+
+  -- skip if not in cm
+  if not main.is_in_cm() then
+    return
+  end
+
+  -- check if we have an run
+  local current_run = main.get_current_run()
+  if not current_run then
+    return
+  end
+
+  if not current_run.pull then
+    current_run.pull = {}
+  end
+
+  -- resolve npc id & value
+  local guid = UnitGUID(unit)
+  if not guid or current_run.pull[guid] then
+    return
+  end
+
+  local npc_id = resolve_npc_id(guid)
+  if not npc_id then
+    return
+  end
+
+  local value = progress.resolve_npc_progress_value(npc_id, current_run.is_teeming)
+  if value and value ~= 0 then
+    local in_percent = (value / current_run.final_quantity_number) * 100
+    local mult = 10 ^ 2
+    in_percent = math.floor(in_percent * mult + 0.5) / mult
+
+    current_run.pull[guid] = {value, in_percent}
+  end
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function on_combat_end() 
+  -- check if we have an run
+  local current_run = main.get_current_run()
+  if not current_run then
+    return
+  end
+
+  -- reset pull
+  if not current_run.pull then
+    return
+  end
+
+  current_run.pull = {}
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 function progress.on_challenge_mode_start()
   last_kill = nil
   last_quantity = nil
@@ -233,7 +301,6 @@ function progress.on_player_entering_world()
   last_kill = nil
   last_quantity = nil
 end
-
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function progress.resolve_npc_progress_value(npc_id, is_teeming)
@@ -271,6 +338,10 @@ function progress:enable()
   -- register events
   addon.register_event("COMBAT_LOG_EVENT_UNFILTERED", on_combat_log_event_unfiltered)
   addon.register_event("SCENARIO_CRITERIA_UPDATE", on_scenario_criteria_update)
+  addon.register_event("UNIT_THREAT_LIST_UPDATE", on_unit_threat_list_update)
+  addon.register_event("ENCOUNTER_END", on_combat_end)
+  addon.register_event("PLAYER_REGEN_ENABLED", on_combat_end)
+  addon.register_event("PLAYER_DEAD", on_combat_end)
 
   -- hook into tooltip
   GameTooltip:HookScript("OnTooltipSetUnit", on_tooltip_set_unit)

@@ -21,6 +21,7 @@ local CONFIG_VALUES = {
   hide_default_objectivetracker = true,
   show_reapingtimer = true,
   scale = 1.0,
+  show_pull_values = false,
   --
   position = {
     left = -260,
@@ -125,6 +126,7 @@ local function on_category_refresh(self)
     "show_deathcounter",
     "progress_tooltip",
     "show_absolute_numbers",
+    "show_pull_values",
     "insert_keystone",
     "show_affixes_as_text",
     "show_affixes_as_icons",

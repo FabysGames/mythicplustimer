@@ -277,7 +277,10 @@ local function show_demo()
     elapsed_time = 123,
     deathcount = 0,
     is_demo = true,
-    is_teeming = false
+    is_teeming = false,
+    pull = {
+      guid = {4, 1.28}
+    }
   }
 
   addon.set_config_value("current_run", demo_run)
