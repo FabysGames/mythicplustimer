@@ -242,7 +242,7 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     end
 
     local pull_value_text = " "
-    if pull_enemies > 0 and addon.c("show_pull_values") then
+    if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
       pull_value_text = pull_value_text .. "|cFF00FF00+" .. pull_in_percent .. "%"
       if addon.c("show_absolute_numbers") then
         pull_value_text = pull_value_text .. " (" .. pull_value .. ")"

@@ -234,7 +234,7 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_unit_threat_list_update(unit)
   -- skip if not in combat
-  if not InCombatLockdown() or not unit or not UnitExists(unit) then
+  if not InCombatLockdown() or not unit or not UnitExists(unit) or UnitIsDead(unit) then
     return
   end
 
@@ -264,9 +264,16 @@ local function on_unit_threat_list_update(unit)
     return
   end
 
+  local _, _, steps = C_Scenario.GetStepInfo()
+  if not steps or steps <= 0 then
+    return
+  end
+
+  local _, _, _, _, final_value = C_Scenario.GetCriteriaInfo(steps)
+
   local value = progress.resolve_npc_progress_value(npc_id, current_run.is_teeming)
   if value and value ~= 0 then
-    local in_percent = (value / current_run.final_quantity_number) * 100
+    local in_percent = (value / final_value) * 100
     local mult = 10 ^ 2
     in_percent = math.floor(in_percent * mult + 0.5) / mult
 
