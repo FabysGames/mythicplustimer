@@ -21,7 +21,7 @@ local CONFIG_VALUES = {
   hide_default_objectivetracker = true,
   show_reapingtimer = true,
   scale = 1.0,
-  show_pull_values = false,
+  show_pull_values = true,
   --
   position = {
     left = -260,

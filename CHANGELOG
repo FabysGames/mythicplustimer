@@ -1,6 +1,6 @@
 MythicPlusTimer 3.7
 ===================================
-- Add option to show the progress value of the current pull. (optional, disabled by default)
+- Add option to show the progress value of the current pull. (optional, enabled by default)
 - Show MDT (Mythic Dungeon Tools) mob percentage in tooltip if available.
 
 MythicPlusTimer 3.6
