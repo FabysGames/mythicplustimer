@@ -1,5 +1,6 @@
 local _, addon = ...
 local criteria = addon.new_module("criteria")
+local LSM = LibStub("LibSharedMedia-3.0")
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local main
@@ -8,6 +9,15 @@ local infos
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local step_frames = {}
+local enemy_forces_bar
+local enemyForcesBarHeightOffset = 2
+local enemyForcesBarWidthOffset = 65
+local redColorBase = 0.8
+local greenColorBase = 0.4
+local blueColorBase = 0.404
+local redColorDiff= -0.235
+local greenColorDiff = 0.42
+local blueColorDiff = 0.063
 
 local demo_steps = {
   {
@@ -42,6 +52,42 @@ local demo_steps = {
     quantity = "42%"
   }
 }
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function create_enemy_forces_bar(step_index)
+  if enemy_forces_bar then
+    return enemy_forces_bar
+  end
+
+  -- frame
+  enemy_forces_bar = CreateFrame("STATUSBAR", nil, main.get_frame())
+  enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+
+  enemy_forces_bar.text = enemy_forces_bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = enemy_forces_bar.text:GetFont()
+  enemy_forces_bar.text:SetFont(font_path, 12, font_flags)
+  enemy_forces_bar.text:SetPoint("TOPLEFT", enemy_forces_bar, "TOPLEFT", enemyForcesBarWidthOffset, -0.5 - enemyForcesBarHeightOffset);
+  --enemy_forces_bar.text:SetFont(LSM:Fetch("font", db.Fonts.AchievementObjectiveFont), db.Fonts.AchievementObjectiveFontSize, db.Fonts.AchievementObjectiveFontOutline)
+  enemy_forces_bar.text:SetJustifyH("CENTER")
+  enemy_forces_bar.text:SetJustifyV("TOP")
+  enemy_forces_bar.text:SetShadowColor(0.0, 0.0, 0.0, 1.0)
+  enemy_forces_bar.text:SetShadowOffset(1, -1)
+  
+  enemy_forces_bar.Background = enemy_forces_bar:CreateTexture(nil, "BORDER")
+  enemy_forces_bar.Background:SetAllPoints(enemy_forces_bar)
+
+  enemy_forces_bar:SetBackdrop({bgFile = "Interface\\ChatFrame\\ChatFrameBackground", insets = {top = -1, left = -1, bottom = -1, right = -1.5}})
+  enemy_forces_bar:SetBackdropColor(0, 0, 0, 1)
+
+  enemy_forces_bar:SetStatusBarTexture(LSM:Fetch("statusbar", "pHish26"))
+  enemy_forces_bar.Background:SetTexture(LSM:Fetch("statusbar", "pHish26"))
+  
+  enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
+  enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
+
+  step_frames[step_index] = enemy_forces_bar
+  return step_frames[step_index]
+end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_step_frame(step_index)
@@ -264,7 +310,11 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
       absolute_number = " (" .. quantity_number .. "/" .. final_value .. missing_absolute .. ")"
     end
 
-    return "- " .. quantity_percent .. "%" .. absolute_number .. pull_value_text .. name
+    if completed then
+      return "- " .. quantity_percent .. "% " .. absolute_number .. pull_value_text .. name
+    else
+      return quantity_percent .. "% " .. absolute_number .. pull_value_text
+    end
   end
 
   -- boss
@@ -362,7 +412,16 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, quantity)
   -- resolve frame
-  local step_frame = create_step_frame(step_index)
+  local step_frame
+  if final_value >= 100 and (not completed) then 
+    step_frame = create_enemy_forces_bar(step_index)
+  else
+    if final_value >= 100 and enemy_forces_bar then
+      enemy_forces_bar:Hide()
+    end
+
+    step_frame = create_step_frame(step_index)
+  end
 
   -- update times
   if completed then
@@ -380,6 +439,19 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
       step_frame.text.current_font = "GameFontHighlight"
     end
 
+    -- enemy forces bar
+    if step_frame.Background then
+      local quantity_percent = cur_value / final_value
+
+      enemy_forces_bar:SetMinMaxValues(0, final_value)
+      enemy_forces_bar:SetValue(cur_value)
+
+      local finalRedColor = redColorBase + redColorDiff * quantity_percent
+      local finalGreenColor = greenColorBase + greenColorDiff * quantity_percent
+      local finalBlueColor = blueColorBase + blueColorDiff * quantity_percent
+
+      enemy_forces_bar:SetStatusBarColor(finalRedColor, finalGreenColor, finalBlueColor, 1)
+    end
     -- reset current run time
     if current_run.times[step_index] then
       current_run.times[step_index] = nil
@@ -402,6 +474,11 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
     if not current_objective_text or not objective_text or string.len(current_objective_text) ~= string.len(objective_text) then
       step_frame:SetHeight(step_frame.text:GetStringHeight())
       step_frame:SetWidth(step_frame.text:GetStringWidth())
+
+      if step_frame.Background then
+        step_frame:SetHeight(step_frame:GetHeight() + enemyForcesBarHeightOffset * 2)
+        step_frame:SetWidth(step_frame:GetWidth() + enemyForcesBarWidthOffset * 2)
+      end
     end
   end
 
