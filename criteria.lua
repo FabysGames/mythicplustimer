@@ -84,6 +84,8 @@ local function create_enemy_forces_bar(step_index)
   
   enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
   enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
+  
+  enemy_forces_bar:SetMinMaxValues(0, 1)
 
   step_frames[step_index] = enemy_forces_bar
   return step_frames[step_index]
@@ -92,7 +94,11 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_step_frame(step_index)
   if step_frames[step_index] then
-    return step_frames[step_index]
+    if step_frames[step_index] == enemy_forces_bar then
+      enemy_forces_bar:Hide()
+    else
+      return step_frames[step_index]
+    end
   end
 
   -- frame
@@ -440,11 +446,12 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
     end
 
     -- enemy forces bar
-    if step_frame.Background then
-      local quantity_percent = cur_value / final_value
+    if step_frame == enemy_forces_bar then
+      local quantity_number = string.sub(quantity, 1, string.len(quantity) - 1)
+      local quantity_percent = tonumber(quantity_number) / final_value
+      local a = tonumber(1)
 
-      enemy_forces_bar:SetMinMaxValues(0, final_value)
-      enemy_forces_bar:SetValue(cur_value)
+      enemy_forces_bar:SetValue(quantity_percent)
 
       local finalRedColor = redColorBase + redColorDiff * quantity_percent
       local finalGreenColor = greenColorBase + greenColorDiff * quantity_percent
@@ -475,7 +482,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
       step_frame:SetHeight(step_frame.text:GetStringHeight())
       step_frame:SetWidth(step_frame.text:GetStringWidth())
 
-      if step_frame.Background then
+      if step_frame == enemy_forces_bar then
         step_frame:SetHeight(step_frame:GetHeight() + enemyForcesBarHeightOffset * 2)
         step_frame:SetWidth(step_frame:GetWidth() + enemyForcesBarWidthOffset * 2)
       end
