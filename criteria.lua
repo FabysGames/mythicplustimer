@@ -10,8 +10,6 @@ local infos
 -- ---------------------------------------------------------------------------------------------------------------------
 local step_frames = {}
 local enemy_forces_bar
-local enemyForcesBarHeightOffset = 2
-local enemyForcesBarWidthOffset = 65
 local redColorBase = 0.8
 local greenColorBase = 0.4
 local blueColorBase = 0.404
@@ -66,7 +64,7 @@ local function create_enemy_forces_bar(step_index)
   enemy_forces_bar.text = enemy_forces_bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = enemy_forces_bar.text:GetFont()
   enemy_forces_bar.text:SetFont(font_path, 12, font_flags)
-  enemy_forces_bar.text:SetPoint("TOPLEFT", enemy_forces_bar, "TOPLEFT", enemyForcesBarWidthOffset, -0.5 - enemyForcesBarHeightOffset);
+  enemy_forces_bar.text:SetPoint("CENTER", enemy_forces_bar, "CENTER", 0, -0.5);
   --enemy_forces_bar.text:SetFont(LSM:Fetch("font", db.Fonts.AchievementObjectiveFont), db.Fonts.AchievementObjectiveFontSize, db.Fonts.AchievementObjectiveFontOutline)
   enemy_forces_bar.text:SetJustifyH("CENTER")
   enemy_forces_bar.text:SetJustifyV("TOP")
@@ -84,7 +82,9 @@ local function create_enemy_forces_bar(step_index)
   
   enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
   enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
-  
+  enemy_forces_bar:SetHeight(18)
+  enemy_forces_bar:SetWidth(250)
+
   enemy_forces_bar:SetMinMaxValues(0, 1)
 
   step_frames[step_index] = enemy_forces_bar
@@ -453,9 +453,9 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
       enemy_forces_bar:SetValue(quantity_percent)
 
-      local finalRedColor = redColorBase + redColorDiff * quantity_percent
+      local finalRedColor   = redColorBase + redColorDiff * quantity_percent
       local finalGreenColor = greenColorBase + greenColorDiff * quantity_percent
-      local finalBlueColor = blueColorBase + blueColorDiff * quantity_percent
+      local finalBlueColor  = blueColorBase + blueColorDiff * quantity_percent
 
       enemy_forces_bar:SetStatusBarColor(finalRedColor, finalGreenColor, finalBlueColor, 1)
     end
@@ -478,14 +478,9 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   if current_objective_text ~= objective_text then
     step_frame.text:SetText(objective_text)
 
-    if not current_objective_text or not objective_text or string.len(current_objective_text) ~= string.len(objective_text) then
+    if (not current_objective_text or not objective_text or string.len(current_objective_text) ~= string.len(objective_text)) and step_frame ~= enemy_forces_bar then
       step_frame:SetHeight(step_frame.text:GetStringHeight())
       step_frame:SetWidth(step_frame.text:GetStringWidth())
-
-      if step_frame == enemy_forces_bar then
-        step_frame:SetHeight(step_frame:GetHeight() + enemyForcesBarHeightOffset * 2)
-        step_frame:SetWidth(step_frame:GetWidth() + enemyForcesBarWidthOffset * 2)
-      end
     end
   end
 
