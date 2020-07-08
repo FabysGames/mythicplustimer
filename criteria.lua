@@ -317,7 +317,7 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
       absolute_number = " (" .. quantity_number .. "/" .. final_value .. missing_absolute .. ")"
     end
 
-    if completed then
+    if completed or not addon.c("show_enemy_forces_bar") then
       return "- " .. quantity_percent .. "% " .. absolute_number .. pull_value_text .. name
     else
       return quantity_percent .. "% " .. absolute_number .. pull_value_text
@@ -420,7 +420,7 @@ end
 function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, quantity)
   -- resolve frame
   local step_frame
-  if final_value >= 100 and (not completed) then 
+  if final_value >= 100 and (not completed) and addon.c("show_enemy_forces_bar") then 
     if step_frames[step_index] then
       step_frames[step_index]:Hide()
     end 
@@ -543,4 +543,5 @@ function criteria:enable()
   addon.register_config_listener("objective_time", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_pull_values", on_config_change)
+  addon.register_config_listener("show_enemy_forces_bar", on_config_change)
 end
