@@ -54,7 +54,8 @@ local demo_steps = {
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_enemy_forces_bar(step_index)
   if enemy_forces_bar then
-    return enemy_forces_bar
+    step_frames[step_index] = enemy_forces_bar
+    return step_frames[step_index]
   end
 
   -- frame
@@ -420,6 +421,9 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   -- resolve frame
   local step_frame
   if final_value >= 100 and (not completed) then 
+    if step_frames[step_index] then
+      step_frames[step_index]:Hide()
+    end 
     step_frame = create_enemy_forces_bar(step_index)
   else
     if final_value >= 100 and enemy_forces_bar then
