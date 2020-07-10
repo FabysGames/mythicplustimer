@@ -1,3 +1,7 @@
+MythicPlusTimer 3.8
+===================================
+- Add option to show enemy forces progression as bar with gradient color. (optional, enabled by default)
+
 MythicPlusTimer 3.7
 ===================================
 - Add option to show the progress value of the current pull. (optional, disabled by default)
