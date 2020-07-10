@@ -1,6 +1,5 @@
 local _, addon = ...
 local criteria = addon.new_module("criteria")
-local LSM = LibStub("LibSharedMedia-3.0")
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local main
@@ -66,7 +65,7 @@ local function create_enemy_forces_bar(step_index)
   local font_path, _, font_flags = enemy_forces_bar.text:GetFont()
   enemy_forces_bar.text:SetFont(font_path, 12, font_flags)
   enemy_forces_bar.text:SetPoint("CENTER", enemy_forces_bar, "CENTER", 0, -0.5);
-  --enemy_forces_bar.text:SetFont(LSM:Fetch("font", db.Fonts.AchievementObjectiveFont), db.Fonts.AchievementObjectiveFontSize, db.Fonts.AchievementObjectiveFontOutline)
+
   enemy_forces_bar.text:SetJustifyH("CENTER")
   enemy_forces_bar.text:SetJustifyV("TOP")
   enemy_forces_bar.text:SetShadowColor(0.0, 0.0, 0.0, 1.0)
@@ -78,8 +77,8 @@ local function create_enemy_forces_bar(step_index)
   enemy_forces_bar:SetBackdrop({bgFile = "Interface\\ChatFrame\\ChatFrameBackground", insets = {top = -1, left = -1, bottom = -1, right = -1.5}})
   enemy_forces_bar:SetBackdropColor(0, 0, 0, 1)
 
-  enemy_forces_bar:SetStatusBarTexture(LSM:Fetch("statusbar", "pHish26"))
-  enemy_forces_bar.Background:SetTexture(LSM:Fetch("statusbar", "pHish26"))
+  enemy_forces_bar:SetStatusBarTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\pHishTex26.tga")
+  enemy_forces_bar.Background:SetTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\pHishTex26.tga")
   
   enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
   enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
