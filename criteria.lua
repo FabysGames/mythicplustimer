@@ -53,6 +53,7 @@ local demo_steps = {
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_enemy_forces_bar(step_index)
   if enemy_forces_bar then
+    enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
     step_frames[step_index] = enemy_forces_bar
     return step_frames[step_index]
   end
