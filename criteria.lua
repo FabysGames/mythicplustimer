@@ -53,7 +53,12 @@ local demo_steps = {
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_enemy_forces_bar(step_index)
   if enemy_forces_bar then
-    enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+    local prev_step_frame = step_frames[step_index - 1]
+    if not enemy_forces_bar.ref_frame or enemy_forces_bar.ref_frame ~= prev_step_frame then
+      enemy_forces_bar:SetPoint("TOPLEFT", prev_step_frame, "BOTTOMLEFT", 0, -5)
+      enemy_forces_bar.ref_frame = prev_step_frame
+    end
+
     step_frames[step_index] = enemy_forces_bar
     return step_frames[step_index]
   end
@@ -78,8 +83,8 @@ local function create_enemy_forces_bar(step_index)
   enemy_forces_bar:SetBackdrop({bgFile = "Interface\\ChatFrame\\ChatFrameBackground", insets = {top = -1, left = -1, bottom = -1, right = -1.5}})
   enemy_forces_bar:SetBackdropColor(0, 0, 0, 1)
 
-  enemy_forces_bar:SetStatusBarTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\pHishTex26.tga")
-  enemy_forces_bar.Background:SetTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\pHishTex26.tga")
+  enemy_forces_bar:SetStatusBarTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\bar.tga")
+  enemy_forces_bar.Background:SetTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\bar.tga")
   
   enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
   enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
