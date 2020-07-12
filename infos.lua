@@ -496,4 +496,5 @@ function infos:enable()
   addon.register_config_listener("show_deathcounter", on_config_change)
   addon.register_config_listener("show_reapingtimer", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
+  addon.register_config_listener("show_enemy_forces_bar", on_config_change)
 end
