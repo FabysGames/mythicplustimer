@@ -172,9 +172,9 @@ local function on_category_refresh(self)
       self
     )
     if i == 1 then
-      checkbox:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -10)
+      checkbox:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
     else
-      checkbox:SetPoint("TOPLEFT", checkboxes_frames[i - 1], "BOTTOMLEFT", 0, -3)
+      checkbox:SetPoint("TOPLEFT", checkboxes_frames[i - 1], "BOTTOMLEFT", 0, 0)
     end
 
     checkboxes_frames[i] = checkbox
