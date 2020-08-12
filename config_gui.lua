@@ -25,12 +25,9 @@ function config_gui.create_checkbox(name, text, checked, on_change, tooltip, par
   -- input
   local checkbox = CreateFrame("CheckButton", nil, checkbox_frame, "InterfaceOptionsCheckButtonTemplate")
   checkbox:SetPoint("TOPLEFT")
-  checkbox:SetScript(
-    "OnClick",
-    function(cb)
-      on_change(cb.checkbox_name, cb:GetChecked())
-    end
-  )
+  checkbox:SetScript("OnClick", function(cb)
+    on_change(cb.checkbox_name, cb:GetChecked())
+  end)
   checkbox:SetChecked(checked)
   checkbox.checkbox_name = name
 
@@ -88,10 +85,10 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
     edgeSize = 8,
     tile = true,
     tileSize = 8,
-    insets = {left = 3, right = 3, top = 6, bottom = 6}
+    insets = {left = 3, right = 3, top = 6, bottom = 6},
   }
 
-  local slider = CreateFrame("Slider", nil, slider_frame)
+  local slider = CreateFrame("Slider", nil, slider_frame, BackdropTemplateMixin and "BackdropTemplate")
   local value_text = slider:CreateFontString(nil, "ARTWORK", "GameFontNormal")
   font_path, _, font_flags = value_text:GetFont()
   value_text:SetFont(font_path, 12, font_flags)
@@ -113,25 +110,22 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
   slider:SetMinMaxValues(min_value, max_value)
   slider:SetValueStep(step)
   slider:SetValue(value)
-  slider:SetScript(
-    "OnValueChanged",
-    function(frame)
-      local val = floor((frame:GetValue() - min_value) / step + 0.5) * step + min_value
+  slider:SetScript("OnValueChanged", function(frame)
+    local val = floor((frame:GetValue() - min_value) / step + 0.5) * step + min_value
 
-      if val < min_value then
-        val = min_value
-      end
-
-      if val > max_value then
-        val = max_value
-      end
-
-      if tonumber(value_text:GetText()) ~= val then
-        value_text:SetText(val)
-        on_change(val)
-      end
+    if val < min_value then
+      val = min_value
     end
-  )
+
+    if val > max_value then
+      val = max_value
+    end
+
+    if tonumber(value_text:GetText()) ~= val then
+      value_text:SetText(val)
+      on_change(val)
+    end
+  end)
 
   value_text:SetPoint("TOP", slider, "BOTTOM")
   value_text:SetText(value)

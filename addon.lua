@@ -161,9 +161,7 @@ end
 local modules = {}
 
 function addon.new_module(name)
-  local module = {
-    name = name
-  }
+  local module = {name = name}
 
   setmetatable(module, {__index = AddonModule})
 

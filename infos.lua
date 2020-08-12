@@ -68,7 +68,7 @@ local function create_reaping_frame()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function create_pull_frame() 
+local function create_pull_frame()
   if pull_frame then
     return pull_frame
   end
@@ -331,7 +331,6 @@ local function update_pull(current_run)
 
   -- set text
   local current_text = pull_frame.text:GetText()
-
 
   if current_text ~= text then
     pull_frame.text:SetText(text)

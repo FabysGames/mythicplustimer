@@ -17,14 +17,11 @@ local quest_frame
 -- ---------------------------------------------------------------------------------------------------------------------
 local function save_frame_position()
   local _, _, relative_point, x_offset, y_offset = main_frame:GetPoint()
-  addon.set_config_value(
-    "position",
-    {
-      left = x_offset,
-      top = y_offset,
-      relative_point = relative_point
-    }
-  )
+  addon.set_config_value("position", {
+    left = x_offset,
+    top = y_offset,
+    relative_point = relative_point,
+  })
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -40,7 +37,7 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_main_frame()
-  local frame = CreateFrame("Frame", "MythicPlusTimer")
+  local frame = CreateFrame("Frame", "MythicPlusTimer", UIParent, BackdropTemplateMixin and "BackdropTemplate")
   frame.frame_toggle = false
 
   frame:EnableMouse(true)
@@ -52,11 +49,7 @@ local function create_main_frame()
 
   local frame_position = addon.c("position")
   if not frame_position then
-    frame_position = {
-      left = -260,
-      top = 220,
-      relative_point = "RIGHT"
-    }
+    frame_position = {left = -260, top = 220, relative_point = "RIGHT"}
 
     addon.set_config_value("position", frame_position)
   end
@@ -278,9 +271,7 @@ local function show_demo()
     deathcount = 0,
     is_demo = true,
     is_teeming = false,
-    pull = {
-      guid = {4, 1.28}
-    }
+    pull = {guid = {4, 1.28}},
   }
 
   addon.set_config_value("current_run", demo_run)
@@ -289,7 +280,9 @@ local function show_demo()
 
   best_times[demo_run.current_zone_id] = {[1] = 50}
   best_times[demo_run.current_zone_id][demo_run.level_key] = {[1] = 110}
-  best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {[1] = 150}
+  best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {
+    [1] = 150,
+  }
 
   -- name
   update_dungeon_info(demo_run)
@@ -338,12 +331,7 @@ local function toggle_frame_movement()
       tile = true,
       tileSize = 32,
       edgeSize = 1,
-      insets = {
-        left = 0,
-        right = 0,
-        top = 0,
-        bottom = 0
-      }
+      insets = {left = 0, right = 0, top = 0, bottom = 0},
     }
 
     frame:SetBackdrop(backdrop)
@@ -512,7 +500,7 @@ function main.on_challenge_mode_start()
     max_time = max_time,
     steps = steps,
     times = {},
-    is_teeming = is_teeming
+    is_teeming = is_teeming,
   }
 
   addon.set_config_value("current_run", current_run)
@@ -561,13 +549,13 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function main.get_quest_frame(frame)
-	local parent = frame:GetParent()
-	
-	if (parent == UIParent or parent == hidden_frame or parent == nil) then
-		return frame
-	end
+  local parent = frame:GetParent()
 
-    return main.get_quest_frame(parent)
+  if (parent == UIParent or parent == hidden_frame or parent == nil) then
+    return frame
+  end
+
+  return main.get_quest_frame(parent)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

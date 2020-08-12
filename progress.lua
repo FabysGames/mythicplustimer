@@ -162,7 +162,6 @@ local function on_scenario_criteria_update()
   last_quantity = quantity_number
 end
 
-
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_tooltip_set_unit(tooltip)
   -- check if tooltip must be updated
@@ -282,7 +281,7 @@ local function on_unit_threat_list_update(unit)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function on_combat_end() 
+local function on_combat_end()
   -- check if we have an run
   local current_run = main.get_current_run()
   if not current_run then

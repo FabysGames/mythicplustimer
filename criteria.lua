@@ -12,42 +12,22 @@ local enemy_forces_bar
 local redColorBase = 0.8
 local greenColorBase = 0.4
 local blueColorBase = 0.404
-local redColorDiff= -0.235
+local redColorDiff = -0.235
 local greenColorDiff = 0.42
 local blueColorDiff = 0.063
 
 local demo_steps = {
-  {
-    name = "Boss 1",
-    completed = true,
-    cur_value = 1,
-    final_value = 1
-  },
-  {
-    name = "Boss 2",
-    completed = false,
-    cur_value = 0,
-    final_value = 1
-  },
-  {
-    name = "Boss 3",
-    completed = false,
-    cur_value = 0,
-    final_value = 1
-  },
-  {
-    name = "Boss 4",
-    completed = false,
-    cur_value = 0,
-    final_value = 1
-  },
+  {name = "Boss 1", completed = true, cur_value = 1, final_value = 1},
+  {name = "Boss 2", completed = false, cur_value = 0, final_value = 1},
+  {name = "Boss 3", completed = false, cur_value = 0, final_value = 1},
+  {name = "Boss 4", completed = false, cur_value = 0, final_value = 1},
   {
     name = addon.t("lbl_enemyforces"),
     completed = false,
     cur_value = 42,
     final_value = 123,
-    quantity = "42%"
-  }
+    quantity = "42%",
+  },
 }
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -64,7 +44,7 @@ local function create_enemy_forces_bar(step_index)
   end
 
   -- frame
-  enemy_forces_bar = CreateFrame("STATUSBAR", nil, main.get_frame())
+  enemy_forces_bar = CreateFrame("STATUSBAR", nil, main.get_frame(), BackdropTemplateMixin and "BackdropTemplate")
   enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
 
   enemy_forces_bar.text = enemy_forces_bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -76,16 +56,19 @@ local function create_enemy_forces_bar(step_index)
   enemy_forces_bar.text:SetJustifyV("TOP")
   enemy_forces_bar.text:SetShadowColor(0.0, 0.0, 0.0, 1.0)
   enemy_forces_bar.text:SetShadowOffset(1, -1)
-  
+
   enemy_forces_bar.Background = enemy_forces_bar:CreateTexture(nil, "BORDER")
   enemy_forces_bar.Background:SetAllPoints(enemy_forces_bar)
 
-  enemy_forces_bar:SetBackdrop({bgFile = "Interface\\ChatFrame\\ChatFrameBackground", insets = {top = -1, left = -1, bottom = -1, right = -1.5}})
+  enemy_forces_bar:SetBackdrop({
+    bgFile = "Interface\\ChatFrame\\ChatFrameBackground",
+    insets = {top = -1, left = -1, bottom = -1, right = -1.5},
+  })
   enemy_forces_bar:SetBackdropColor(0, 0, 0, 1)
 
   enemy_forces_bar:SetStatusBarTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\bar.tga")
   enemy_forces_bar.Background:SetTexture("Interface\\AddOns\\MythicPlusTimer\\barResource\\bar.tga")
-  
+
   enemy_forces_bar.Background:SetVertexColor(0, 0, 0, 1)
   enemy_forces_bar:SetStatusBarColor(0, 1, 0, 1)
   enemy_forces_bar:SetHeight(18)
@@ -425,10 +408,10 @@ end
 function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, quantity)
   -- resolve frame
   local step_frame
-  if final_value >= 100 and (not completed) and addon.c("show_enemy_forces_bar") then 
+  if final_value >= 100 and (not completed) and addon.c("show_enemy_forces_bar") then
     if step_frames[step_index] then
       step_frames[step_index]:Hide()
-    end 
+    end
     step_frame = create_enemy_forces_bar(step_index)
   else
     if final_value >= 100 and enemy_forces_bar then
@@ -462,9 +445,9 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
       enemy_forces_bar:SetValue(quantity_percent)
 
-      local finalRedColor   = redColorBase + redColorDiff * quantity_percent
+      local finalRedColor = redColorBase + redColorDiff * quantity_percent
       local finalGreenColor = greenColorBase + greenColorDiff * quantity_percent
-      local finalBlueColor  = blueColorBase + blueColorDiff * quantity_percent
+      local finalBlueColor = blueColorBase + blueColorDiff * quantity_percent
 
       enemy_forces_bar:SetStatusBarColor(finalRedColor, finalGreenColor, finalBlueColor, 1)
     end

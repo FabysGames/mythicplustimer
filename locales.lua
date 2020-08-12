@@ -51,7 +51,7 @@ local enUS = {
   lbl_timeleft = "Time left",
   lbl_reapingin = "Reaping in",
   lbl_enemyforces = "Enemy Forces",
-  lbl_currentpull = "Current Pull"
+  lbl_currentpull = "Current Pull",
 }
 
 addon.add_locale("enUS", enUS)
@@ -107,7 +107,7 @@ local deDE = {
   lbl_timeleft = "Verbleibende Zeit",
   lbl_reapingin = "Schröpfend in",
   lbl_enemyforces = "Feindliche Streitkräfte",
-  lbl_currentpull = "Aktueller Kampf"
+  lbl_currentpull = "Aktueller Kampf",
 }
 
 addon.add_locale("deDE", deDE)
@@ -163,7 +163,7 @@ local zhCN = {
   lbl_timeleft = "剩余时间",
   lbl_reapingin = "Reaping in",
   lbl_enemyforces = "Enemy Forces",
-  lbl_currentpull = "Current Pull"
+  lbl_currentpull = "Current Pull",
 }
 
 addon.add_locale("zhCN", zhCN)
@@ -219,7 +219,7 @@ local koKR = {
   lbl_timeleft = "남은 시간",
   lbl_reapingin = "수확",
   lbl_enemyforces = "Enemy Forces",
-  lbl_currentpull = "Current Pull"
+  lbl_currentpull = "Current Pull",
 }
 
 addon.add_locale("koKR", koKR)
