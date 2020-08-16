@@ -153,7 +153,7 @@ local function on_scenario_criteria_update()
     local timestamp, npc_id, valid = unpack(last_kill)
 
     if timestamp and npc_id and delta and valid then
-      if (GetTime() * 1000) - timestamp <= 600 then
+      if (GetTime() * 1000) - timestamp <= 100 then
         update_progress_value(npc_id, delta, current_run.is_teeming)
       end
     end

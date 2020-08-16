@@ -54,7 +54,7 @@ local function create_main_frame()
     addon.set_config_value("position", frame_position)
   end
 
-  frame:SetScale(addon.c("scale") * UIParent:GetScale())
+  frame:SetScale(addon.c("scale"))
   frame:SetPoint(frame_position.relative_point, frame_position.left, frame_position.top)
 
   -- Drag text
