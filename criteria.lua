@@ -400,6 +400,9 @@ function criteria.update()
     criteria.update_step(i, current_run, name, completed, cur_value, final_value, quantity)
   end
 
+  -- update prideful
+  infos.update_prideful()
+
   -- update reaping
   infos.update_reaping()
 end

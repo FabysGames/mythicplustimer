@@ -259,8 +259,8 @@ local function show_demo()
   local demo_run = {
     cm_level = 30,
     level_key = "l" .. 30,
-    affixes = {9, 7, 13, 120},
-    affixes_key = "affixes-9-7-13-120",
+    affixes = {9, 7, 13, 121},
+    affixes_key = "affixes-9-7-13-121",
     zone_name = "Demo",
     current_zone_id = current_id,
     current_map_id = current_id,
@@ -296,6 +296,9 @@ local function show_demo()
 
   -- deathcounter
   infos.update_deathcounter_info(demo_run, 2, 10)
+
+  -- prideful
+  infos.update_prideful_info(demo_run)
 
   -- reaping
   infos.update_reaping_info(demo_run)

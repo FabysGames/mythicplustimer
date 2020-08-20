@@ -26,6 +26,7 @@ local CONFIG_VALUES = {
   show_reapingtimer = true,
   scale = 1.0,
   show_pull_values = false,
+  show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
 }
@@ -133,6 +134,7 @@ local function on_category_refresh(self)
     "show_affixes_as_icons",
     "hide_default_objectivetracker",
     --    "show_reapingtimer"
+    "show_pridefultimer",
   }
 
   local checkboxes_frames = {}

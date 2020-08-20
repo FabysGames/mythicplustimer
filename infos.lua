@@ -9,6 +9,8 @@ local criteria
 local deathcounter_frame
 local reaping_frame
 local current_reaping_in
+local prideful_frame
+local current_prideful_in
 local pull_frame
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -68,6 +70,24 @@ local function create_reaping_frame()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function create_prideful_frame()
+  if prideful_frame then
+    return prideful_frame
+  end
+
+  local frame = CreateFrame("Frame", nil, main.get_frame())
+  frame:ClearAllPoints()
+
+  frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  local font_path, _, font_flags = frame.text:GetFont()
+  frame.text:SetFont(font_path, 12, font_flags)
+  frame.text:SetPoint("TOPLEFT")
+
+  prideful_frame = frame
+  return prideful_frame
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 local function create_pull_frame()
   if pull_frame then
     return pull_frame
@@ -98,6 +118,10 @@ local function on_config_change()
     current_run.deathcount = -1
     infos.update_deathcounter_info(current_run, 2, 10)
 
+    -- prideful
+    current_prideful_in = nil
+    infos.update_prideful_info(current_run)
+
     -- reaping
     current_reaping_in = nil
     infos.update_reaping_info(current_run)
@@ -107,6 +131,10 @@ local function on_config_change()
   -- update deathcounter
   current_run.deathcount = -1 -- reset count in cache to trigger the rerender
   infos.update_deathcounter()
+
+  -- update prideful
+  current_prideful_in = nil -- reset current to trigger the rerender
+  infos.update_prideful()
 
   -- update reaping
   current_reaping_in = nil -- reset current to trigger the rerender
@@ -180,6 +208,12 @@ local function update_deathcounter(current_run, deathcount, death_timelost)
 
   -- update tooltip
   update_deathcounter_tooltip(current_run)
+
+  -- update prideful frame point
+  if prideful_frame and (not prideful_frame.ref_frame or prideful_frame.ref_frame ~= deathcounter_frame) then
+    prideful_frame:SetPoint("TOPLEFT", deathcounter_frame, "BOTTOMLEFT", 0, -5)
+    prideful_frame.ref_frame = deathcounter_frame
+  end
 
   -- update reaping frame point
   if reaping_frame and (not reaping_frame.ref_frame or reaping_frame.ref_frame ~= deathcounter_frame) then
@@ -276,6 +310,96 @@ local function update_reaping(current_run)
   end
 
   reaping_frame:Show()
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function update_prideful(current_run)
+  -- is called at criteria update
+  if current_run.is_prideful == nil then
+    current_run.is_prideful = false
+    current_prideful_in = nil
+
+    for _, affix_id in ipairs(current_run.affixes) do
+      if affix_id == 121 then
+        current_run.is_prideful = true
+        break
+      end
+    end
+  end
+
+  -- check if prideful / done
+  if not current_run.is_prideful or not addon.c("show_pridefultimer") or current_run.quantity_completed then
+    if prideful_frame then
+      prideful_frame:Hide()
+    end
+    return
+  end
+
+  -- update
+  create_prideful_frame()
+
+  -- skip if enemy forces is not known (criterias are not always known on cm start ... update gets called anyway)
+  if current_run.final_quantity_number == nil then
+    prideful_frame:Hide()
+    return
+  end
+
+  -- update point
+  local ref_frame = nil
+
+  if deathcounter_frame and current_run.deathcount_visible then
+    ref_frame = deathcounter_frame
+  else
+    ref_frame = criteria.get_last_frame(current_run)
+  end
+
+  if not prideful_frame.ref_frame or prideful_frame.ref_frame ~= ref_frame then
+    prideful_frame:SetPoint("TOPLEFT", ref_frame, "BOTTOMLEFT", 0, -5)
+    prideful_frame.ref_frame = ref_frame
+  end
+
+  -- absolute number
+  local prideful_quantity = current_run.final_quantity_number / 5
+  local prideful_in = prideful_quantity - current_run.quantity_number % prideful_quantity
+
+  if current_prideful_in == prideful_in then
+    return
+  end
+
+  current_prideful_in = prideful_in
+
+  -- percent
+  local prideful_in_percent = (prideful_in / current_run.final_quantity_number) * 100
+  local mult = 10 ^ 2
+  prideful_in_percent = math.floor(prideful_in_percent * mult + 0.5) / mult
+
+  -- resolve text
+  local color_string = "|cFFFFFFFF"
+  if prideful_in_percent < 4 then
+    color_string = "|cFFFF0000"
+  elseif prideful_in_percent < 10 then
+    color_string = "|cFFFFFF00"
+  end
+
+  local prideful_text = addon.t("lbl_pridefulin") .. ": " .. color_string .. prideful_in_percent .. "%" .. "|r"
+
+  if addon.c("show_absolute_numbers") then
+    prideful_text = prideful_text .. " (" .. math.ceil(prideful_in) .. ")"
+  end
+
+  -- set text
+  local current_prideful_text = prideful_frame.text:GetText()
+
+  if current_prideful_text ~= prideful_text then
+    prideful_frame.text:SetText(prideful_text)
+
+    if not current_prideful_text or not prideful_text or string.len(current_prideful_text) ~= string.len(prideful_text) then
+      prideful_frame:SetHeight(prideful_frame.text:GetStringHeight())
+      prideful_frame:SetWidth(prideful_frame.text:GetStringWidth())
+    end
+  end
+
+  prideful_frame:Show()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -410,6 +534,11 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 function infos.hide_frames()
+  -- prideful frame
+  if prideful_frame then
+    prideful_frame:Hide()
+  end
+
   -- reaping frame
   if reaping_frame then
     reaping_frame:Hide()
@@ -469,6 +598,22 @@ function infos.update_reaping_info(current_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+function infos.update_prideful()
+  local current_run = main.get_current_run()
+  if not current_run then
+    return
+  end
+
+  update_prideful(current_run)
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function infos.update_prideful_info(current_run)
+  -- used to update the prideful directly (demo)
+  update_prideful(current_run)
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 function infos.update_pull()
   local current_run = main.get_current_run()
   if not current_run then
@@ -494,6 +639,7 @@ function infos:enable()
   -- config listeners
   addon.register_config_listener("show_deathcounter", on_config_change)
   addon.register_config_listener("show_reapingtimer", on_config_change)
+  addon.register_config_listener("show_pridefultimer", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
 end
