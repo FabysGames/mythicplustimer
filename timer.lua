@@ -51,6 +51,7 @@ local function create_timer_frames()
   local font_path, _, font_flags = time_left_frame.text:GetFont()
   time_left_frame.text:SetFont(font_path, 16, font_flags)
   time_left_frame.text:SetPoint("TOPLEFT")
+  time_left_frame.text:SetJustifyH("LEFT")
 
   timer_frames.time_left = time_left_frame
 
@@ -64,6 +65,7 @@ local function create_timer_frames()
   font_path, _, font_flags = time_in_cm_frame.text:GetFont()
   time_in_cm_frame.text:SetFont(font_path, 12, font_flags)
   time_in_cm_frame.text:SetPoint("TOPLEFT")
+  time_in_cm_frame.text:SetJustifyH("LEFT")
 
   timer_frames.time_in_cm = time_in_cm_frame
 
@@ -77,6 +79,7 @@ local function create_timer_frames()
   font_path, _, font_flags = time_2_frame.text:GetFont()
   time_2_frame.text:SetFont(font_path, 12, font_flags)
   time_2_frame.text:SetPoint("TOPLEFT")
+  time_2_frame.text:SetJustifyH("LEFT")
 
   timer_frames.time_2 = time_2_frame
 
@@ -90,6 +93,7 @@ local function create_timer_frames()
   font_path, _, font_flags = time_3_frame.text:GetFont()
   time_3_frame.text:SetFont(font_path, 12, font_flags)
   time_3_frame.text:SetPoint("TOPLEFT")
+  time_3_frame.text:SetJustifyH("LEFT")
 
   timer_frames.time_3 = time_3_frame
 end
@@ -168,9 +172,9 @@ local function on_update_time(_, elapsed_time)
 
   local time_left_text = main.format_seconds(time_left)
   if time_left == 0 then
-    time_left_text = string.format("|c%s%s", addon.c("color_highlight_invalid"), time_left_text)
+    time_left_text = string.format("|c%s%s", addon.c("color_timeleft_expired"), time_left_text)
   else
-    time_left_text = string.format("|c%s%s", addon.c("color_highlight"), time_left_text)
+    time_left_text = string.format("|c%s%s", addon.c("color_timeleft"), time_left_text)
   end
 
   if time_left_text ~= current_time_left_text then
@@ -185,7 +189,7 @@ local function on_update_time(_, elapsed_time)
   -- time in cm
   local current_time_in_cm_text = time_in_cm_frame.text:GetText()
 
-  local time_in_cm_text = string.format("|c%s(%s / %s)", addon.c("color_primary"), main.format_seconds(elapsed_time), main.format_seconds(current_run.max_time))
+  local time_in_cm_text = string.format("|c%s(%s / %s)", addon.c("color_time"), main.format_seconds(elapsed_time), main.format_seconds(current_run.max_time))
 
   if time_in_cm_text ~= current_time_in_cm_text then
     time_in_cm_frame.text:SetText(time_in_cm_text)
@@ -218,9 +222,9 @@ local function on_update_time(_, elapsed_time)
   local current_time_2_text = time_2_frame.text:GetText()
   local time_2_text = string.format("+2 (%s)", main.format_seconds(two_chest_time))
   if time_left_2 == 0 then
-    time_2_text = string.format("|c%s%s|r", addon.c("color_disabled"), time_2_text)
+    time_2_text = string.format("|c%s%s|r", addon.c("color_chest_time_expired"), time_2_text)
   else
-    time_2_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_primary"), time_2_text, addon.c("color_highlight"), main.format_seconds(time_left_2))
+    time_2_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_chest_time"), time_2_text, addon.c("color_chest_timeleft"), main.format_seconds(time_left_2))
   end
 
   if time_2_text ~= current_time_2_text then
@@ -237,9 +241,9 @@ local function on_update_time(_, elapsed_time)
   local current_time_3_text = time_3_frame.text:GetText()
   local time_3_text = string.format("+3 (%s)", main.format_seconds(three_chest_time))
   if time_left_3 == 0 then
-    time_3_text = string.format("|c%s%s|r", addon.c("color_disabled"), time_3_text)
+    time_3_text = string.format("|c%s%s|r", addon.c("color_chest_time_expired"), time_3_text)
   else
-    time_3_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_primary"), time_3_text, addon.c("color_highlight"), main.format_seconds(time_left_3))
+    time_3_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_chest_time"), time_3_text, addon.c("color_chest_timeleft"), main.format_seconds(time_left_3))
   end
 
   if time_3_text ~= current_time_3_text then

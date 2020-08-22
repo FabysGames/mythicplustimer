@@ -175,9 +175,9 @@ function config_gui.create_slider(text, on_change, min_value, max_value, step, v
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function config_gui.create_line(parent)
+function config_gui.create_line(parent, height)
   local line_frame = CreateFrame("Frame", nil, parent)
-  line_frame:SetHeight(18)
+  line_frame:SetHeight(height or 18)
   line_frame:SetPoint("LEFT", 0)
   line_frame:SetPoint("RIGHT", -13, 0)
 

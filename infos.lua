@@ -28,6 +28,7 @@ local function create_deathcounter_frame()
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
+  frame.text:SetJustifyH("LEFT")
 
   -- tooltip
   local on_enter = function()
@@ -64,6 +65,7 @@ local function create_reaping_frame()
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
+  frame.text:SetJustifyH("LEFT")
 
   reaping_frame = frame
   return reaping_frame
@@ -82,6 +84,7 @@ local function create_prideful_frame()
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
+  frame.text:SetJustifyH("LEFT")
 
   prideful_frame = frame
   return prideful_frame
@@ -100,6 +103,7 @@ local function create_pull_frame()
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
+  frame.text:SetJustifyH("LEFT")
 
   pull_frame = frame
   return pull_frame
@@ -184,7 +188,7 @@ local function update_deathcounter(current_run, deathcount, death_timelost)
   -- update
   create_deathcounter_frame()
 
-  local deathcounter_text = string.format("|c%s%s %s:|r|c%s -%s", addon.c("color_primary"), deathcount, addon.t("lbl_deaths"), addon.c("color_highlight_invalid"), main.format_seconds(death_timelost))
+  local deathcounter_text = string.format("|c%s%s %s:|r|c%s -%s", addon.c("color_deathcounter"), deathcount, addon.t("lbl_deaths"), addon.c("color_deathcounter_timelost"), main.format_seconds(death_timelost))
   local current_deathcounter_text = deathcounter_frame.text:GetText()
 
   if current_deathcounter_text ~= deathcounter_text then
@@ -284,14 +288,14 @@ local function update_reaping(current_run)
   reaping_in_percent = math.floor(reaping_in_percent * mult + 0.5) / mult
 
   -- resolve text
-  local color_string = "|cFFFFFFFF"
+  local color_string = "|c" .. addon.c("color_prideful_value")
   if reaping_in_percent < 4 then
-    color_string = "|cFFFF0000"
+    color_string = "|c" .. addon.c("color_prideful_value_alert")
   elseif reaping_in_percent < 10 then
-    color_string = "|cFFFFFF00"
+    color_string = "|c" .. addon.c("color_prideful_value_warning")
   end
 
-  local reaping_text = "|c" .. addon.c("color_primary") .. addon.t("lbl_reapingin") .. ": " .. color_string .. reaping_in_percent .. "%" .. "|r"
+  local reaping_text = "|c" .. addon.c("color_prideful") .. addon.t("lbl_reapingin") .. ": " .. color_string .. reaping_in_percent .. "%" .. "|r"
 
   if addon.c("show_absolute_numbers") then
     reaping_text = reaping_text .. " (" .. math.ceil(reaping_in) .. ")"
@@ -374,14 +378,14 @@ local function update_prideful(current_run)
   prideful_in_percent = math.floor(prideful_in_percent * mult + 0.5) / mult
 
   -- resolve text
-  local color_string = "|cFFFFFFFF"
+  local color_string = "|c" .. addon.c("color_prideful_value")
   if prideful_in_percent < 4 then
-    color_string = "|cFFFF0000"
+    color_string = "|c" .. addon.c("color_prideful_value_alert")
   elseif prideful_in_percent < 10 then
-    color_string = "|cFFFFFF00"
+    color_string = "|c" .. addon.c("color_prideful_value_warning")
   end
 
-  local prideful_text = "|c" .. addon.c("color_primary") .. addon.t("lbl_pridefulin") .. ": " .. color_string .. prideful_in_percent .. "%" .. "|r"
+  local prideful_text = "|c" .. addon.c("color_prideful") .. addon.t("lbl_pridefulin") .. ": " .. color_string .. prideful_in_percent .. "%" .. "|r"
   if addon.c("show_absolute_numbers") then
     prideful_text = prideful_text .. " (" .. math.ceil(prideful_in) .. ")"
   end
@@ -447,7 +451,7 @@ local function update_pull(current_run)
   end
 
   -- update text
-  local text = "|c" .. addon.c("primary_color") .. addon.t("lbl_currentpull") .. ": |cFF00FF00" .. in_percent .. "%"
+  local text = "|c" .. addon.c("color_current_pull") .. addon.t("lbl_currentpull") .. ": |c" .. addon.c("color_current_pull") .. "" .. in_percent .. "%"
   if addon.c("show_absolute_numbers") then
     text = text .. " (" .. value .. ")"
   end
@@ -641,6 +645,10 @@ function infos:enable()
   addon.register_config_listener("show_pridefultimer", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
-  addon.register_config_listener("color_primary", on_config_change)
-  addon.register_config_listener("color_highlight_invalid", on_config_change)
+  addon.register_config_listener("color_deathcounter", on_config_change)
+  addon.register_config_listener("color_deathcounter_timelost", on_config_change)
+  addon.register_config_listener("color_prideful", on_config_change)
+  addon.register_config_listener("color_prideful_value", on_config_change)
+  addon.register_config_listener("color_prideful_value_alert", on_config_change)
+  addon.register_config_listener("color_prideful_value_warning", on_config_change)
 end

@@ -231,7 +231,7 @@ local function update_dungeon_info(current_run)
   dungeon_frame.tooltip = tooltip
 
   -- set text
-  affixes_text_frame.text:SetText(string.format("|c%s%s", addon.c("color_primary"), text))
+  affixes_text_frame.text:SetText(string.format("|c%s%s", addon.c("color_affixes"), text))
   affixes_text_frame:SetHeight(affixes_text_frame.text:GetStringHeight())
   affixes_text_frame:SetWidth(affixes_text_frame.text:GetStringWidth())
 
@@ -679,5 +679,11 @@ function main:enable()
   addon.register_config_listener("show_affixes_as_icons", on_config_change)
   addon.register_config_listener("show_affixes_as_text", on_config_change)
   addon.register_config_listener("color_dungeon_name", on_config_change)
-  addon.register_config_listener("color_primary", on_config_change)
+  addon.register_config_listener("color_affixes", on_config_change)
+  addon.register_config_listener("color_timeleft", on_config_change)
+  addon.register_config_listener("color_timeleft_expired", on_config_change)
+  addon.register_config_listener("color_time", on_config_change)
+  addon.register_config_listener("color_chest_timeleft", on_config_change)
+  addon.register_config_listener("color_chest_time", on_config_change)
+  addon.register_config_listener("color_chest_time_expired", on_config_change)
 end

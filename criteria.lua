@@ -103,6 +103,7 @@ local function create_step_frame(step_index)
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
   frame.text:SetPoint("TOPLEFT")
+  frame.text:SetJustifyH("LEFT")
 
   step_frames[step_index] = frame
   return step_frames[step_index]
@@ -173,7 +174,7 @@ local function resolve_time_info(step_index, current_run)
 
   -- time info
   local time = current_run.times[step_index]
-  local time_info = " - " .. main.format_seconds(time)
+  local time_info = "  |c" .. addon.c("color_objective_completed_time") .. main.format_seconds(time)
 
   -- add best times
   local best_times = addon.c("best_times")
@@ -284,7 +285,7 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
     local pull_value_text = " "
     if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
-      pull_value_text = pull_value_text .. "|c" .. addon.c("color_highlight") .. "+" .. pull_in_percent .. "%"
+      pull_value_text = pull_value_text .. "|c" .. addon.c("color_current_pull") .. "+" .. pull_in_percent .. "%"
       if addon.c("show_absolute_numbers") then
         pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
       end
@@ -425,10 +426,10 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   end
 
   -- update times
-  local color = addon.c("color_primary")
+  local color = addon.c("color_objective")
   if completed then
     set_step_completed(step_index, current_run, name)
-    color = addon.c("color_disabled")
+    color = addon.c("color_objective_completed")
   else
     -- set font
     if not step_frame.text.current_font or step_frame.text.current_font ~= "GameFontHighlight" then
@@ -531,7 +532,8 @@ function criteria:enable()
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_pull_values", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
-  addon.register_config_listener("color_primary", on_config_change)
-  addon.register_config_listener("color_disabled", on_config_change)
-  addon.register_config_listener("color_highlight", on_config_change)
+  addon.register_config_listener("color_objective", on_config_change)
+  addon.register_config_listener("color_objective_completed", on_config_change)
+  addon.register_config_listener("color_objective_completed_time", on_config_change)
+  addon.register_config_listener("color_current_pull", on_config_change)
 end

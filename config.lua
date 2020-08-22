@@ -30,11 +30,24 @@ local CONFIG_VALUES = {
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
   --
-  color_primary = "FFFFFFFF",
-  color_disabled = "FF808080",
-  color_highlight = "FF00FF00",
-  color_highlight_invalid = "FFFF0000",
   color_dungeon_name = "FFFFD100",
+  color_affixes = "FFFFFFFF",
+  color_timeleft = "FF00FF00",
+  color_timeleft_expired = "FFFF0000",
+  color_time = "FFFFFFFF",
+  color_chest_timeleft = "FF00FF00",
+  color_chest_time = "FFFFFFFF",
+  color_chest_time_expired = "FF808080",
+  color_objective = "FFFFFFFF",
+  color_objective_completed = "FF808080",
+  color_objective_completed_time = "FF808080",
+  color_current_pull = "FF00FF00",
+  color_deathcounter = "FFFFFFFF",
+  color_deathcounter_timelost = "FFFF0000",
+  color_prideful = "FFFFFFFF",
+  color_prideful_value = "FFFFFFFF",
+  color_prideful_value_warning = "FFFFFF00",
+  color_prideful_value_alert = "FFFF0000",
 }
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -100,11 +113,24 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_category_colors_default()
   local colors = {
-    "color_primary",
-    "color_disabled",
-    "color_highlight",
-    "color_highlight_invalid",
     "color_dungeon_name",
+    "color_affixes",
+    "color_timeleft",
+    "color_timeleft_expired",
+    "color_time",
+    "color_chest_timeleft",
+    "color_chest_time",
+    "color_chest_time_expired",
+    "color_objective",
+    "color_objective_completed",
+    "color_objective_completed_time",
+    "color_current_pull",
+    "color_deathcounter",
+    "color_deathcounter_timelost",
+    "color_prideful",
+    "color_prideful_value",
+    "color_prideful_value_warning",
+    "color_prideful_value_alert",
   }
 
   for _, key in ipairs(colors) do
@@ -282,39 +308,63 @@ local function on_category_colors_refresh(self)
 
   -- colors
   local colors = {
-    "color_primary",
-    "color_disabled",
-    "color_highlight",
-    "color_highlight_invalid",
     "color_dungeon_name",
+    "color_affixes",
+    "_line",
+    "color_timeleft",
+    "color_timeleft_expired",
+    "color_time",
+    "_line",
+    "color_chest_timeleft",
+    "color_chest_time",
+    "color_chest_time_expired",
+    "_line",
+    "color_objective",
+    "color_objective_completed",
+    "color_objective_completed_time",
+    "color_current_pull",
+    "_line",
+    "color_deathcounter",
+    "color_deathcounter_timelost",
+    "_line",
+    "color_prideful",
+    "color_prideful_value",
+    "color_prideful_value_warning",
+    "color_prideful_value_alert",
   }
 
   local colors_frames = {}
   local colors_frames_bykey = {}
   for i, key in ipairs(colors) do
-    local config_name = addon.t("config_" .. key)
+    if key == "_line" then
+      local line = config_gui.create_line(self, 6)
+      line:SetPoint("TOPLEFT", colors_frames[i - 1], "BOTTOMLEFT", 0, -3)
+      colors_frames[i] = line
+    else
+      local config_name = addon.t("config_" .. key)
 
-    local tooltip = {}
-    table.insert(tooltip, config_name)
-    table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+      local tooltip = {}
+      table.insert(tooltip, config_name)
+      table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
 
-    local picker = config_gui.create_color_picker(key, config_name, addon.c(key), false, function(config_key, color)
-      local current_run = main.get_current_run()
-      if current_run and current_run.is_completed then
-        main.show_demo()
+      local picker = config_gui.create_color_picker(key, config_name, addon.c(key), false, function(config_key, color)
+        local current_run = main.get_current_run()
+        if current_run and current_run.is_completed then
+          main.show_demo()
+        end
+
+        addon.set_config_value(config_key, color)
+      end, tooltip, self)
+
+      if i == 1 then
+        picker:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
+      else
+        picker:SetPoint("TOPLEFT", colors_frames[i - 1], "BOTTOMLEFT", 0, 0)
       end
 
-      addon.set_config_value(config_key, color)
-    end, tooltip, self)
-
-    if i == 1 then
-      picker:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
-    else
-      picker:SetPoint("TOPLEFT", colors_frames[i - 1], "BOTTOMLEFT", 0, 0)
+      colors_frames[i] = picker
+      colors_frames_bykey[key] = picker
     end
-
-    colors_frames[i] = picker
-    colors_frames_bykey[key] = picker
   end
 
   -- line
