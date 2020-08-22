@@ -9,12 +9,12 @@ local infos
 -- ---------------------------------------------------------------------------------------------------------------------
 local step_frames = {}
 local enemy_forces_bar
-local redColorBase = 0.8
-local greenColorBase = 0.4
-local blueColorBase = 0.404
-local redColorDiff = -0.235
-local greenColorDiff = 0.42
-local blueColorDiff = 0.063
+local red_color_base = 0.8
+local green_color_base = 0.4
+local blue_color_base = 0.404
+local red_color_diff = -0.235
+local green_color_diff = 0.42
+local blue_color_diff = 0.063
 
 local demo_steps = {
   {name = "Boss 1", completed = true, cur_value = 1, final_value = 1},
@@ -445,12 +445,13 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
       enemy_forces_bar:SetValue(quantity_percent)
 
-      local finalRedColor = redColorBase + redColorDiff * quantity_percent
-      local finalGreenColor = greenColorBase + greenColorDiff * quantity_percent
-      local finalBlueColor = blueColorBase + blueColorDiff * quantity_percent
+      local finalRedColor = red_color_base + red_color_diff * quantity_percent
+      local finalGreenColor = green_color_base + green_color_diff * quantity_percent
+      local finalBlueColor = blue_color_base + blue_color_diff * quantity_percent
 
       enemy_forces_bar:SetStatusBarColor(finalRedColor, finalGreenColor, finalBlueColor, 1)
     end
+
     -- reset current run time
     if current_run.times[step_index] then
       current_run.times[step_index] = nil
