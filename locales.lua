@@ -55,6 +55,7 @@ local enUS = {
   lbl_pridefulin = "Prideful in",
   lbl_enemyforces = "Enemy Forces",
   lbl_currentpull = "Current Pull",
+  lbl_colors = "Colors",
 }
 
 addon.add_locale("enUS", enUS)
@@ -114,6 +115,7 @@ local deDE = {
   lbl_pridefulin = "Stolz in",
   lbl_enemyforces = "Feindliche Streitkräfte",
   lbl_currentpull = "Aktueller Kampf",
+  lbl_colors = "Farben",
 }
 
 addon.add_locale("deDE", deDE)
@@ -173,6 +175,7 @@ local zhCN = {
   lbl_pridefulin = "Prideful in",
   lbl_enemyforces = "Enemy Forces",
   lbl_currentpull = "Current Pull",
+  lbl_colors = "Colors",
 }
 
 addon.add_locale("zhCN", zhCN)
@@ -232,6 +235,7 @@ local koKR = {
   lbl_pridefulin = "Prideful in",
   lbl_enemyforces = "Enemy Forces",
   lbl_currentpull = "Current Pull",
+  lbl_colors = "Colors",
 }
 
 addon.add_locale("koKR", koKR)
@@ -291,6 +295,7 @@ local zhTW = {
   lbl_pridefulin = "傲慢還剩",
   lbl_enemyforces = "敵方部隊",
   lbl_currentpull = "當前拉怪",
+  lbl_colors = "色彩",
 }
 
 addon.add_locale("zhTW", zhTW)

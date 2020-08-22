@@ -183,7 +183,7 @@ end
 local function update_dungeon_info(current_run)
   -- dungeon name
   local dungeon_frame = create_info_frame_dungeon()
-  local dungeon_name = "+" .. current_run.cm_level .. " - " .. current_run.zone_name
+  local dungeon_name = string.format("|c%s+%s - %s", addon.c("color_dungeon_name"), current_run.cm_level, current_run.zone_name)
 
   dungeon_frame.text:SetText(dungeon_name)
   dungeon_frame:SetHeight(dungeon_frame.text:GetStringHeight())
@@ -231,7 +231,7 @@ local function update_dungeon_info(current_run)
   dungeon_frame.tooltip = tooltip
 
   -- set text
-  affixes_text_frame.text:SetText(text)
+  affixes_text_frame.text:SetText(string.format("|c%s%s", addon.c("color_primary"), text))
   affixes_text_frame:SetHeight(affixes_text_frame.text:GetStringHeight())
   affixes_text_frame:SetWidth(affixes_text_frame.text:GetStringWidth())
 
@@ -678,4 +678,6 @@ function main:enable()
   addon.register_config_listener("hide_default_objectivetracker", on_objectivetracker_change)
   addon.register_config_listener("show_affixes_as_icons", on_config_change)
   addon.register_config_listener("show_affixes_as_text", on_config_change)
+  addon.register_config_listener("color_dungeon_name", on_config_change)
+  addon.register_config_listener("color_primary", on_config_change)
 end

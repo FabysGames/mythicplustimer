@@ -29,27 +29,18 @@ local CONFIG_VALUES = {
   show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
+  --
+  color_primary = "FFFFFFFF",
+  color_disabled = "FF808080",
+  color_highlight = "FF00FF00",
+  color_highlight_invalid = "FFFF0000",
+  color_dungeon_name = "FFFFD100",
 }
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- Options category
 local category
-
--- ---------------------------------------------------------------------------------------------------------------------
-local function on_input_enter(input)
-  if not input.tooltip then
-    return
-  end
-
-  GameTooltip:Hide()
-  GameTooltip:ClearLines()
-  GameTooltip:SetOwner(input, "ANCHOR_TOPLEFT")
-
-  for _, v in pairs(input.tooltip) do
-    GameTooltip:AddLine(v)
-  end
-  GameTooltip:Show()
-end
+local category_colors
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_button_click(button)
@@ -100,6 +91,26 @@ end
 
 --   frame:Show()
 -- end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function on_category_default()
+  MythicPlusTimerDB.config = CONFIG_VALUES
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+local function on_category_colors_default()
+  local colors = {
+    "color_primary",
+    "color_disabled",
+    "color_highlight",
+    "color_highlight_invalid",
+    "color_dungeon_name",
+  }
+
+  for _, key in ipairs(colors) do
+    MythicPlusTimerDB.config[key] = CONFIG_VALUES[key]
+  end
+end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local category_initialized = false
@@ -255,18 +266,93 @@ local function on_category_refresh(self)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function on_category_default()
-  MythicPlusTimerDB.config = CONFIG_VALUES
+local category_colors_initialized = false
+
+local function on_category_colors_refresh(self)
+  if category_colors_initialized then
+    return
+  end
+  category_colors_initialized = true
+
+  local name = self:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  local font_path, _, font_flags = name:GetFont()
+  name:SetFont(font_path, 16, font_flags)
+  name:SetPoint("TOPLEFT", 10, -16)
+  name:SetText(addon_name .. " - " .. addon.t("lbl_colors"))
+
+  -- colors
+  local colors = {
+    "color_primary",
+    "color_disabled",
+    "color_highlight",
+    "color_highlight_invalid",
+    "color_dungeon_name",
+  }
+
+  local colors_frames = {}
+  local colors_frames_bykey = {}
+  for i, key in ipairs(colors) do
+    local config_name = addon.t("config_" .. key)
+
+    local tooltip = {}
+    table.insert(tooltip, config_name)
+    table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. key))
+
+    local picker = config_gui.create_color_picker(key, config_name, addon.c(key), false, function(config_key, color)
+      local current_run = main.get_current_run()
+      if current_run and current_run.is_completed then
+        main.show_demo()
+      end
+
+      addon.set_config_value(config_key, color)
+    end, tooltip, self)
+
+    if i == 1 then
+      picker:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
+    else
+      picker:SetPoint("TOPLEFT", colors_frames[i - 1], "BOTTOMLEFT", 0, 0)
+    end
+
+    colors_frames[i] = picker
+    colors_frames_bykey[key] = picker
+  end
+
+  -- line
+  local line = config_gui.create_line(self)
+  line:SetPoint("TOPLEFT", colors_frames[#colors_frames], "BOTTOMLEFT", 0, -3)
+
+  -- reset button
+  local tooltip = {}
+  table.insert(tooltip, addon.t("config_colorsresetbtn"))
+  table.insert(tooltip, "|cFFFFFFFF" .. addon.t("config_desc_" .. "colorsresetbtn"))
+
+  local button = config_gui.create_button("colorsresetbtn", addon.t("config_colorsresetbtn"), function()
+    on_category_colors_default()
+    ReloadUI()
+  end, tooltip, self)
+
+  button:SetPoint("TOPLEFT", line, "BOTTOMLEFT", 0, -3)
+  button:SetPoint("RIGHT", -10, 0)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_options_category()
+  -- main
   category = CreateFrame("Frame")
   category.name = addon_name
   category.default = on_category_default
   category.refresh = on_category_refresh
 
   InterfaceOptions_AddCategory(category)
+
+  -- colors
+  category_colors = CreateFrame("Frame", nil, category)
+  category_colors.name = addon.t("lbl_colors")
+  category_colors.parent = category.name
+  category_colors.default = on_category_colors_default
+  category_colors.refresh = on_category_colors_refresh
+
+  InterfaceOptions_AddCategory(category_colors)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

@@ -93,7 +93,7 @@ local function create_step_frame(step_index)
   -- frame
   local frame = CreateFrame("Frame", nil, main.get_frame())
   if step_index == 1 then
-    frame:SetPoint("TOPLEFT", timer.get_label_3_frame(), "BOTTOMLEFT", 0, -20)
+    frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
   else
     frame:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
   end
@@ -284,7 +284,7 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
     local pull_value_text = " "
     if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
-      pull_value_text = pull_value_text .. "|cFF00FF00+" .. pull_in_percent .. "%"
+      pull_value_text = pull_value_text .. "|c" .. addon.c("color_highlight") .. "+" .. pull_in_percent .. "%"
       if addon.c("show_absolute_numbers") then
         pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
       end
@@ -425,14 +425,10 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   end
 
   -- update times
+  local color = addon.c("color_primary")
   if completed then
     set_step_completed(step_index, current_run, name)
-
-    -- set font
-    if not step_frame.text.current_font or step_frame.text.current_font ~= "GameFontDisable" then
-      step_frame.text:SetFontObject("GameFontDisable")
-      step_frame.text.current_font = "GameFontDisable"
-    end
+    color = addon.c("color_disabled")
   else
     -- set font
     if not step_frame.text.current_font or step_frame.text.current_font ~= "GameFontHighlight" then
@@ -467,7 +463,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   local step_info = resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, quantity)
 
   -- set text
-  local objective_text = step_info .. time_info
+  local objective_text = string.format("|c%s%s%s", color, step_info, time_info)
   local current_objective_text = step_frame.text:GetText()
 
   if current_objective_text ~= objective_text then
@@ -481,7 +477,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
   -- show frame
   if step_index == 1 then
-    step_frame:SetPoint("TOPLEFT", timer.get_label_3_frame(), "BOTTOMLEFT", 0, -20)
+    step_frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
   end
 
   step_frame:Show()
@@ -535,4 +531,7 @@ function criteria:enable()
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_pull_values", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
+  addon.register_config_listener("color_primary", on_config_change)
+  addon.register_config_listener("color_disabled", on_config_change)
+  addon.register_config_listener("color_highlight", on_config_change)
 end

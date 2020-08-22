@@ -184,7 +184,7 @@ local function update_deathcounter(current_run, deathcount, death_timelost)
   -- update
   create_deathcounter_frame()
 
-  local deathcounter_text = deathcount .. " " .. addon.t("lbl_deaths") .. ":|cFFFF0000 -" .. main.format_seconds(death_timelost)
+  local deathcounter_text = string.format("|c%s%s %s:|r|c%s -%s", addon.c("color_primary"), deathcount, addon.t("lbl_deaths"), addon.c("color_highlight_invalid"), main.format_seconds(death_timelost))
   local current_deathcounter_text = deathcounter_frame.text:GetText()
 
   if current_deathcounter_text ~= deathcounter_text then
@@ -291,7 +291,7 @@ local function update_reaping(current_run)
     color_string = "|cFFFFFF00"
   end
 
-  local reaping_text = addon.t("lbl_reapingin") .. ": " .. color_string .. reaping_in_percent .. "%" .. "|r"
+  local reaping_text = "|c" .. addon.c("color_primary") .. addon.t("lbl_reapingin") .. ": " .. color_string .. reaping_in_percent .. "%" .. "|r"
 
   if addon.c("show_absolute_numbers") then
     reaping_text = reaping_text .. " (" .. math.ceil(reaping_in) .. ")"
@@ -381,8 +381,7 @@ local function update_prideful(current_run)
     color_string = "|cFFFFFF00"
   end
 
-  local prideful_text = addon.t("lbl_pridefulin") .. ": " .. color_string .. prideful_in_percent .. "%" .. "|r"
-
+  local prideful_text = "|c" .. addon.c("color_primary") .. addon.t("lbl_pridefulin") .. ": " .. color_string .. prideful_in_percent .. "%" .. "|r"
   if addon.c("show_absolute_numbers") then
     prideful_text = prideful_text .. " (" .. math.ceil(prideful_in) .. ")"
   end
@@ -448,7 +447,7 @@ local function update_pull(current_run)
   end
 
   -- update text
-  local text = addon.t("lbl_currentpull") .. ": |cFF00FF00" .. in_percent .. "%"
+  local text = "|c" .. addon.c("primary_color") .. addon.t("lbl_currentpull") .. ": |cFF00FF00" .. in_percent .. "%"
   if addon.c("show_absolute_numbers") then
     text = text .. " (" .. value .. ")"
   end
@@ -642,4 +641,6 @@ function infos:enable()
   addon.register_config_listener("show_pridefultimer", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
+  addon.register_config_listener("color_primary", on_config_change)
+  addon.register_config_listener("color_highlight_invalid", on_config_change)
 end

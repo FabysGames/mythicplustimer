@@ -19,6 +19,28 @@ local function on_input_enter(input)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function hex_to_argb(hex)
+  if string.len(hex) == 8 then
+    return tonumber("0x" .. string.sub(hex, 1, 2)) / 255, tonumber("0x" .. string.sub(hex, 3, 4)) / 255, tonumber("0x" .. string.sub(hex, 5, 6)) / 255, tonumber("0x" .. string.sub(hex, 7, 8)) / 255
+  else
+    return 1, tonumber("0x" .. string.sub(hex, 1, 2)) / 255, tonumber("0x" .. string.sub(hex, 3, 4)) / 255, tonumber("0x" .. string.sub(hex, 5, 6)) / 255
+  end
+end
+
+local function rgba_to_hex(r, g, b, a)
+  r = math.ceil(255 * r)
+  g = math.ceil(255 * g)
+  b = math.ceil(255 * b)
+
+  if a == nil then
+    return string.format("FF%02x%02x%02x", r, g, b)
+  end
+
+  a = math.ceil(255 * a)
+  return string.format("%02x%02x%02x%02x", a, r, g, b)
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 function config_gui.create_checkbox(name, text, checked, on_change, tooltip, parent)
   local checkbox_frame = CreateFrame("Frame", nil, parent)
 
@@ -167,4 +189,79 @@ function config_gui.create_line(parent)
   line:SetTexCoord(0.81, 0.94, 0.5, 1)
 
   return line_frame
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
+function config_gui.create_color_picker(name, text, value, has_opacity, on_change, tooltip, parent)
+  local picker_frame = CreateFrame("Button", nil, parent)
+  picker_frame:SetWidth(350)
+  picker_frame:SetHeight(24)
+
+  picker_frame:EnableMouse(true)
+  picker_frame:SetScript("OnClick", function()
+    local on_color_picker_change = function(restore)
+      local new_r, new_g, new_b, new_a;
+      if restore then
+        new_r, new_g, new_b, new_a = unpack(restore);
+      else
+        new_a, new_r, new_g, new_b = OpacitySliderFrame:GetValue(), ColorPickerFrame:GetColorRGB();
+      end
+
+      picker_frame.color.value = {new_r, new_g, new_b, new_a}
+      picker_frame.color:SetColorTexture(new_r, new_g, new_b, new_a)
+
+      on_change(name, rgba_to_hex(new_r, new_g, new_b, new_a))
+    end
+
+    local r, g, b, a = unpack(picker_frame.color.value)
+
+    ColorPickerFrame.hasOpacity = has_opacity
+    ColorPickerFrame.opacity = a;
+    ColorPickerFrame.previousValues = {r, g, b, a};
+    ColorPickerFrame.func, ColorPickerFrame.opacityFunc, ColorPickerFrame.cancelFunc = on_color_picker_change, on_color_picker_change, on_color_picker_change;
+    ColorPickerFrame:SetColorRGB(r, g, b);
+    ColorPickerFrame:Hide();
+    ColorPickerFrame:Show();
+  end)
+
+  -- color
+  local color = picker_frame:CreateTexture(nil, "OVERLAY")
+  color:SetWidth(24)
+  color:SetHeight(16)
+  color:SetPoint("LEFT")
+
+  local a, r, g, b = hex_to_argb(value)
+  color.value = {r, g, b, a}
+  color:SetColorTexture(r, g, b, a)
+
+  picker_frame.color = color
+
+  -- background
+  local background = picker_frame:CreateTexture(nil, "BACKGROUND")
+  background:SetWidth(24)
+  background:SetHeight(16)
+  background:SetTexture(188523)
+  background:SetTexCoord(0.25, 0, 0.5, 0.25)
+  background:SetDesaturated(true)
+  background:SetVertexColor(1, 1, 1, 0.75)
+  background:SetPoint("CENTER", color)
+  background:Show()
+
+  -- text
+  local color_text = picker_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+  color_text:SetHeight(24)
+  color_text:SetJustifyH("LEFT")
+  color_text:SetPoint("LEFT", color, "RIGHT", 5, 0)
+  color_text:SetText(text)
+  color_text:Show()
+
+  picker_frame.text = color_text
+
+  -- tooltip
+  picker_frame.tooltip = tooltip
+
+  picker_frame:SetScript("OnEnter", on_input_enter)
+  picker_frame:SetScript("OnLeave", GameTooltip_Hide)
+
+  return picker_frame
 end

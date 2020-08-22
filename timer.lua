@@ -67,52 +67,26 @@ local function create_timer_frames()
 
   timer_frames.time_in_cm = time_in_cm_frame
 
-  -- +2 label
-  local label_2_frame = CreateFrame("Frame", nil, main_frame)
-  label_2_frame:ClearAllPoints()
-  label_2_frame:SetPoint("TOPLEFT", time_left_frame, "BOTTOMLEFT", 0, -5)
-  label_2_frame:SetScript("OnMouseDown", on_frame_mousedown)
-
-  label_2_frame.text = label_2_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  font_path, _, font_flags = label_2_frame.text:GetFont()
-  label_2_frame.text:SetFont(font_path, 12, font_flags)
-  label_2_frame.text:SetPoint("TOPLEFT")
-
-  timer_frames.label_2 = label_2_frame
-
-  -- +2 timer
+  -- +2
   local time_2_frame = CreateFrame("Frame", nil, main_frame)
   time_2_frame:ClearAllPoints()
-  time_2_frame:SetPoint("BOTTOMLEFT", label_2_frame, "BOTTOMRIGHT", 5, 0)
+  time_2_frame:SetPoint("TOPLEFT", time_left_frame, "BOTTOMLEFT", 0, -5)
   time_2_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
-  time_2_frame.text = time_2_frame:CreateFontString(nil, "OVERLAY", "GameFontGreen")
+  time_2_frame.text = time_2_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   font_path, _, font_flags = time_2_frame.text:GetFont()
   time_2_frame.text:SetFont(font_path, 12, font_flags)
   time_2_frame.text:SetPoint("TOPLEFT")
 
   timer_frames.time_2 = time_2_frame
 
-  -- +3 label
-  local label_3_frame = CreateFrame("Frame", nil, main_frame)
-  label_3_frame:ClearAllPoints()
-  label_3_frame:SetPoint("TOPLEFT", label_2_frame, "BOTTOMLEFT", 0, -5)
-  label_3_frame:SetScript("OnMouseDown", on_frame_mousedown)
-
-  label_3_frame.text = label_3_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  font_path, _, font_flags = label_3_frame.text:GetFont()
-  label_3_frame.text:SetFont(font_path, 12, font_flags)
-  label_3_frame.text:SetPoint("TOPLEFT")
-
-  timer_frames.label_3 = label_3_frame
-
-  -- +3 timer
+  -- +3
   local time_3_frame = CreateFrame("Frame", nil, main_frame)
   time_3_frame:ClearAllPoints()
-  time_3_frame:SetPoint("BOTTOMLEFT", label_3_frame, "BOTTOMRIGHT", 5, 0)
+  time_3_frame:SetPoint("TOPLEFT", time_2_frame, "BOTTOMLEFT", 0, -5)
   time_3_frame:SetScript("OnMouseDown", on_frame_mousedown)
 
-  time_3_frame.text = time_3_frame:CreateFontString(nil, "OVERLAY", "GameFontGreen")
+  time_3_frame.text = time_3_frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   font_path, _, font_flags = time_3_frame.text:GetFont()
   time_3_frame.text:SetFont(font_path, 12, font_flags)
   time_3_frame.text:SetPoint("TOPLEFT")
@@ -189,42 +163,37 @@ local function on_update_time(_, elapsed_time)
 
   current_run.time_left = time_left
 
-  -- time left - font
-  local font = "GameFontGreenLarge"
-  if time_left == 0 then
-    font = "GameFontRedLarge"
-  end
-
-  if not time_left_frame.text.current_font or time_left_frame.text.current_font ~= font then
-    time_left_frame.text:SetFontObject(font)
-    time_left_frame.text.current_font = font
-  end
-
   -- time left - text
-  local time_left_text = main.format_seconds(time_left)
   local current_time_left_text = time_left_frame.text:GetText()
 
-  time_left_frame.text:SetText(time_left_text)
+  local time_left_text = main.format_seconds(time_left)
+  if time_left == 0 then
+    time_left_text = string.format("|c%s%s", addon.c("color_highlight_invalid"), time_left_text)
+  else
+    time_left_text = string.format("|c%s%s", addon.c("color_highlight"), time_left_text)
+  end
 
-  if not current_time_left_text or not time_left_text or string.len(time_left_text) ~= string.len(current_time_left_text) then
-    local current_width = time_left_frame.text:GetStringWidth() + 2
-    if not time_left_frame.width or current_width > time_left_frame.width then
-      time_left_frame.width = current_width
+  if time_left_text ~= current_time_left_text then
+    time_left_frame.text:SetText(time_left_text)
+
+    if not current_time_left_text or not time_left_text or string.len(time_left_text) ~= string.len(current_time_left_text) then
+      time_left_frame:SetHeight(time_left_frame.text:GetStringHeight())
+      time_left_frame:SetWidth(time_left_frame.text:GetStringWidth())
     end
-
-    time_left_frame:SetHeight(time_left_frame.text:GetStringHeight())
-    time_left_frame:SetWidth(time_left_frame.width)
   end
 
   -- time in cm
-  local time_in_cm_text = "(" .. main.format_seconds(elapsed_time) .. " / " .. main.format_seconds(current_run.max_time) .. ")"
   local current_time_in_cm_text = time_in_cm_frame.text:GetText()
 
-  time_in_cm_frame.text:SetText(time_in_cm_text)
+  local time_in_cm_text = string.format("|c%s(%s / %s)", addon.c("color_primary"), main.format_seconds(elapsed_time), main.format_seconds(current_run.max_time))
 
-  if not time_in_cm_text or not current_time_in_cm_text or string.len(time_in_cm_text) ~= string.len(current_time_in_cm_text) then
-    time_in_cm_frame:SetHeight(time_in_cm_frame.text:GetStringHeight())
-    time_in_cm_frame:SetWidth(time_in_cm_frame.text:GetStringWidth())
+  if time_in_cm_text ~= current_time_in_cm_text then
+    time_in_cm_frame.text:SetText(time_in_cm_text)
+
+    if not time_in_cm_text or not current_time_in_cm_text or string.len(time_in_cm_text) ~= string.len(current_time_in_cm_text) then
+      time_in_cm_frame:SetHeight(time_in_cm_frame.text:GetStringHeight())
+      time_in_cm_frame:SetWidth(time_in_cm_frame.text:GetStringWidth())
+    end
   end
 
   -- chest timer
@@ -245,95 +214,41 @@ local function on_update_time(_, elapsed_time)
   current_run.time_left_3 = time_left_3
 
   -- +2
-  local label_2_frame = timer_frames.label_2
   local time_2_frame = timer_frames.time_2
-
-  local current_label_2_text = label_2_frame.text:GetText()
   local current_time_2_text = time_2_frame.text:GetText()
-  local label_2_text = "+2 (" .. main.format_seconds(two_chest_time) .. ")"
-  local time_2_text = ""
-  local update_time_2_frame_pos = false
-
+  local time_2_text = string.format("+2 (%s)", main.format_seconds(two_chest_time))
   if time_left_2 == 0 then
-    if not label_2_frame.text.currentFont or label_2_frame.text.currentFont ~= "GameFontDisable" then
-      label_2_frame.text:SetFontObject("GameFontDisable")
-      label_2_frame.text.currentFont = "GameFontDisable"
-    end
-
-    -- hide time 2 frame
-    time_2_frame:Hide()
+    time_2_text = string.format("|c%s%s|r", addon.c("color_disabled"), time_2_text)
   else
-    label_2_text = label_2_text .. ":"
+    time_2_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_primary"), time_2_text, addon.c("color_highlight"), main.format_seconds(time_left_2))
+  end
 
-    if not label_2_frame.text.currentFont or label_2_frame.text.currentFont ~= "GameFontHighlight" then
-      label_2_frame.text:SetFontObject("GameFontHighlight")
-      label_2_frame.text.currentFont = "GameFontHighlight"
-    end
-
-    -- update time 2 info
-    time_2_text = main.format_seconds(time_left_2)
+  if time_2_text ~= current_time_2_text then
     time_2_frame.text:SetText(time_2_text)
-    time_2_frame:Show()
-    update_time_2_frame_pos = true
-  end
 
-  label_2_frame.text:SetText(label_2_text)
-
-  -- +2 update frames
-  if not label_2_text or not current_label_2_text or string.len(label_2_text) ~= string.len(current_label_2_text) then
-    label_2_frame:SetHeight(label_2_frame.text:GetStringHeight())
-    label_2_frame:SetWidth(label_2_frame.text:GetStringWidth())
-  end
-
-  if update_time_2_frame_pos and (not time_2_text or not current_time_2_text or string.len(time_2_text) ~= string.len(current_time_2_text)) then
-    time_2_frame:SetHeight(time_2_frame.text:GetStringHeight())
-    time_2_frame:SetWidth(time_2_frame.text:GetStringWidth())
+    if not time_2_text or not current_time_2_text or string.len(time_2_text) ~= string.len(current_time_2_text) then
+      time_2_frame:SetHeight(time_2_frame.text:GetStringHeight())
+      time_2_frame:SetWidth(time_2_frame.text:GetStringWidth())
+    end
   end
 
   -- +3
-  local label_3_frame = timer_frames.label_3
   local time_3_frame = timer_frames.time_3
-
-  local current_label_3_text = label_3_frame.text:GetText()
   local current_time_3_text = time_3_frame.text:GetText()
-  local label_3_text = "+3 (" .. main.format_seconds(three_chest_time) .. ")"
-  local time_3_text = ""
-  local update_time_3_frame_pos = false
-
+  local time_3_text = string.format("+3 (%s)", main.format_seconds(three_chest_time))
   if time_left_3 == 0 then
-    if not label_3_frame.text.currentFont or label_3_frame.text.currentFont ~= "GameFontDisable" then
-      label_3_frame.text:SetFontObject("GameFontDisable")
-      label_3_frame.text.currentFont = "GameFontDisable"
-    end
-
-    -- hide time 3 frame
-    time_3_frame:Hide()
+    time_3_text = string.format("|c%s%s|r", addon.c("color_disabled"), time_3_text)
   else
-    label_3_text = label_3_text .. ":"
+    time_3_text = string.format("|c%s%s:|r |c%s%s", addon.c("color_primary"), time_3_text, addon.c("color_highlight"), main.format_seconds(time_left_3))
+  end
 
-    if not label_3_frame.text.currentFont or label_3_frame.text.currentFont ~= "GameFontHighlight" then
-      label_3_frame.text:SetFontObject("GameFontHighlight")
-      label_3_frame.text.currentFont = "GameFontHighlight"
-    end
-
-    -- update time 3 info
-    time_3_text = main.format_seconds(time_left_3)
+  if time_3_text ~= current_time_3_text then
     time_3_frame.text:SetText(time_3_text)
-    time_3_frame:Show()
-    update_time_3_frame_pos = true
-  end
 
-  label_3_frame.text:SetText(label_3_text)
-
-  -- +3 update frames
-  if not label_3_text or not current_label_3_text or string.len(label_3_text) ~= string.len(current_label_3_text) then
-    label_3_frame:SetHeight(label_3_frame.text:GetStringHeight())
-    label_3_frame:SetWidth(label_3_frame.text:GetStringWidth())
-  end
-
-  if update_time_3_frame_pos and (not time_3_text or not current_time_3_text or string.len(time_3_text) ~= string.len(current_time_3_text)) then
-    time_3_frame:SetHeight(time_3_frame.text:GetStringHeight())
-    time_3_frame:SetWidth(time_3_frame.text:GetStringWidth())
+    if not time_3_text or not current_time_3_text or string.len(time_3_text) ~= string.len(current_time_3_text) then
+      time_3_frame:SetHeight(time_3_frame.text:GetStringHeight())
+      time_3_frame:SetWidth(time_3_frame.text:GetStringWidth())
+    end
   end
 
   -- update criteria
@@ -383,8 +298,8 @@ function timer.update_time(elapsed_time)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function timer.get_label_3_frame()
-  return timer_frames.label_3
+function timer.get_time_3_frame()
+  return timer_frames.time_3
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
