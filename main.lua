@@ -411,11 +411,68 @@ local function on_challenge_mode_reset()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+local function resolve_current_instance_data()
+  local _, _, _, _, _, _, _, current_zone_id = GetInstanceInfo()
+  local cm_level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
+  local current_map_id = C_ChallengeMode.GetActiveChallengeMapID()
+  local _, _, steps = C_Scenario.GetStepInfo()
+  local zone_name, _, max_time = C_ChallengeMode.GetMapUIInfo(current_map_id)
+
+  local affixes_ids = {}
+  local is_teeming = false
+  for _, affix_id in pairs(affixes) do
+    table.insert(affixes_ids, affix_id)
+
+    if affix_id == 5 then
+      is_teeming = true
+    end
+  end
+
+  local affixes_key = "affixes"
+  for _, k in ipairs(affixes_ids) do
+    affixes_key = affixes_key .. "-" .. k
+  end
+
+  return {
+    cm_level = cm_level,
+    level_key = "l" .. cm_level,
+    affixes = affixes,
+    affixes_key = affixes_key,
+    zone_name = zone_name,
+    current_zone_id = current_zone_id,
+    current_map_id = current_map_id,
+    max_time = max_time,
+    steps = steps,
+    is_teeming = is_teeming,
+  }
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 local function restart_challenge_mode()
   -- check if in active run
   local current_run = main.get_current_run()
   if current_run and not current_run.is_demo then
     main.hide_default_tracker()
+
+    local data = resolve_current_instance_data()
+
+    if current_run.level_key .. current_run.affixes_key ~= data.level_key .. data.affixes_key then
+      current_run.times = {}
+    end
+
+    current_run.cm_level = data.cm_level
+    current_run.level_key = data.level_key
+    current_run.affixes = data.affixes
+    current_run.affixes_key = data.affixes_key
+    current_run.zone_name = data.zone_name
+    current_run.current_zone_id = data.current_zone_id
+    current_run.current_map_id = data.current_map_id
+    current_run.max_time = data.max_time
+    current_run.steps = data.steps
+    current_run.is_teeming = data.is_teeming
+
+    addon.set_config_value("current_run", current_run)
+
     update_dungeon_info(current_run)
     main.show_frame()
 
@@ -471,39 +528,20 @@ function main.on_challenge_mode_start()
   end
 
   -- resolve current instance data
-  local _, _, _, _, _, _, _, current_zone_id = GetInstanceInfo()
-  local cm_level, affixes = C_ChallengeMode.GetActiveKeystoneInfo()
-  local current_map_id = C_ChallengeMode.GetActiveChallengeMapID()
-  local _, _, steps = C_Scenario.GetStepInfo()
-  local zone_name, _, max_time = C_ChallengeMode.GetMapUIInfo(current_map_id)
-
-  local affixes_ids = {}
-  local is_teeming = false
-  for _, affix_id in pairs(affixes) do
-    table.insert(affixes_ids, affix_id)
-
-    if affix_id == 5 then
-      is_teeming = true
-    end
-  end
-
-  local affixes_key = "affixes"
-  for _, k in ipairs(affixes_ids) do
-    affixes_key = affixes_key .. "-" .. k
-  end
+  local data = resolve_current_instance_data()
 
   local current_run = {
-    cm_level = cm_level,
-    level_key = "l" .. cm_level,
-    affixes = affixes,
-    affixes_key = affixes_key,
-    zone_name = zone_name,
-    current_zone_id = current_zone_id,
-    current_map_id = current_map_id,
-    max_time = max_time,
-    steps = steps,
+    cm_level = data.cm_level,
+    level_key = data.level_key,
+    affixes = data.affixes,
+    affixes_key = data.affixes_key,
+    zone_name = data.zone_name,
+    current_zone_id = data.current_zone_id,
+    current_map_id = data.current_map_id,
+    max_time = data.max_time,
+    steps = data.steps,
+    is_teeming = data.is_teeming,
     times = {},
-    is_teeming = is_teeming,
   }
 
   addon.set_config_value("current_run", current_run)
@@ -511,16 +549,16 @@ function main.on_challenge_mode_start()
   -- create initial best times config entries
   local best_times = addon.c("best_times")
 
-  if not best_times[current_zone_id] then
-    best_times[current_zone_id] = {}
+  if not best_times[current_run.current_zone_id] then
+    best_times[current_run.current_zone_id] = {}
   end
 
-  if not best_times[current_zone_id][current_run.level_key] then
-    best_times[current_zone_id][current_run.level_key] = {}
+  if not best_times[current_run.current_zone_id][current_run.level_key] then
+    best_times[current_run.current_zone_id][current_run.level_key] = {}
   end
 
-  if not best_times[current_zone_id][current_run.level_key .. current_run.affixes_key] then
-    best_times[current_zone_id][current_run.level_key .. current_run.affixes_key] = {}
+  if not best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key] then
+    best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key] = {}
   end
 
   -- update dungeon info
