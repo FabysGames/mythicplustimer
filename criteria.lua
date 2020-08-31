@@ -174,6 +174,10 @@ local function resolve_time_info(step_index, current_run)
 
   -- time info
   local time = current_run.times[step_index]
+  if time == 0 then
+    return ""
+  end
+
   local time_info = "  |c" .. addon.c("color_objective_completed_time") .. main.format_seconds(time)
 
   -- add best times
