@@ -13,7 +13,7 @@ local function insert_keystone()
     for slot = 1, slots do
       -- check if item at slot is the key
       local item_id = GetContainerItemID(bag, slot)
-      if item_id == 180653 or item_id == 158923 then
+      if item_id == 180653 or item_id == 158923 or item_id == 151086 then
         -- pickup item and insert it
         PickupContainerItem(bag, slot)
         if (CursorHasItem()) then
