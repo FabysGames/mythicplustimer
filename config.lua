@@ -71,38 +71,39 @@ local function on_button_click(button)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
--- local function export_data()
---   local npc_progress = addon.c("npc_progress")
---   if not npc_progress then
---     return
---   end
+local function export_data()
+  local npc_progress = addon.c("npc_progress")
+  if not npc_progress then
+    addon.print("no data found")
+    return
+  end
 
---   local frame = CreateFrame("Frame", nil, UIParent)
---   frame:SetPoint("CENTER", 0, 0)
---   frame:SetWidth(300)
---   frame:SetHeight(100)
+  local frame = CreateFrame("Frame", nil, UIParent)
+  frame:SetPoint("CENTER", 0, 0)
+  frame:SetWidth(300)
+  frame:SetHeight(100)
 
---   local data = "{"
---   for npc_id, _ in pairs(npc_progress) do
---     local value, occurrences = nil, -1
---     for val, val_occurrences in pairs(npc_progress[npc_id]) do
---       if val_occurrences > occurrences then
---         value, occurrences = val, val_occurrences
---       end
---     end
+  local data = "{"
+  for npc_id, _ in pairs(npc_progress) do
+    local value, occurrences = nil, -1
+    for val, val_occurrences in pairs(npc_progress[npc_id]) do
+      if val_occurrences > occurrences then
+        value, occurrences = val, val_occurrences
+      end
+    end
 
---     data = data .. "[" .. npc_id .. "]={[" .. value .. "]=1},"
---   end
---   data = data .. "}"
+    data = data .. "[" .. npc_id .. "]={[" .. value .. "]=1},"
+  end
+  data = data .. "}"
 
---   local f = CreateFrame("EditBox", "MPTExport", frame, "InputBoxTemplate")
---   f:SetSize(300, 50)
---   f:SetPoint("CENTER", 0, 0)
---   f:SetScript("OnEnterPressed", frame.Hide)
---   f:SetText(data)
+  local f = CreateFrame("EditBox", "MPTExport", frame, "InputBoxTemplate")
+  f:SetSize(300, 50)
+  f:SetPoint("CENTER", 0, 0)
+  f:SetScript("OnEnterPressed", frame.Hide)
+  f:SetText(data)
 
---   frame:Show()
--- end
+  frame:Show()
+end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_category_default()
@@ -283,11 +284,6 @@ local function on_category_refresh(self)
 
   unlock_checkbox:SetPoint("TOPRIGHT", self, "TOPRIGHT", -10, -10)
   unlock_checkbox.checkbox:SetChecked(main.is_frame_moveable())
-
-  -- -- export data button
-  -- local export_button = config_gui.create_button("export_data", "Export Data", export_data, nil, self)
-  -- export_button:SetPoint("TOPLEFT", scary_buttons_frames[#scary_buttons_frames], "BOTTOMLEFT", 0, -3)
-  -- export_button:SetPoint("RIGHT", -10, 0)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -444,6 +440,13 @@ local function on_slash_command(msg)
     return
   end
 
+  -- export
+  if msg == "export" then
+    export_data()
+    return
+  end
+
+  -- debug
   if msg == "debug" then
     local frame = CreateFrame("Frame", nil, UIParent)
     frame:SetPoint("CENTER", 0, 0)
