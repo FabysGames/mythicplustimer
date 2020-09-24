@@ -365,6 +365,11 @@ local function update_prideful(current_run)
   -- absolute number
   local prideful_quantity = current_run.final_quantity_number / 5
   local prideful_in = prideful_quantity - current_run.quantity_number % prideful_quantity
+  local missing_absolute = current_run.final_quantity_number - current_run.quantity_number
+
+  if prideful_in > missing_absolute then
+    prideful_in = missing_absolute
+  end
 
   if current_prideful_in == prideful_in then
     return
