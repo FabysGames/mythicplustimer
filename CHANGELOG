@@ -1,3 +1,8 @@
+MythicPlusTimer 4.1.0
+===================================
+- Added esES (and support for esMX) locale (Created by xergio (https://github.com/xergio), thanks)
+- Added an option to enable/disable the percent displays (optional, enabled by default)
+
 MythicPlusTimer 4.0.1
 ===================================
 - Update for WoW 9.0.2

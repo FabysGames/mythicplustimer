@@ -16,6 +16,7 @@ local CONFIG_VALUES = {
   objective_time_inchat = true,
   show_deathcounter = true,
   progress_tooltip = true,
+  show_percent_numbers = true,
   show_absolute_numbers = false,
   show_enemy_forces_bar = false,
   insert_keystone = true,
@@ -163,6 +164,7 @@ local function on_category_refresh(self)
     "objective_time_inchat",
     "show_deathcounter",
     "progress_tooltip",
+    "show_percent_numbers",
     "show_absolute_numbers",
     "show_pull_values",
     "show_enemy_forces_bar",
@@ -197,6 +199,16 @@ local function on_category_refresh(self)
       if config_key == "objective_time_perlevelaffix" and checked and addon.c("objective_time_perlevel") then
         addon.set_config_value("objective_time_perlevel", false)
         checkboxes_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+      end
+
+      if config_key == "show_percent_numbers" and not checked and not addon.c("show_absolute_numbers") then
+        addon.set_config_value("show_absolute_numbers", true)
+        checkboxes_frames_bykey["show_absolute_numbers"].checkbox:SetChecked(true)
+      end
+
+      if config_key == "show_absolute_numbers" and not checked and not addon.c("show_percent_numbers") then
+        addon.set_config_value("show_percent_numbers", true)
+        checkboxes_frames_bykey["show_percent_numbers"].checkbox:SetChecked(true)
       end
 
       addon.set_config_value(config_key, checked)

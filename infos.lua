@@ -390,9 +390,18 @@ local function update_prideful(current_run)
     color_string = "|c" .. addon.c("color_prideful_value_warning")
   end
 
-  local prideful_text = "|c" .. addon.c("color_prideful") .. addon.t("lbl_pridefulin") .. " " .. color_string .. prideful_in_percent .. "%" .. "|r"
+  local prideful_text = "|c" .. addon.c("color_prideful") .. addon.t("lbl_pridefulin") .. " " .. color_string
+
+  if addon.c("show_percent_numbers") then
+    prideful_text = prideful_text .. prideful_in_percent .. "%"
+  end
+
   if addon.c("show_absolute_numbers") then
-    prideful_text = prideful_text .. " (" .. math.ceil(prideful_in) .. ")"
+    if addon.c("show_percent_numbers") then
+      prideful_text = prideful_text .. "|r (" .. math.ceil(prideful_in) .. ")"
+    else
+      prideful_text = prideful_text .. math.ceil(prideful_in) .. "|r"
+    end
   end
 
   -- set text
@@ -656,4 +665,5 @@ function infos:enable()
   addon.register_config_listener("color_prideful_value", on_config_change)
   addon.register_config_listener("color_prideful_value_alert", on_config_change)
   addon.register_config_listener("color_prideful_value_warning", on_config_change)
+  addon.register_config_listener("show_percent_numbers", on_config_change)
 end

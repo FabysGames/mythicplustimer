@@ -289,15 +289,29 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
     local pull_value_text = " "
     if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
-      pull_value_text = pull_value_text .. "|c" .. addon.c("color_current_pull") .. "+" .. pull_in_percent .. "%"
+      pull_value_text = pull_value_text .. "|c" .. addon.c("color_current_pull")
+
+      if addon.c("show_percent_numbers") then
+        pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
+      end
+
       if addon.c("show_absolute_numbers") then
-        pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
+        if addon.c("show_percent_numbers") then
+          pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
+        else
+          pull_value_text = pull_value_text .. "+" .. pull_value
+        end
       end
 
       pull_value_text = pull_value_text .. "|r "
     end
 
-    -- resolve absolute number text
+    -- resolve text
+    local percent_text = ""
+    if addon.c("show_percent_numbers") then
+      percent_text = " " .. quantity_percent .. "% "
+    end
+
     local absolute_number = ""
     if addon.c("show_absolute_numbers") then
       local missing_absolute = final_value - quantity_number
@@ -307,13 +321,19 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
         missing_absolute = " - " .. missing_absolute
       end
 
-      absolute_number = " (" .. quantity_number .. "/" .. final_value .. missing_absolute .. ")"
+      absolute_number = quantity_number .. "/" .. final_value .. missing_absolute
+
+      if addon.c("show_percent_numbers") then
+        absolute_number = " (" .. absolute_number .. ")"
+      else
+        absolute_number = " " .. absolute_number
+      end
     end
 
     if completed or not addon.c("show_enemy_forces_bar") then
-      return "- " .. quantity_percent .. "% " .. absolute_number .. pull_value_text .. name
+      return "-" .. percent_text .. absolute_number .. pull_value_text .. name
     else
-      return quantity_percent .. "% " .. absolute_number .. pull_value_text
+      return percent_text .. absolute_number .. pull_value_text
     end
   end
 
@@ -534,6 +554,7 @@ function criteria:enable()
   addon.register_config_listener("objective_time_perlevel", on_config_change)
   addon.register_config_listener("objective_time_perlevelaffix", on_config_change)
   addon.register_config_listener("objective_time", on_config_change)
+  addon.register_config_listener("show_percent_numbers", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)
   addon.register_config_listener("show_pull_values", on_config_change)
   addon.register_config_listener("show_enemy_forces_bar", on_config_change)
