@@ -216,9 +216,17 @@ local function on_tooltip_set_unit(tooltip)
   -- create tooltip info
   local name = C_Scenario.GetCriteriaInfo(steps)
 
-  local absolute_number = ""
+  local text = ""
+  if addon.c("show_percent_numbers") then
+    text = text .. quantity_percent .. "%"
+  end
+
   if addon.c("show_absolute_numbers") then
-    absolute_number = " (+" .. value .. ")"
+    if addon.c("show_percent_numbers") then
+      text = text .. " (+" .. value .. ")"
+    else
+      text = text .. value
+    end
   end
 
   local mdt_info = ""
@@ -226,7 +234,7 @@ local function on_tooltip_set_unit(tooltip)
   --   mdt_info = " [MDT]"
   -- end
 
-  GameTooltip:AddDoubleLine(name .. ": +" .. quantity_percent .. "%" .. absolute_number .. mdt_info)
+  GameTooltip:AddDoubleLine(name .. ": +" .. text .. mdt_info)
   GameTooltip:Show()
 end
 
