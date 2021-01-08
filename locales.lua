@@ -599,6 +599,7 @@ local esES = {
 }
 
 addon.add_locale("esES", esES)
+addon.add_locale("esMX", esES) -- Sorry, this should be temporary until some LATAM friend add this locale.
 
 -- ---------------------------------------------------------------------------------------------------------------------
 -- ptBR
@@ -699,4 +700,3 @@ local ptBR = {
 }
 
 addon.add_locale("ptBR", ptBR)
-addon.add_locale("esMX", esES) -- Sorry, this should be temporary until some LATAM friend add this locale.
