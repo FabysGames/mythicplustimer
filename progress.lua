@@ -127,6 +127,11 @@ local function on_scenario_criteria_update()
     return
   end
 
+  -- skip if run is completed
+  if current_run.is_completed then
+    return
+  end
+
   -- resolve enemy forces quantity
   local _, _, steps = C_Scenario.GetStepInfo()
   if not steps or steps <= 0 then
@@ -136,6 +141,10 @@ local function on_scenario_criteria_update()
   local _, _, _, _, final_value, _, _, quantity = C_Scenario.GetCriteriaInfo(steps)
   local quantity_number = string.sub(quantity, 1, string.len(quantity) - 1)
   quantity_number = tonumber(quantity_number)
+
+  if quantity_number == nil then
+    return
+  end
 
   -- set last_quantity if not set (first kill after start / restart will not be calculated)
   if last_quantity == nil then
