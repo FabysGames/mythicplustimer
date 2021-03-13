@@ -1,3 +1,7 @@
+MythicPlusTimer 4.3.0
+===================================
+- Update for WoW 9.0.5
+
 MythicPlusTimer 4.2.1
 ===================================
 - Fixed Lua Error while doing a scenario after finishing a m+ dungeon.
