@@ -1,5 +1,5 @@
 ## Interface: 90005
-## Version: 4.3.0
+## Version: 4.3.1
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
