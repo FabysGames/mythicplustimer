@@ -218,12 +218,16 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone_level
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        time_info = time_info .. " (" .. diff_info .. ")"
+      else
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. ", " .. diff_info .. ")"
+      end
     end
   end
 
@@ -239,12 +243,16 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone_level_affixes
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        time_info = time_info .. " (" .. diff_info .. ")"
+      else
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. ", " .. diff_info .. ")"
+      end
     end
   end
 
@@ -260,12 +268,16 @@ local function resolve_time_info(step_index, current_run)
       local diff = time - last_best_time_zone
       local diff_info = ""
       if diff > 0 then
-        diff_info = ", +" .. main.format_seconds(diff)
+        diff_info = "+" .. main.format_seconds(diff)
       elseif diff < 0 then
-        diff_info = ", -" .. main.format_seconds(diff * -1)
+        diff_info = "-" .. main.format_seconds(diff * -1)
       end
 
-      time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. diff_info .. ")"
+      if addon.c("objective_time_delta_only") then
+        time_info = time_info .. " (" .. diff_info .. ")"
+      else
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. ", " .. diff_info .. ")"
+      end
     end
   end
 
@@ -591,6 +603,7 @@ function criteria:enable()
   addon.register_config_listener("objective_time_inchat", on_config_change)
   addon.register_config_listener("objective_time_perlevel", on_config_change)
   addon.register_config_listener("objective_time_perlevelaffix", on_config_change)
+  addon.register_config_listener("objective_time_delta_only", on_config_change)
   addon.register_config_listener("objective_time", on_config_change)
   addon.register_config_listener("show_percent_numbers", on_config_change)
   addon.register_config_listener("show_absolute_numbers", on_config_change)

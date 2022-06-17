@@ -13,6 +13,7 @@ local CONFIG_VALUES = {
   objective_time = true,
   objective_time_perlevel = false,
   objective_time_perlevelaffix = true,
+  objective_time_delta_only = false,
   objective_time_inchat = true,
   show_deathcounter = true,
   progress_tooltip = true,
@@ -297,6 +298,7 @@ local function on_category_refresh(self)
     "objective_time",
     "objective_time_perlevel",
     "objective_time_perlevelaffix",
+    "objective_time_delta_only",
 
     "__separator__",
 
