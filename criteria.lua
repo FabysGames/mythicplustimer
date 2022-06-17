@@ -35,7 +35,11 @@ local function create_enemy_forces_bar(step_index)
   if enemy_forces_bar then
     local prev_step_frame = step_frames[step_index - 1]
     if not enemy_forces_bar.ref_frame or enemy_forces_bar.ref_frame ~= prev_step_frame then
-      enemy_forces_bar:SetPoint("TOPLEFT", prev_step_frame, "BOTTOMLEFT", 0, -5)
+      if addon.c("align_right") then
+        enemy_forces_bar:SetPoint("TOPRIGHT", prev_step_frame, "BOTTOMRIGHT", 0, -5)
+      else 
+        enemy_forces_bar:SetPoint("TOPLEFT", prev_step_frame, "BOTTOMLEFT", 0, -5)
+      end
       enemy_forces_bar.ref_frame = prev_step_frame
     end
 
@@ -45,7 +49,12 @@ local function create_enemy_forces_bar(step_index)
 
   -- frame
   enemy_forces_bar = CreateFrame("STATUSBAR", nil, main.get_frame(), BackdropTemplateMixin and "BackdropTemplate")
-  enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+
+  if addon.c("align_right") then
+    enemy_forces_bar:SetPoint("TOPRIGHT", step_frames[step_index - 1], "BOTTOMRIGHT", 0, -5)
+  else 
+    enemy_forces_bar:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+  end
 
   enemy_forces_bar.text = enemy_forces_bar:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = enemy_forces_bar.text:GetFont()
@@ -93,17 +102,31 @@ local function create_step_frame(step_index)
   -- frame
   local frame = CreateFrame("Frame", nil, main.get_frame())
   if step_index == 1 then
-    frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    if addon.c("align_right") then
+      frame:SetPoint("TOPRIGHT", timer.get_time_3_frame(), "BOTTOMRIGHT", 0, -20)
+    else 
+      frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    end
   else
-    frame:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+    if addon.c("align_right") then
+      frame:SetPoint("TOPRIGHT", step_frames[step_index - 1], "BOTTOMRIGHT", 0, -5)
+    else 
+      frame:SetPoint("TOPLEFT", step_frames[step_index - 1], "BOTTOMLEFT", 0, -5)
+    end
   end
 
   -- text
   frame.text = frame:CreateFontString(nil, "BACKGROUND", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT")
-  frame.text:SetJustifyH("LEFT")
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT")
+    frame.text:SetJustifyH("RIGHT")
+  else 
+    frame.text:SetPoint("TOPLEFT")
+    frame.text:SetJustifyH("LEFT")
+  end
 
   step_frames[step_index] = frame
   return step_frames[step_index]
@@ -331,7 +354,12 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     end
 
     if completed or not addon.c("show_enemy_forces_bar") then
-      return "-" .. percent_text .. absolute_number .. pull_value_text .. name
+      local criteria_prefix = "-"
+      if addon.c("align_right") then
+        criteria_prefix = ""
+      end
+      
+      return criteria_prefix .. percent_text .. absolute_number .. pull_value_text .. name
     else
       return percent_text .. absolute_number .. pull_value_text
     end
@@ -342,7 +370,13 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     cur_value = final_value
   end
 
-  return "- " .. cur_value .. "/" .. final_value .. " " .. name
+
+  local criteria_prefix = "- "
+  if addon.c("align_right") then
+    criteria_prefix = ""
+  end
+
+  return criteria_prefix .. cur_value .. "/" .. final_value .. " " .. name
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -503,7 +537,11 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
   -- show frame
   if step_index == 1 then
-    step_frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    if addon.c("align_right") then
+      step_frame:SetPoint("TOPRIGHT", timer.get_time_3_frame(), "BOTTOMRIGHT", 0, -20)
+    else 
+      step_frame:SetPoint("TOPLEFT", timer.get_time_3_frame(), "BOTTOMLEFT", 0, -20)
+    end
   end
 
   step_frame:Show()

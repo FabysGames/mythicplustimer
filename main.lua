@@ -73,12 +73,22 @@ local function create_info_frame_dungeon()
 
   local frame = CreateFrame("Frame", nil, main_frame)
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", main_frame, 0, -30)
+  
+  if addon.c("align_right") then
+    frame:SetPoint("TOPRIGHT", main_frame, 0, -30)
+  else 
+    frame:SetPoint("TOPLEFT", main_frame, 0, -30)
+  end
 
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 16, font_flags)
-  frame.text:SetPoint("TOPLEFT", 0, 0)
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT", 0, 0)
+  else 
+    frame.text:SetPoint("TOPLEFT", 0, 0)
+  end
 
   local on_enter = function(self, motion)
     local dungeon_frame = info_frames.dungeon
@@ -112,12 +122,22 @@ local function create_info_frame_affixes_text()
 
   local frame = CreateFrame("Frame", nil, main_frame)
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", info_frames.dungeon, "BOTTOMLEFT", 0, -3)
+  
+  if addon.c("align_right") then
+    frame:SetPoint("TOPRIGHT", info_frames.dungeon, "BOTTOMRIGHT", 0, -3)
+  else 
+    frame:SetPoint("TOPLEFT", info_frames.dungeon, "BOTTOMLEFT", 0, -3)
+  end
 
   frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
   local font_path, _, font_flags = frame.text:GetFont()
   frame.text:SetFont(font_path, 12, font_flags)
-  frame.text:SetPoint("TOPLEFT", 0, 0)
+
+  if addon.c("align_right") then
+    frame.text:SetPoint("TOPRIGHT", 0, 0)
+  else 
+    frame.text:SetPoint("TOPLEFT", 0, 0)
+  end
 
   info_frames.affixes_text = frame
   return info_frames.affixes_text
@@ -131,7 +151,13 @@ local function create_info_frame_affixes_icons()
 
   local frame = CreateFrame("Frame", nil, main_frame)
   frame:ClearAllPoints()
-  frame:SetPoint("TOPLEFT", info_frames.dungeon, "BOTTOMLEFT", 0, -3)
+
+  if addon.c("align_right") then
+    frame:SetPoint("TOPRIGHT", info_frames.dungeon, "BOTTOMRIGHT", 0, -3)
+  else 
+    frame:SetPoint("TOPLEFT", info_frames.dungeon, "BOTTOMLEFT", 0, -3)
+  end
+
   frame:SetHeight(16)
 
   info_frames.affixes_icons = frame
@@ -139,7 +165,7 @@ local function create_info_frame_affixes_icons()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function create_info_frame_affix_icon(icons_frame, affix_index)
+local function create_info_frame_affix_icon(icons_frame, affix_index, affixes_len)
   if not info_frames.affixes_icon then
     info_frames.affixes_icon = {}
   end
@@ -152,7 +178,11 @@ local function create_info_frame_affix_icon(icons_frame, affix_index)
   frame:SetSize(16, 16)
 
   if affix_index == 1 then
-    frame:SetPoint("TOPLEFT", icons_frame, "TOPLEFT", 0, 0)
+     if addon.c("align_right") then
+      frame:SetPoint("TOPRIGHT", icons_frame, "TOPRIGHT", (-16 - 5) * (affixes_len - 1), 0)
+     else 
+      frame:SetPoint("TOPLEFT", icons_frame, "TOPLEFT", 0, 0)
+     end
   else
     frame:SetPoint("LEFT", info_frames.affixes_icon[affix_index - 1], "RIGHT", 5, 0)
   end
@@ -212,7 +242,7 @@ local function update_dungeon_info(current_run)
 
     -- update icons
     if addon.c("show_affixes_as_icons") then
-      local affix_icon_frame = create_info_frame_affix_icon(affixes_icons_frame, i)
+      local affix_icon_frame = create_info_frame_affix_icon(affixes_icons_frame, i, #current_run.affixes)
 
       if not affix_icon_frame.affix_id or affix_icon_frame.affix_id ~= affix_id then
         affix_icon_frame:SetUp(affix_id)
@@ -233,15 +263,29 @@ local function update_dungeon_info(current_run)
 
   if addon.c("show_affixes_as_text") then
     affixes_text_frame:Show()
-    affixes_icons_frame:SetPoint("TOPLEFT", dungeon_frame, "BOTTOMLEFT", 0, -8 - affixes_text_frame:GetHeight())
+
+    affixes_icons_frame:ClearAllPoints()
+    
+    if addon.c("align_right") then
+      affixes_icons_frame:SetPoint("TOPRIGHT", dungeon_frame, "BOTTOMRIGHT", 0, -8 - affixes_text_frame:GetHeight())
+    else 
+      affixes_icons_frame:SetPoint("TOPLEFT", dungeon_frame, "BOTTOMLEFT", 0, -8 - affixes_text_frame:GetHeight())
+    end
   else
     affixes_text_frame:Hide()
-    affixes_icons_frame:SetPoint("TOPLEFT", dungeon_frame, "BOTTOMLEFT", 0, -3)
+
+    affixes_icons_frame:ClearAllPoints()
+    
+    if addon.c("align_right") then
+      affixes_icons_frame:SetPoint("TOPRIGHT", dungeon_frame, "BOTTOMRIGHT", 0, -3)
+    else 
+      affixes_icons_frame:SetPoint("TOPLEFT", dungeon_frame, "BOTTOMLEFT", 0, -3)
+    end
   end
 
   -- update icons frame
   if addon.c("show_affixes_as_icons") then
-    affixes_icons_frame:SetWidth(16 * #current_run.affixes)
+    affixes_icons_frame:SetWidth(16 * #current_run.affixes + (5 * #current_run.affixes-1))
     affixes_icons_frame:Show()
   else
     affixes_icons_frame:Hide()

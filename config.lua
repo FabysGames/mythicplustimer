@@ -29,6 +29,7 @@ local CONFIG_VALUES = {
   show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
+  align_right = false,
   --
   color_dungeon_name = "FFFFD100",
   color_affixes = "FFFFFFFF",
@@ -174,6 +175,7 @@ local function on_category_refresh(self)
     "hide_default_objectivetracker",
     -- "show_reapingtimer"
     -- "show_pridefultimer",
+    "align_right"
   }
 
   local checkboxes_frames = {}
@@ -212,6 +214,10 @@ local function on_category_refresh(self)
       end
 
       addon.set_config_value(config_key, checked)
+
+      if config_key == "align_right" then
+        ReloadUI()
+      end
     end, tooltip, self)
     if i == 1 then
       checkbox:SetPoint("TOPLEFT", name, "BOTTOMLEFT", 0, -5)
