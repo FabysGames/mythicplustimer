@@ -224,9 +224,15 @@ local function resolve_time_info(step_index, current_run)
       end
 
       if addon.c("objective_time_delta_only") then
-        time_info = time_info .. " (" .. diff_info .. ")"
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
       else
-        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. ", " .. diff_info .. ")"
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level) .. diff_info .. ")"
       end
     end
   end
@@ -249,9 +255,15 @@ local function resolve_time_info(step_index, current_run)
       end
 
       if addon.c("objective_time_delta_only") then
-        time_info = time_info .. " (" .. diff_info .. ")"
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
       else
-        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. ", " .. diff_info .. ")"
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone_level_affixes) .. diff_info .. ")"
       end
     end
   end
@@ -274,9 +286,15 @@ local function resolve_time_info(step_index, current_run)
       end
 
       if addon.c("objective_time_delta_only") then
-        time_info = time_info .. " (" .. diff_info .. ")"
+        if diff_info ~= "" then
+          time_info = time_info .. " (" .. diff_info .. ")"
+        end
       else
-        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. ", " .. diff_info .. ")"
+        if diff_info ~= "" then
+          diff_info = ", " .. diff_info
+        end
+
+        time_info = time_info .. " (" .. addon.t("lbl_best") .. ": " .. main.format_seconds(best_time_zone) .. diff_info .. ")"
       end
     end
   end
