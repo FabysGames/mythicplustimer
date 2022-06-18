@@ -13,6 +13,7 @@ local CONFIG_VALUES = {
   objective_time = true,
   objective_time_perlevel = false,
   objective_time_perlevelaffix = true,
+  objective_time_perrun = false,
   objective_time_delta_only = false,
   objective_time_inchat = true,
   show_deathcounter = true,
@@ -63,6 +64,7 @@ local function on_button_click(button)
 
   if button_name == "delete_besttimes" then
     addon.set_config_value("best_times", {})
+    addon.set_config_value("best_runs", {})
   elseif button_name == "delete_npcprogress" then
     addon.set_config_value("npc_progress", {})
     addon.set_config_value("npc_progress_teeming", {})
@@ -298,16 +300,14 @@ local function on_category_refresh(self)
     "objective_time",
     "objective_time_perlevel",
     "objective_time_perlevelaffix",
+    "objective_time_perrun",
     "objective_time_delta_only",
 
     "__separator__",
 
+    "show_pull_values",
     "show_percent_numbers",
     "show_absolute_numbers",
-
-    "__separator__",
-
-    "show_pull_values",
 
     "__separator__",  
     
@@ -337,14 +337,28 @@ local function on_category_refresh(self)
           main.show_demo()
         end
 
-        if config_key == "objective_time_perlevel" and checked and addon.c("objective_time_perlevelaffix") then
+        if config_key == "objective_time_perlevel" and checked then
           addon.set_config_value("objective_time_perlevelaffix", false)
           checkboxes_data_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perrun", false)
+          checkboxes_data_frames_bykey["objective_time_perrun"].checkbox:SetChecked(false)
         end
 
-        if config_key == "objective_time_perlevelaffix" and checked and addon.c("objective_time_perlevel") then
+        if config_key == "objective_time_perlevelaffix" and checked then
           addon.set_config_value("objective_time_perlevel", false)
           checkboxes_data_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perrun", false)
+          checkboxes_data_frames_bykey["objective_time_perrun"].checkbox:SetChecked(false)
+        end
+
+        if config_key == "objective_time_perrun" and checked then
+          addon.set_config_value("objective_time_perlevel", false)
+          checkboxes_data_frames_bykey["objective_time_perlevel"].checkbox:SetChecked(false)
+
+          addon.set_config_value("objective_time_perlevelaffix", false)
+          checkboxes_data_frames_bykey["objective_time_perlevelaffix"].checkbox:SetChecked(false)
         end
 
         if config_key == "show_percent_numbers" and not checked and not addon.c("show_absolute_numbers") then
@@ -610,6 +624,10 @@ local function on_slash_command(msg)
     frame:SetHeight(100)
 
     local data = ""
+
+    data = data .. "BEST RUNS\n"
+    local best_runs = addon.c("best_runs")
+    data = print_debug_table(data, best_runs)
 
     data = data .. "BEST TIMES\n"
     local best_times = addon.c("best_times")

@@ -322,6 +322,12 @@ local function show_demo()
   best_times[demo_run.current_zone_id][demo_run.level_key] = {[1] = 110}
   best_times[demo_run.current_zone_id][demo_run.level_key .. demo_run.affixes_key] = {[1] = 150}
 
+  local best_runs = addon.c("best_runs")
+  best_runs[demo_run.current_map_id] = {}
+  best_runs[demo_run.current_map_id][demo_run.level_key .. demo_run.affixes_key] = {
+    times = {[1] = 100}
+  }
+
   -- name
   update_dungeon_info(demo_run)
 
@@ -436,6 +442,8 @@ local function on_challenge_mode_completed()
   local current_run = main.get_current_run()
   if current_run then
     current_run.is_completed = true
+
+    main.on_challenge_mode_complete(current_run)
   end
 
   main.show_default_tracker()
@@ -531,6 +539,19 @@ local function on_player_entering_world()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
+function main.on_challenge_mode_complete(current_run)
+  local best_runs = addon.c("best_runs")
+  local best_run = best_runs[current_run.current_map_id][current_run.level_key .. current_run.affixes_key]
+
+  if best_run == nil or current_run.elapsed_time < best_run.elapsed_time then
+    best_runs[current_run.current_map_id][current_run.level_key .. current_run.affixes_key] = {
+      elapsed_time = current_run.elapsed_time,
+      times = current_run.times,
+    }
+  end
+end
+
+-- ---------------------------------------------------------------------------------------------------------------------
 function main.on_player_entering_world()
   -- restart if in cm
   if main.is_in_cm() then
@@ -597,6 +618,13 @@ function main.on_challenge_mode_start()
 
   if not best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key] then
     best_times[current_run.current_zone_id][current_run.level_key .. current_run.affixes_key] = {}
+  end
+
+  -- create initial best runs config entries
+  local best_runs = addon.c("best_runs")
+
+  if not best_runs[current_run.current_map_id] then
+    best_runs[current_run.current_map_id] = {}
   end
 
   -- update dungeon info
@@ -741,6 +769,11 @@ function main:enable()
   local best_times = addon.c("best_times")
   if not best_times then
     addon.set_config_value("best_times", {})
+  end
+
+  local best_runs = addon.c("best_runs")
+  if not best_runs then
+    addon.set_config_value("best_runs", {})
   end
 
   -- register events
