@@ -1,7 +1,7 @@
 # MythicPlusTimer 4.8.0
 
 - Update criteria view
-- Add option the to show best completion time per dungeon run
+- Add option to show best completion time per dungeon run
 
 # MythicPlusTimer 4.7.1
 
