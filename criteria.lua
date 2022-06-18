@@ -356,7 +356,11 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
         end
       end
 
-      pull_value_text = pull_value_text .. "|r "
+      pull_value_text = pull_value_text .. "|r"
+
+      if not addon.c("align_right") then
+        pull_value_text = pull_value_text .. " "
+      end
     end
 
     -- resolve text
@@ -384,12 +388,19 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     end
 
     if completed or not addon.c("show_enemy_forces_bar") then
-      local criteria_prefix = "-"
-      if addon.c("align_right") then
-        criteria_prefix = ""
+      if completed then
+        if addon.c("align_right") then
+            return name
+        else 
+          return "- " .. name
+        end
+      else
+        if addon.c("align_right") then
+            return name .. percent_text .. absolute_number .. pull_value_text
+        else 
+          return "-" .. percent_text .. absolute_number .. pull_value_text .. name
+        end
       end
-      
-      return criteria_prefix .. percent_text .. absolute_number .. pull_value_text .. name
     else
       return percent_text .. absolute_number .. pull_value_text
     end
@@ -397,16 +408,18 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
 
   -- boss
   if completed then
-    cur_value = final_value
+    if addon.c("align_right") then
+      return name
+    else
+      return "- " .. name
+    end
+  else
+    if addon.c("align_right") then
+      return  name .. " " .. cur_value .. "/" .. final_value
+    else
+      return "- " .. cur_value .. "/" .. final_value .. " " .. name
+    end
   end
-
-
-  local criteria_prefix = "- "
-  if addon.c("align_right") then
-    criteria_prefix = ""
-  end
-
-  return criteria_prefix .. cur_value .. "/" .. final_value .. " " .. name
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

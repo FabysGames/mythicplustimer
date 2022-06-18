@@ -1,3 +1,7 @@
+# MythicPlusTimer 4.8.0
+
+- Update criteria view
+
 # MythicPlusTimer 4.7.1
 
 - Fix completion time view
