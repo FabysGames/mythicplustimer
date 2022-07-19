@@ -363,6 +363,7 @@ local function toggle_frame_movement()
     if difficulty ~= 8 then
       main.hide_frame()
       main.show_default_tracker()
+      main.reset_current_run()
     end
 
     frame.drag_text:Hide()
@@ -541,9 +542,13 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 function main.on_challenge_mode_complete(current_run)
   local best_runs = addon.c("best_runs")
+  if not best_runs[current_run.current_map_id] then
+    best_runs[current_run.current_map_id] = {}
+  end
+
   local best_run = best_runs[current_run.current_map_id][current_run.level_key .. current_run.affixes_key]
 
-  if best_run == nil or current_run.elapsed_time < best_run.elapsed_time then
+  if best_run == nil or best_run.elapsed_time == nil or current_run.elapsed_time < best_run.elapsed_time then
     best_runs[current_run.current_map_id][current_run.level_key .. current_run.affixes_key] = {
       elapsed_time = current_run.elapsed_time,
       times = current_run.times,
@@ -562,6 +567,7 @@ function main.on_player_entering_world()
   -- hide timer
   main.hide_frame()
   main.show_default_tracker()
+  main.reset_current_run()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

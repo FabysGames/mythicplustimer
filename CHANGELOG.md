@@ -1,3 +1,7 @@
+# MythicPlusTimer 4.8.1
+
+- Fixed scenario (timewalking) lua error
+
 # MythicPlusTimer 4.8.0
 
 - Update criteria view
