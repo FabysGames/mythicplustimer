@@ -367,5 +367,5 @@ function progress:enable()
   addon.register_event("PLAYER_DEAD", on_combat_end)
 
   -- hook into tooltip
-  GameTooltip:HookScript("OnTooltipSetUnit", on_tooltip_set_unit)
+  TooltipDataProcessor.AddTooltipPostCall(Enum.TooltipDataType.Unit, on_tooltip_set_unit)
 end
