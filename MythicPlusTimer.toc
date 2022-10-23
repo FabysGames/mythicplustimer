@@ -1,5 +1,5 @@
 ## Interface: 100002
-## Version: 5.0.0-beta.2
+## Version: 5.0.0-beta.3
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance

@@ -244,7 +244,6 @@ local function on_tooltip_set_unit(tooltip)
   -- end
 
   GameTooltip:AddDoubleLine(name .. ": +" .. text .. mdt_info)
-  GameTooltip:Show()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
