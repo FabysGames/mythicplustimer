@@ -1,3 +1,7 @@
+# MythicPlusTimer 5.0.2
+
+- Update tooltip system
+
 # MythicPlusTimer 5.0.1
 
 - Update for WoW 10.0.2

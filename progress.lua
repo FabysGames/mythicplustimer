@@ -173,6 +173,11 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_tooltip_set_unit(tooltip)
+  -- check if the tooltip is the GameTooltip, ignore all other
+  if tooltip ~= GameTooltip then
+    return
+  end
+
   -- check if tooltip must be updated
   if not addon.c("progress_tooltip") then
     return
@@ -243,7 +248,7 @@ local function on_tooltip_set_unit(tooltip)
   --   mdt_info = " [MDT]"
   -- end
 
-  GameTooltip:AddDoubleLine(name .. ": +" .. text .. mdt_info)
+  tooltip:AddDoubleLine(name .. ": +" .. text .. mdt_info)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
