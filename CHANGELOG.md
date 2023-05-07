@@ -1,3 +1,7 @@
+# MythicPlusTimer 5.1.0
+
+- Update for WoW 10.1.0
+
 # MythicPlusTimer 5.0.3
 
 - Try to hide the default tracker on every update
