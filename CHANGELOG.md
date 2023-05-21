@@ -1,3 +1,7 @@
+# MythicPlusTimer 5.1.1
+
+- Moved getting quest_frame just before it is hidden to work with ElvUI (By revolive (https://github.com/revolive), thanks)
+
 # MythicPlusTimer 5.1.0
 
 - Update for WoW 10.1.0
