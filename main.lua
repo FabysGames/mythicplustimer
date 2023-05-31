@@ -447,8 +447,6 @@ local function on_challenge_mode_completed()
 
     main.on_challenge_mode_complete(current_run)
   end
-
-  main.show_default_tracker()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
