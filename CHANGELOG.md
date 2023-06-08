@@ -1,3 +1,7 @@
+# MythicPlusTimer 5.2.0
+
+- Keep objectives hidden when challenge mode completes (By benhamlin (https://github.com/benhamlin), thanks)
+
 # MythicPlusTimer 5.1.1
 
 - Moved getting quest_frame just before it is hidden to work with ElvUI (By revolive (https://github.com/revolive), thanks)
