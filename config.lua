@@ -553,21 +553,27 @@ end
 -- ---------------------------------------------------------------------------------------------------------------------
 local function create_options_category()
   -- main
-  category = CreateFrame("Frame")
-  category.name = addon_name
-  category.default = on_category_default
-  category.refresh = on_category_refresh
+  local frame = CreateFrame("Frame")
+  frame.name = addon_name
+  frame.OnDefault = on_category_default
+  frame.OnRefresh = on_category_refresh
 
-  InterfaceOptions_AddCategory(category)
+  local settings_category, _ = Settings.RegisterCanvasLayoutCategory(frame, frame.name)
+  settings_category.ID = frame.name
+	Settings.RegisterAddOnCategory(settings_category)
+  category = settings_category
 
   -- colors
-  category_colors = CreateFrame("Frame", nil, category)
-  category_colors.name = addon.t("lbl_colors")
-  category_colors.parent = category.name
-  category_colors.default = on_category_colors_default
-  category_colors.refresh = on_category_colors_refresh
+  local frame_colors = CreateFrame("Frame")
+  frame_colors.name = addon.t("lbl_colors")
+  frame_colors.parent = category.name
+  frame_colors.OnDefault = on_category_colors_default
+  frame_colors.OnRefresh = on_category_colors_refresh
 
-  InterfaceOptions_AddCategory(category_colors)
+  local settings_category_colors, _ = Settings.RegisterCanvasLayoutSubcategory(category, frame_colors, frame_colors.name)
+  settings_category_colors.ID = frame_colors.name
+  Settings.RegisterAddOnCategory(settings_category_colors)
+  category_colors = settings_category_colors
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

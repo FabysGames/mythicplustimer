@@ -348,14 +348,13 @@ local function resolve_time_info(step_index, current_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-local function resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, quantity)
+local function resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
   -- enemy forces
-  if final_value >= 100 then
-    -- absolute number
-    local quantity_number = string.sub(quantity, 1, string.len(quantity) - 1)
+  if is_weighted_progress then
+    local quantity_number = cur_value
 
     -- percentage
-    local quantity_percent = (quantity_number / final_value) * 100
+    local quantity_percent = (cur_value / final_value) * 100
     local mult = 10 ^ 2
     quantity_percent = math.floor(quantity_percent * mult + 0.5) / mult
     if quantity_percent > 100 then
@@ -488,9 +487,9 @@ local function on_scenario_criteria_update()
   -- check if all are completed
   local completed_steps = 0
   for i = 1, steps do
-    local _, _, completed = C_Scenario.GetCriteriaInfo(i)
+    local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
 
-    if completed then
+    if criteriaInfo.completed then
       completed_steps = completed_steps + 1
     end
   end
@@ -549,8 +548,8 @@ function criteria.update()
   end
 
   for i = 1, steps do
-    local name, _, completed, cur_value, final_value, _, _, quantity = C_Scenario.GetCriteriaInfo(i)
-    criteria.update_step(i, current_run, name, completed, cur_value, final_value, quantity)
+    local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
+    criteria.update_step(i, current_run, criteriaInfo.description, criteriaInfo.completed, criteriaInfo.quantity, criteriaInfo.totalQuantity, criteriaInfo.isWeightedProgress)
   end
 
   -- update prideful
@@ -561,16 +560,16 @@ function criteria.update()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
-function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, quantity)
+function criteria.update_step(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
   -- resolve frame
   local step_frame
-  if final_value >= 100 and (not completed) and addon.c("show_enemy_forces_bar") then
+  if is_weighted_progress and (not completed) and addon.c("show_enemy_forces_bar") then
     if step_frames[step_index] then
       step_frames[step_index]:Hide()
     end
     step_frame = create_enemy_forces_bar(step_index)
   else
-    if final_value >= 100 and enemy_forces_bar then
+    if is_weighted_progress and enemy_forces_bar then
       enemy_forces_bar:Hide()
     end
 
@@ -591,8 +590,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
     -- enemy forces bar
     if step_frame == enemy_forces_bar then
-      local quantity_number = string.sub(quantity, 1, string.len(quantity) - 1)
-      local quantity_percent = tonumber(quantity_number) / final_value
+      local quantity_percent = cur_value / final_value
       local a = tonumber(1)
 
       enemy_forces_bar:SetValue(quantity_percent)
@@ -614,7 +612,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
   local time_info = resolve_time_info(step_index, current_run)
 
   -- resolve step info
-  local step_info = resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, quantity)
+  local step_info = resolve_step_info(step_index, current_run, name, completed, cur_value, final_value, is_weighted_progress)
 
   -- set text
   local objective_text = string.format("|c%s%s%s", color, step_info, time_info)

@@ -704,11 +704,9 @@ function main.hide_default_tracker()
 
   local in_combat = InCombatLockdown() or UnitAffectingCombat("player")
   if not in_combat then
-    if quest_frame == nil then
-      -- find quest frame (used to find object tracker, other addons could have moved the tracker frame)
-      quest_frame = main.get_quest_frame(ObjectiveTrackerFrame)
-      quest_frame:SetParent(hidden_frame)
-    end
+    -- find quest frame (used to find object tracker, other addons could have moved the tracker frame)
+    quest_frame = main.get_quest_frame(ObjectiveTrackerFrame)
+    quest_frame:SetParent(hidden_frame)
     hidden_frame:Hide()
   end
 end

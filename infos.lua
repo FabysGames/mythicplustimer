@@ -573,22 +573,6 @@ local function on_combat_log_event_unfiltered()
     return
   end
 
-  -- skip if surrendered_soul debuff is active on dest
-  if not surrendered_soul then
-    surrendered_soul = GetSpellInfo(212570)
-  end
-
-  for i = 1, 40 do
-    local debuff_name = UnitDebuff(dest_name, i)
-    if debuff_name == nil then
-      break
-    end
-
-    if debuff_name == surrendered_soul then
-      return
-    end
-  end
-
   -- player death happened
   local current_run = main.get_current_run()
   if not current_run then
