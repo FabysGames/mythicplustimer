@@ -25,10 +25,8 @@ local CONFIG_VALUES = {
   show_affixes_as_text = true,
   show_affixes_as_icons = false,
   hide_default_objectivetracker = true,
-  show_reapingtimer = true,
   scale = 1.0,
   show_pull_values = false,
-  show_pridefultimer = true,
   --
   position = {left = -260, top = 220, relative_point = "RIGHT"},
   align_right = false,
@@ -47,10 +45,6 @@ local CONFIG_VALUES = {
   color_current_pull = "FF00FF00",
   color_deathcounter = "FFFFFFFF",
   color_deathcounter_timelost = "FFFF0000",
-  color_prideful = "FFFFFFFF",
-  color_prideful_value = "FFFFFFFF",
-  color_prideful_value_warning = "FFFFFF00",
-  color_prideful_value_alert = "FFFF0000",
 }
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -132,10 +126,6 @@ local function on_category_colors_default()
     "color_current_pull",
     "color_deathcounter",
     "color_deathcounter_timelost",
-    -- "color_prideful",
-    -- "color_prideful_value",
-    -- "color_prideful_value_warning",
-    -- "color_prideful_value_alert",
   }
 
   for _, key in ipairs(colors) do
@@ -492,10 +482,6 @@ local function on_category_colors_refresh(self)
     "color_deathcounter",
     "color_deathcounter_timelost",
     -- "_line",
-    -- "color_prideful",
-    -- "color_prideful_value",
-    -- "color_prideful_value_warning",
-    -- "color_prideful_value_alert",
   }
 
   local colors_frames = {}

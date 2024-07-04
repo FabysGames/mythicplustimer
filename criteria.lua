@@ -557,12 +557,6 @@ function criteria.update()
     local criteriaInfo = C_ScenarioInfo.GetCriteriaInfo(i)
     criteria.update_step(i, current_run, criteriaInfo.description, criteriaInfo.completed, criteriaInfo.quantity, criteriaInfo.totalQuantity, criteriaInfo.isWeightedProgress)
   end
-
-  -- update prideful
-  infos.update_prideful()
-
-  -- update reaping
-  infos.update_reaping()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------

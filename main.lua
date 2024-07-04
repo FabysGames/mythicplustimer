@@ -340,12 +340,6 @@ local function show_demo()
 
   -- deathcounter
   infos.update_deathcounter_info(demo_run, 2, 10)
-
-  -- prideful
-  infos.update_prideful_info(demo_run)
-
-  -- reaping
-  infos.update_reaping_info(demo_run)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
