@@ -354,17 +354,19 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     local quantity_number = cur_value
 
     -- percentage
-    local quantity_percent = (cur_value / final_value) * 100
-    local mult = 10 ^ 2
-    quantity_percent = math.floor(quantity_percent * mult + 0.5) / mult
-    if quantity_percent > 100 then
-      quantity_percent = 100
-    end
+    local quantity_percent = cur_value -- :OnlyPercentValue
+    -- local quantity_percent = (cur_value / final_value) * 100
+    -- local mult = 10 ^ 2
+    -- quantity_percent = math.floor(quantity_percent * mult + 0.5) / mult
+    -- if quantity_percent > 100 then
+    --   quantity_percent = 100
+    -- end
 
     -- set to 100% if completed (needed if enemy forces is the last criteria which gets completed, quantity is not updated to 100% in this case)
     if completed then
       quantity_percent = 100
-      quantity_number = final_value
+      quantity_number = 100 -- :OnlyPercentValue
+      -- quantity_number = final_value
       current_run.quantity_completed = true
     end
 
@@ -376,64 +378,68 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
     local pull_enemies = 0
     local pull_value = 0
     local pull_in_percent = 0
-    if current_run.pull then
-      for _, v in pairs(current_run.pull) do
-        pull_enemies = pull_enemies + 1
-        pull_value = pull_value + v[1]
-        pull_in_percent = pull_in_percent + v[2]
-      end
-    end
+    -- if current_run.pull then
+    --   for _, v in pairs(current_run.pull) do
+    --     pull_enemies = pull_enemies + 1
+    --     pull_value = pull_value + v[1]
+    --     pull_in_percent = pull_in_percent + v[2]
+    --   end
+    -- end
 
     local pull_value_text = ""
-    if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
-      pull_value_text = pull_value_text .. " |c" .. addon.c("color_current_pull")
+    -- :OnlyPercentValue
+    -- if pull_enemies > 0 and addon.c("show_pull_values") and not completed then
+    --   pull_value_text = pull_value_text .. " |c" .. addon.c("color_current_pull")
 
-      if addon.c("show_percent_numbers") then
-        pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
-      end
+    --   if addon.c("show_percent_numbers") then
+    --     pull_value_text = pull_value_text .. "+" .. pull_in_percent .. "%"
+    --   end
 
-      if addon.c("show_absolute_numbers") then
-        if addon.c("show_percent_numbers") then
-          pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
-        else
-          pull_value_text = pull_value_text .. "+" .. pull_value
-        end
-      end
+    --   if addon.c("show_absolute_numbers") then
+    --     if addon.c("show_percent_numbers") then
+    --       pull_value_text = pull_value_text .. " (" .. pull_value .. ")"
+    --     else
+    --       pull_value_text = pull_value_text .. "+" .. pull_value
+    --     end
+    --   end
 
-      pull_value_text = pull_value_text .. "|r"
+    --   pull_value_text = pull_value_text .. "|r"
 
-      if not addon.c("align_right") then
-        pull_value_text = pull_value_text .. " "
-      end
-    else 
-      if not addon.c("align_right") then
-        pull_value_text = pull_value_text .. " "
-      end
-    end
+    --   if not addon.c("align_right") then
+    --     pull_value_text = pull_value_text .. " "
+    --   end
+    -- else 
+    --   if not addon.c("align_right") then
+    --     pull_value_text = pull_value_text .. " "
+    --   end
+    -- end
 
     -- resolve text
     local percent_text = ""
-    if addon.c("show_percent_numbers") then
-      percent_text = " " .. quantity_percent .. "%"
-    end
+    -- if addon.c("show_percent_numbers") then
+    --   percent_text = " " .. quantity_percent .. "%"
+    -- end
+    -- :OnlyPercentValue
+    percent_text = " " .. quantity_percent .. "%"
 
     local absolute_number = ""
-    if addon.c("show_absolute_numbers") then
-      local missing_absolute = final_value - quantity_number
-      if missing_absolute == 0 then
-        missing_absolute = ""
-      else
-        missing_absolute = " - " .. missing_absolute
-      end
+    -- :OnlyPercentValue
+    -- if addon.c("show_absolute_numbers") then
+    --   local missing_absolute = final_value - quantity_number
+    --   if missing_absolute == 0 then
+    --     missing_absolute = ""
+    --   else
+    --     missing_absolute = " - " .. missing_absolute
+    --   end
 
-      absolute_number = quantity_number .. "/" .. final_value .. missing_absolute
+    --   absolute_number = quantity_number .. "/" .. final_value .. missing_absolute
 
-      if addon.c("show_percent_numbers") then
-        absolute_number = " (" .. absolute_number .. ")"
-      else
-        absolute_number = " " .. absolute_number
-      end
-    end
+    --   if addon.c("show_percent_numbers") then
+    --     absolute_number = " (" .. absolute_number .. ")"
+    --   else
+    --     absolute_number = " " .. absolute_number
+    --   end
+    -- end
 
     if completed or not addon.c("show_enemy_forces_bar") then
       if completed then

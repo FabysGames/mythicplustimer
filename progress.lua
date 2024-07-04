@@ -173,6 +173,11 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_tooltip_set_unit(tooltip)
+  -- :OnlyPercentValue
+  if true then
+    return 
+  end
+
   -- check if the tooltip is the GameTooltip, ignore all other
   if tooltip ~= GameTooltip then
     return
@@ -365,7 +370,7 @@ end
 -- Enable
 function progress:enable()
   -- register events
-  addon.register_event("COMBAT_LOG_EVENT_UNFILTERED", on_combat_log_event_unfiltered)
+  -- addon.register_event("COMBAT_LOG_EVENT_UNFILTERED", on_combat_log_event_unfiltered) :OnlyPercentValue
   addon.register_event("SCENARIO_CRITERIA_UPDATE", on_scenario_criteria_update)
   addon.register_event("UNIT_THREAT_LIST_UPDATE", on_unit_threat_list_update)
   addon.register_event("ENCOUNTER_END", on_combat_end)

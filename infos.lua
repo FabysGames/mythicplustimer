@@ -476,6 +476,11 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function update_pull(current_run)
+  -- :OnlyPercentValue
+  if true then
+    return 
+  end
+  
   -- is called at criteria update
   if not current_run.pull then
     return
