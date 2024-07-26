@@ -182,7 +182,7 @@ local function on_category_refresh(self)
 
   local checkboxes_general = {
     "insert_keystone",
-    "progress_tooltip",
+   -- "progress_tooltip",  -- :OnlyPercentValue
     "objective_time_inchat",
   }
 
