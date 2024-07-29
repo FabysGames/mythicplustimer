@@ -181,11 +181,6 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function update_pull(current_run)
-  -- :OnlyPercentValue
-  if true then
-    return 
-  end
-  
   -- is called at criteria update
   if not current_run.pull then
     return
@@ -222,11 +217,9 @@ local function update_pull(current_run)
   -- resolve pull value
   local enemies = 0
   local value = 0
-  local in_percent = 0
   for _, v in pairs(current_run.pull) do
     enemies = enemies + 1
     value = value + v[1]
-    in_percent = in_percent + v[2]
   end
 
   if enemies == 0 then
@@ -234,11 +227,16 @@ local function update_pull(current_run)
     return
   end
 
+  local in_percent = (value / current_run.final_quantity_number) * 100
+  local mult = 10 ^ 2
+  in_percent = math.floor(in_percent * mult + 0.5) / mult
+
   -- update text
   local text = "|c" .. addon.c("color_current_pull") .. addon.t("lbl_currentpull") .. " |c" .. addon.c("color_current_pull") .. "" .. in_percent .. "%"
-  if addon.c("show_absolute_numbers") then
-    text = text .. " (" .. value .. ")"
-  end
+   -- :OnlyPercentValue
+  -- if addon.c("show_absolute_numbers") then
+  --   text = text .. " (" .. value .. ")"
+  -- end
 
   -- set text
   local current_text = pull_frame.text:GetText()

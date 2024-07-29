@@ -295,7 +295,7 @@ local function on_category_refresh(self)
 
     "__separator__",
 
-    -- "show_pull_values",       -- :OnlyPercentValue
+    "show_pull_values",      
     -- "show_percent_numbers",   -- :OnlyPercentValue
     -- "show_absolute_numbers",  -- :OnlyPercentValue
 

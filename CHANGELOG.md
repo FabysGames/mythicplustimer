@@ -1,6 +1,7 @@
 # MythicPlusTimer 6.1.0
 
 - Re-Enable % value in the enemy tooltips (Requires MDT - https://github.com/Nnoggie/MythicDungeonTools)
+- Re-Enable current pull enemy progress % value (Requires MDT - https://github.com/Nnoggie/MythicDungeonTools)
 
 # MythicPlusTimer 6.0.0
 
