@@ -173,11 +173,6 @@ end
 
 -- ---------------------------------------------------------------------------------------------------------------------
 local function on_tooltip_set_unit(tooltip)
-  -- :OnlyPercentValue
-  if true then
-    return 
-  end
-
   -- check if the tooltip is the GameTooltip, ignore all other
   if tooltip ~= GameTooltip then
     return
@@ -237,24 +232,20 @@ local function on_tooltip_set_unit(tooltip)
   local name = criteriaInfo.description
 
   local text = ""
-  if addon.c("show_percent_numbers") then
-    text = text .. quantity_percent .. "%"
-  end
+  -- if addon.c("show_percent_numbers") then
+  --   text = text .. quantity_percent .. "%"
+  -- end
+   text = text .. quantity_percent .. "%"
 
-  if addon.c("show_absolute_numbers") then
-    if addon.c("show_percent_numbers") then
-      text = text .. " (+" .. value .. ")"
-    else
-      text = text .. value
-    end
-  end
-
-  local mdt_info = ""
-  -- if is_mdt_value then
-  --   mdt_info = " [MDT]"
+  -- if addon.c("show_absolute_numbers") then   -- :OnlyPercentValue
+  --   if addon.c("show_percent_numbers") then
+  --     text = text .. " (+" .. value .. ")"
+  --   else
+  --     text = text .. value
+  --   end
   -- end
 
-  tooltip:AddDoubleLine(name .. ": +" .. text .. mdt_info)
+  tooltip:AddDoubleLine(name .. ": +" .. text)
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -352,10 +343,10 @@ function progress.resolve_npc_progress_value(npc_id, is_teeming)
     is_mdt_value = true
   end
 
-  if not value or value == 0 then
-    value = get_progress_value(npc_id, is_teeming)
-    is_mdt_value = false
-  end
+  -- if not value or value == 0 then -- :OnlyPercentValue
+  --   value = get_progress_value(npc_id, is_teeming)
+  --   is_mdt_value = false
+  -- end
 
   return value, is_mdt_value
 end
