@@ -596,8 +596,7 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
     -- enemy forces bar
     if step_frame == enemy_forces_bar then
-      local quantity_percent = cur_value / final_value
-      local a = tonumber(1)
+      local quantity_percent = cur_value / 100.0
 
       enemy_forces_bar:SetValue(quantity_percent)
 
