@@ -1,3 +1,5 @@
+# MythicPlusTimer 6.2.0
+
 # MythicPlusTimer 6.1.0
 
 - Re-Enable % value in the enemy tooltips (Requires MDT - https://github.com/Nnoggie/MythicDungeonTools)

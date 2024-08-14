@@ -596,7 +596,9 @@ function criteria.update_step(step_index, current_run, name, completed, cur_valu
 
     -- enemy forces bar
     if step_frame == enemy_forces_bar then
+      -- :OnlyPercentValue
       local quantity_percent = cur_value / 100.0
+      -- local quantity_percent = cur_value / final_value
 
       enemy_forces_bar:SetValue(quantity_percent)
 
