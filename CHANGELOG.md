@@ -1,5 +1,7 @@
 # MythicPlusTimer 6.2.0
 
+- Re-Enable absolute enemy forces number if available
+
 # MythicPlusTimer 6.1.0
 
 - Re-Enable % value in the enemy tooltips (Requires MDT - https://github.com/Nnoggie/MythicDungeonTools)
