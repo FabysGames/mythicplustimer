@@ -1,3 +1,8 @@
+# MythicPlusTimer 6.3.0
+
+- Update chest timers according to challengers peril (By melisekm (https://github.com/melisekm), thanks)
+- Update for WoW 11.0.5
+
 # MythicPlusTimer 6.2.0
 
 - Re-Enable absolute enemy forces number if available
