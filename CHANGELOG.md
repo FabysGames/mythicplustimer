@@ -1,3 +1,7 @@
+# MythicPlusTimer 6.3.1
+
+- Fixed configuration toggle slash command
+
 # MythicPlusTimer 6.3.0
 
 - Update chest timers according to challengers peril (By melisekm (https://github.com/melisekm), thanks)

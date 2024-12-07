@@ -597,8 +597,7 @@ local function on_slash_command(msg)
       return
     end
 
-    InterfaceOptionsFrame_OpenToCategory(category)
-    InterfaceOptionsFrame_OpenToCategory(category)
+    Settings.OpenToCategory(category:GetID())
     return
   end
 
