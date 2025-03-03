@@ -1,3 +1,7 @@
+# MythicPlusTimer 6.4.0
+
+- Update for WoW 11.1.0
+
 # MythicPlusTimer 6.3.1
 
 - Fixed configuration toggle slash command

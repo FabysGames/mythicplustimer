@@ -21,7 +21,7 @@ jobs:
           mv MythicPlusTimer_${{ env.RELEASE_VERSION }}.zip MythicPlusTimer/MythicPlusTimer_${{ env.RELEASE_VERSION }}.zip
       - name: Create Release Changelog
         run: |
-          awk -v version="6.3.1" '/# MythicPlusTimer / {printit = $3 == version}; printit;' CHANGELOG.md > RELEASE_CHANGELOG
+          awk -v version="6.4.0" '/# MythicPlusTimer / {printit = $3 == version}; printit;' CHANGELOG.md > RELEASE_CHANGELOG
           cat RELEASE_CHANGELOG
       - uses: ncipollo/release-action@v1
         with:
