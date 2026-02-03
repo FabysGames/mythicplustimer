@@ -5,7 +5,6 @@ local main = addon.new_module("main")
 local config
 local criteria
 local timer
-local progress
 local infos
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -430,7 +429,6 @@ local function on_challenge_mode_start()
   main.on_challenge_mode_start()
   timer.on_challenge_mode_start()
   criteria.on_challenge_mode_start()
-  progress.on_challenge_mode_start()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -529,7 +527,6 @@ local function on_player_entering_world()
   main.on_player_entering_world()
   timer.on_player_entering_world()
   criteria.on_player_entering_world()
-  progress.on_player_entering_world()
 end
 
 -- ---------------------------------------------------------------------------------------------------------------------
@@ -749,7 +746,6 @@ function main:init()
   config = addon.get_module("config")
   criteria = addon.get_module("criteria")
   timer = addon.get_module("timer")
-  progress = addon.get_module("progress")
   infos = addon.get_module("infos")
 end
 

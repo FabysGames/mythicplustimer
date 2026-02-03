@@ -42,7 +42,6 @@ local CONFIG_VALUES = {
   color_objective = "FFFFFFFF",
   color_objective_completed = "FF808080",
   color_objective_completed_time = "FF808080",
-  color_current_pull = "FF00FF00",
   color_deathcounter = "FFFFFFFF",
   color_deathcounter_timelost = "FFFF0000",
 }
@@ -123,7 +122,6 @@ local function on_category_colors_default()
     "color_objective",
     "color_objective_completed",
     "color_objective_completed_time",
-    "color_current_pull",
     "color_deathcounter",
     "color_deathcounter_timelost",
   }
@@ -182,7 +180,6 @@ local function on_category_refresh(self)
 
   local checkboxes_general = {
     "insert_keystone",
-   "progress_tooltip", 
     "objective_time_inchat",
   }
 
@@ -295,7 +292,6 @@ local function on_category_refresh(self)
 
     "__separator__",
 
-    "show_pull_values",      
     "show_percent_numbers",  
     "show_absolute_numbers",  
 
@@ -477,7 +473,6 @@ local function on_category_colors_refresh(self)
     "color_objective",
     "color_objective_completed",
     "color_objective_completed_time",
-    "color_current_pull",
     "_line",
     "color_deathcounter",
     "color_deathcounter_timelost",
@@ -545,7 +540,6 @@ local function create_options_category()
   frame.OnRefresh = on_category_refresh
 
   local settings_category, _ = Settings.RegisterCanvasLayoutCategory(frame, frame.name)
-  settings_category.ID = frame.name
 	Settings.RegisterAddOnCategory(settings_category)
   category = settings_category
 
@@ -557,7 +551,6 @@ local function create_options_category()
   frame_colors.OnRefresh = on_category_colors_refresh
 
   local settings_category_colors, _ = Settings.RegisterCanvasLayoutSubcategory(category, frame_colors, frame_colors.name)
-  settings_category_colors.ID = frame_colors.name
   Settings.RegisterAddOnCategory(settings_category_colors)
   category_colors = settings_category_colors
 end

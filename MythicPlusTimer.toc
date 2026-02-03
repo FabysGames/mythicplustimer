@@ -1,5 +1,5 @@
-## Interface: 110200
-## Version: 6.5.0
+## Interface: 120000
+## Version: 7.0.0
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
@@ -15,5 +15,4 @@ main.lua
 timer.lua
 criteria.lua
 infos.lua
-progress.lua
 keystone.lua
