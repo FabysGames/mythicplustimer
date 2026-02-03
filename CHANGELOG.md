@@ -1,4 +1,4 @@
-# MythicPlusTimer 7.0.0
+# MythicPlusTimer 7.0.1
 
 - Update for WoW 12.0.0 Midnight
 
