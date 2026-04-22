@@ -425,7 +425,7 @@ local function resolve_step_info(step_index, current_run, name, completed, cur_v
         if addon.c("align_right") then
           return name .. percent_text .. absolute_number
         else 
-          return "-" .. percent_text .. absolute_number .. name
+          return "-" .. percent_text .. absolute_number .. " " .. name
         end
       end
     else

@@ -1,5 +1,5 @@
-## Interface: 120001
-## Version: 7.0.2
+## Interface: 120005
+## Version: 7.0.3
 ## Title: MythicPlusTimer
 ## Author: Fabys
 ## Notes: Custom Mythic+ timer appearance
